@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GOO.Properties
-{
-
-
+namespace GOO.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -22,49 +22,98 @@ namespace GOO.Properties
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources
-    {
-
+    internal class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if ((resourceMan == null))
-                {
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GOO.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MatrixID1;MatrixID2;Afstand;Rijtijd
+        ///0;0;0;0
+        ///0;1;220;26
+        ///0;2;12549;878
+        ///0;3;9903;792
+        ///0;4;9903;792
+        ///0;5;10072;888
+        ///0;6;10529;854
+        ///0;7;7610;628
+        ///0;8;7700;616
+        ///0;9;7798;623
+        ///0;10;8356;679
+        ///0;11;8053;666
+        ///0;12;8004;657
+        ///0;13;7640;611
+        ///0;14;7890;638
+        ///0;15;7508;600
+        ///0;16;8222;679
+        ///0;17;10179;847
+        ///0;18;8741;791
+        ///0;19;9090;727
+        ///0;20;11408;941
+        ///0;21;9479;839
+        ///0;22;9114;773
+        ///0;23;9187;786
+        ///0;24;9333;812
+        ///0;25;8192;664
+        ///0;26;8192;664
+        ///0;27;8506;693
+        ///0;28;24989;1711
+        ///0;29;24989;1711
+        ///0;30;26316;1817
+        ///0;31;26396;1823
+        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AfstandenMatrix {
+            get {
+                return ResourceManager.GetString("AfstandenMatrix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order;Plaats;Frequentie;AantContainers;VolumePerContainer;LedigingsDuurMinuten;MatrixID;XCoordinaat;YCoordinaat
+        ///18;BUDEL                         ;2PWK ;1;1100;1.84;321;55749270;512744895
+        ///33;DEURNE                        ;2PWK ;1;1100;3.7;912;57880874;514679426
+        ///114;MAARHEEZE                     ;1PWK;1;1100;1.62;484;56295706;513089704
+        ///121;DEURNE                        ;1PWK ;1;660;1;868;57717831;514645180
+        ///122;BUDEL                         ;1PWK ;1;1100;2.03;169;55718302;512652154
+        ///141;LIEROP             [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Orderbestand {
+            get {
+                return ResourceManager.GetString("Orderbestand", resourceCulture);
             }
         }
     }
