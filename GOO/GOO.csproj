@@ -60,8 +60,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\DistanceMatrixItem.cs" />
+    <Compile Include="Utilities\Distances.cs" />
     <Compile Include="Utilities\OrderFrequencyEnum.cs" />
-    <Compile Include="Utilities\FileManager.cs" />
+    <Compile Include="Utilities\FilesInitializer.cs" />
     <Compile Include="Utilities\INPC.cs" />
     <Compile Include="Utilities\Order.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
