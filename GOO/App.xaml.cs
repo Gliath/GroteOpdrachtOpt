@@ -4,6 +4,7 @@ using System.Windows;
 
 using GOO.View;
 using GOO.ViewModel;
+using GOO.Utilities;
 
 namespace GOO
 {
@@ -27,6 +28,8 @@ namespace GOO
             AllocConsole();
             #endif
             Console.WriteLine("Program booting up...");
+
+            FilesInitializer.InitializeFiles();
 
             new MainView() { DataContext = new MainViewModel() }.Show();
         }

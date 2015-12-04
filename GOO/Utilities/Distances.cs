@@ -39,6 +39,7 @@ namespace GOO.Utilities
 
         public void AssembleMatrix()
         {
+            MaximumMatrixID++; // Needs to be one higher
             Matrix = new DistanceMatrixItem[MaximumMatrixID, MaximumMatrixID];
 
             for (int i = 0; i < MatrixCounter; i++)
