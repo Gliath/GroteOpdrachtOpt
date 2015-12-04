@@ -60,6 +60,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Optimizers\2-5opt.cs" />
+    <Compile Include="Optimizers\2opt.cs" />
+    <Compile Include="Optimizers\3opt.cs" />
+    <Compile Include="ScoreCalculator\RouteScore.cs" />
+    <Compile Include="StartSolution\StartSolution.cs" />
     <Compile Include="Utilities\DistanceMatrixItem.cs" />
     <Compile Include="Utilities\Distances.cs" />
     <Compile Include="Utilities\OrderFrequencyEnum.cs" />
