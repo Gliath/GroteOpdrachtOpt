@@ -49,12 +49,26 @@ namespace GOO.Utilities
 
                 int OrderNumber = int.Parse(variables[0].Trim());
                 string Place = variables[1].Trim();
-                OrderFrequency Frequency = OrderFrequency.PWK1;
-                switch (variables[2])
+                OrderFrequency Frequency;
+                switch (variables[2].Trim())
                 {
-                    case "":
+                    case "1PWK":
+                        Frequency = OrderFrequency.PWK1;
                         break;
-                    default: 
+                    case "2PWK":
+                        Frequency = OrderFrequency.PWK2;
+                        break;
+                    case "3PWK":
+                        Frequency = OrderFrequency.PWK3;
+                        break;
+                    case "4PWK":
+                        Frequency = OrderFrequency.PWK4;
+                        break;
+                    case "5PWK":
+                        Frequency = OrderFrequency.PWK5;
+                        break;
+                    default:
+                        Frequency = OrderFrequency.PWK1;
                         break;
                 }
 

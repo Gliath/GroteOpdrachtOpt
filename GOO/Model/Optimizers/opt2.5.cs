@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GOO.Optimizers
+namespace GOO.Model.Optimizers
 {
     public class opt2_5
     {

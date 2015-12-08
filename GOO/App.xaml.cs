@@ -30,6 +30,7 @@ namespace GOO
             Console.WriteLine("Program booting up...");
 
             FilesInitializer.InitializeFiles();
+            Console.WriteLine("Files have been processed");
 
             new MainView() { DataContext = new MainViewModel() }.Show();
         }
