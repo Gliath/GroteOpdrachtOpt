@@ -13,6 +13,7 @@ namespace GOO.Utilities
         private List<int> MatrixItemsTo;
         private List<int> MatrixItemsFrom;
         private List<DistanceMatrixItem> MatrixItemsInfo;
+        private List<int> MatrixItemsToRemove;
 
         public Distances()
         {
@@ -54,6 +55,38 @@ namespace GOO.Utilities
             MatrixItemsFrom = null;
             MatrixItemsTo = null;
             MatrixItemsInfo = null;
+        }
+
+        public void QueueRemoveItem(int MatrixID)
+        {
+            if (MatrixItemsToRemove == null)
+                MatrixItemsToRemove = new List<int>();
+
+            MatrixItemsToRemove.Add(MatrixID);
+        }
+
+        public void RemoveQueuedItems()
+        {
+            if (MatrixItemsToRemove == null)
+                return;
+
+            if (MatrixItemsToRemove.Count == 0)
+            {
+                MatrixItemsToRemove = null; // Disposes it?
+                return;
+            }
+
+            // There are items to remove
+            for (int i = 0; i < Matrix.GetLength(0); i++)
+            {
+                Boolean RemoveRow = false;
+                if (MatrixItemsToRemove.Contains(i)) // If MatrixIDFrom is the ID that needs to be removed ....
+                    RemoveRow = true;
+
+                for (int j = 0; j < Matrix.GetLength(1); j++)
+                    if (RemoveRow || MatrixItemsToRemove.Contains(j)) // Or if MatrixIDTo is the ID that needs to be removed ...
+                        Matrix[i, j] = null; // Dispose the informatiion of the specified location
+            }
         }
     }
 }

@@ -17,11 +17,13 @@ namespace GOO.Utilities
             Task OrdersInitializer = Task.Factory.StartNew(() => InitializeOrders());
 
             Task.WaitAll(DistanceInitializer, OrdersInitializer);
+
+            CleanUpDistanceMatrix();
         }
 
         private static void InitializeDistanceMatrix()
         {
-            string[] lines = DistanceMatrix.Split(new string[] {"\r\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = DistanceMatrix.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             _DistanceMatrix = new Distances();
 
             for (int i = 1; i < lines.Length; i++) // Skip the first line
@@ -44,7 +46,7 @@ namespace GOO.Utilities
             _Orders = new Order[lines.Length];
 
             for (int i = 1; i < lines.Length; i++) // Skip the first line
-			{
+            {
                 string[] variables = lines[i].Split(';');
 
                 int OrderNumber = int.Parse(variables[0].Trim());
@@ -82,6 +84,29 @@ namespace GOO.Utilities
 
                 _Orders[i] = new Order(OrderNumber, Place, Frequency, NumberOfContainers, VolumePerContainer, EmptyingTimeInMinutes, MatrixID, X, Y);
             }
+        }
+
+        private static void CleanUpDistanceMatrix()
+        {
+            for (int i = 0; i < _DistanceMatrix.Matrix.GetLength(0); i++)
+            {
+                Boolean MatrixHasAOrders = false;
+                for (int j = 1; j < _Orders.Length; j++) // First order is empty
+                {
+                    if (_Orders[j].MatrixID == i) // Found a order with the matrix
+                    {
+                        MatrixHasAOrders = true;
+                        break;
+                    }
+                }
+                if (MatrixHasAOrders)
+                    continue;
+
+                // Matrix has no orders, remove it
+                _DistanceMatrix.QueueRemoveItem(i);
+            }
+
+            _DistanceMatrix.RemoveQueuedItems();
         }
     }
 }
