@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GOO.Model;
+
+using System;
 using System.Threading.Tasks;
 
 namespace GOO.Utilities
@@ -18,7 +20,7 @@ namespace GOO.Utilities
 
             Task.WaitAll(DistanceInitializer, OrdersInitializer);
 
-            CleanUpDistanceMatrix();
+            CleanUpDistanceMatrix(); // Seems not to be necessary... (see commit note when method was commited)
         }
 
         private static void InitializeDistanceMatrix()

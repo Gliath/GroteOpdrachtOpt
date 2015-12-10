@@ -60,17 +60,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\Day.cs" />
     <Compile Include="Model\Optimizers\opt2.5.cs" />
     <Compile Include="Model\Optimizers\opt2.cs" />
     <Compile Include="Model\Optimizers\opt3.cs" />
+    <Compile Include="Model\Route.cs" />
     <Compile Include="Model\RouteScore.cs" />
+    <Compile Include="Model\Solution.cs" />
     <Compile Include="Model\StartSolution.cs" />
     <Compile Include="Utilities\DistanceMatrixItem.cs" />
     <Compile Include="Utilities\Distances.cs" />
     <Compile Include="Utilities\OrderFrequencyEnum.cs" />
     <Compile Include="Utilities\FilesInitializer.cs" />
     <Compile Include="Utilities\INPC.cs" />
-    <Compile Include="Utilities\Order.cs" />
+    <Compile Include="Model\Order.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>

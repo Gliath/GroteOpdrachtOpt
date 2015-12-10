@@ -10,9 +10,9 @@ namespace GOO.Model
         /// </summary>
         /// <returns>The solution according to the format</returns>
         /// <Solution Format>
-        ///     day;truck;sequence number;node;
+        ///     day;truck;sequence number;order;
         ///     Example:
-        ///     1;1;1;114;  // go to node 114
+        ///     1;1;1;114;  // go to node of order 114
         ///     1;1;2;287;  // always go back to depot node at the end of the day
         /// </Solution Format>
         public List<string> Solution { get; private set; }
