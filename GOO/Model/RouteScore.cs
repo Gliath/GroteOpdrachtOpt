@@ -10,6 +10,7 @@ namespace GOO.Model
     {
         public static double CalculateScore(string[] solution)
         {
+            /*
             // Day;Truck;Sequence number;Order;
             double travelTime = 0.0;
             double penaltyTime = 0.0;
@@ -56,7 +57,7 @@ namespace GOO.Model
                 else if (numberOfOccurences > orderFrequency) // Error time
                     Console.WriteLine("Something went wrong. The algorithm did the order to many times. {0} times instead of {1} times", numberOfOccurences, orderFrequency);
             }
-
+            */
 
 
             /*
