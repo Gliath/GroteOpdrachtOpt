@@ -66,6 +66,7 @@
     <Compile Include="Model\Optimizers\Opt3.cs" />
     <Compile Include="Model\Order.cs" />
     <Compile Include="Model\Route.cs" />
+    <Compile Include="Model\RouteGenerator.cs" />
     <Compile Include="Model\RouteScore.cs" />
     <Compile Include="Model\Solution.cs" />
     <Compile Include="Model\StartSolution.cs" />
