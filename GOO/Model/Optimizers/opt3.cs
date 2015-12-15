@@ -2,7 +2,7 @@
 
 namespace GOO.Model.Optimizers
 {
-    public class opt3
+    public class Opt3
     {
         
     }
