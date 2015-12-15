@@ -55,13 +55,13 @@ namespace GOO.Model
         /// This function will add a new order afther the specified order in the orderlist.
         /// </summary>
         /// <param name="ordnew"> The new Order to be added </param>
-        /// <param name="aftherord"> The Order the new it will be placed after </param>
-        public void AddOrder(Order ordnew, Order aftherord)
+        /// <param name="afterord"> The Order the new it will be placed after </param>
+        public void AddOrder(Order ordnew, Order afterord)
         {
-            int midA = aftherord.MatrixID; //the coord this order will be placed afhter
+            int midA = afterord.MatrixID; //the coord this order will be placed afhter
             int midB = ordnew.MatrixID; // new added coordinate
             int midC = 287; // the dropping coordinate
-            if (Orders.FindIndex(o => o.OrderNumber == aftherord.OrderNumber) == Orders.Count-1) //if order is added on the end of the list
+            if (Orders.FindIndex(o => o.OrderNumber == afterord.OrderNumber) == Orders.Count-1) //if order is added on the end of the list
             {
                 traveltime -= FilesInitializer._DistanceMatrix.Matrix[midA, midC].TravelTime; //remove travel time to end if was last item on list
                 traveltime += FilesInitializer._DistanceMatrix.Matrix[midB, midC].TravelTime; //adds the new travel time to base from the added node
@@ -69,7 +69,7 @@ namespace GOO.Model
             }
             else
             {
-                int Ordernext = Orders.FindIndex(o => o.OrderNumber == aftherord.OrderNumber)+1; //gets the orderid in the orderlist
+                int Ordernext = Orders.FindIndex(o => o.OrderNumber == afterord.OrderNumber)+1; //gets the orderid in the orderlist
                 midC = Orders[Ordernext].MatrixID; // gets the matric id of the obtained orderid
                 traveltime -= FilesInitializer._DistanceMatrix.Matrix[midA, midC].TravelTime; //remove travel time to next node from previous node
                 traveltime += FilesInitializer._DistanceMatrix.Matrix[midA, midB].TravelTime; //adds the new travel time from previous to the new node
