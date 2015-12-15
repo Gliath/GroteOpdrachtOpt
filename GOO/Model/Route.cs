@@ -15,13 +15,33 @@ namespace GOO.Model
         public double traveltime { get; set; } // the total travel time
         public int weight { get; set; } //the filled weight of the route
 
+        /// <summary>
+        /// This function removes the specified order from the order list and updates the traveltime and weight
+        /// </summary>
+        /// <param name="ord"> Removes the given order from the list </param>
         public void RemoveOrder(Order ord)
         {
+            int prevO = 287; //node before the removed node
+            int currO = ord.MatrixID; // the removed node
+            int nextO = 287; //node after the removed node
+
             int indexnr = Orders.FindIndex(o => o.OrderNumber == ord.OrderNumber);
-            if (indexnr > 0)
+
+            if (indexnr > 0) //if the removed node is not the first node
             {
-                //TODO: Make remove order code!!!
+                prevO = Orders[indexnr - 1].MatrixID;
             }
+            if (indexnr < Orders.Count-1) //if the removed node is not the last node
+            {
+                nextO = Orders[indexnr + 1].MatrixID;
+            }
+
+            //update travel time
+            traveltime -= FilesInitializer._DistanceMatrix.Matrix[prevO, currO].TravelTime;
+            traveltime -= FilesInitializer._DistanceMatrix.Matrix[currO, nextO].TravelTime;
+            traveltime += FilesInitializer._DistanceMatrix.Matrix[prevO, nextO].TravelTime;
+            weight -= ord.VolumePerContainer * ord.NumberOfContainers; //adds the weight of this order
+            Orders.Remove(ord);
         }
 
         /// <summary>
