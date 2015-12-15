@@ -10,13 +10,12 @@ namespace GOO.Model
     {
         public static double CalculateScore(string[] solution)
         {
-            /*
             // Day;Truck;Sequence number;Order;
+            int locationWasteDisposal = 287;
+
             double travelTime = 0.0;
-            double penaltyTime = 0.0;
+            double declinePenalty = 0.0;
             // FilesInitializer._Orders for the list of orders
-            Solution solutionToCheck = new Solution(solution);
-            
 
             // Check for frequency
             foreach (Order order in FilesInitializer._Orders)
@@ -24,40 +23,10 @@ namespace GOO.Model
                 int numberOfOccurences = 0;
                 for (int i = 0; i < solution.Length; i++)
                 {
-                    string[] info = solution[i].Split(';');
 
-                    solutionToCheck.AddItem(info);
                 }
-
-                int orderFrequency;
-                switch (order.Frequency)
-	            {
-		            case OrderFrequency.PWK1:
-                        orderFrequency = 1;
-                        break;
-                    case OrderFrequency.PWK2:
-                        orderFrequency = 2;
-                     break;
-                    case OrderFrequency.PWK3:
-                        orderFrequency = 3;
-                     break;
-                    case OrderFrequency.PWK4:
-                        orderFrequency = 4;
-                     break;
-                    case OrderFrequency.PWK5:
-                        orderFrequency = 5;
-                     break;
-                    default:
-                        orderFrequency = 0;
-                     break;
-	            }
-
-                if(numberOfOccurences < orderFrequency) // Penalty time...
-                    penaltyTime += orderFrequency * order.EmptyingTimeInMinutes * orderFrequency;
-                else if (numberOfOccurences > orderFrequency) // Error time
-                    Console.WriteLine("Something went wrong. The algorithm did the order to many times. {0} times instead of {1} times", numberOfOccurences, orderFrequency);
             }
-            */
+
 
 
             /*
@@ -157,7 +126,7 @@ namespace GOO.Model
             }
             */
 
-            return travelTime + penaltyTime;
+            return travelTime + declinePenalty;
         }
     }
 }
