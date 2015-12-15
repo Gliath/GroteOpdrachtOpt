@@ -15,6 +15,11 @@ namespace GOO.Model
             days = new Day[NUMBER_OF_DAYS];
         }
 
+        public double GetSolutionScore()
+        {
+            return 0;
+        }
+
         // To do optimize method, by storing it in a variable and know when it has been changed (and where)
         public override string ToString()
         {
