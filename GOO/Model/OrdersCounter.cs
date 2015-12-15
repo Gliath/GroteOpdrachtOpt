@@ -14,21 +14,38 @@ namespace GOO.Model
         {
             BasicEmptyCounterList = new List<OrderCounter>();
             foreach (Order order in FilesInitializer._Orders)
-            {
                 BasicEmptyCounterList.Add(new OrderCounter(order.OrderNumber, order.FrequencyNumber));
-            }
         }
 
-        private List<OrderCounter> counterList;
+        public List<OrderCounter> CounterList { get; set; }
 
         public OrdersCounter()
         {
-            counterList = BasicEmpty<List<OrderCounter>>.Copy(BasicEmptyCounterList);
+            CounterList = BasicEmpty<List<OrderCounter>>.CopyTo(BasicEmptyCounterList);
+        }
+
+        public void AddOccurrence(int OrderNumber)
+        {
+            foreach (OrderCounter order in CounterList)
+                if (order.OrderNumber == OrderNumber)
+                {
+                    order.OrderOccurrences++;
+                    break;
+                }
+        }
+
+        public Boolean IsCompleted()
+        {
+            foreach (OrderCounter order in CounterList)
+                if (!order.IsOrderCompleted())
+                    return false;
+
+            return true;
         }
 
         private static class BasicEmpty<T>
         {
-            public static T Copy(object objectToCopy)
+            public static T CopyTo(object objectToCopy)
             {
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
@@ -40,7 +57,7 @@ namespace GOO.Model
             }
         }
 
-        private class OrderCounter
+        public class OrderCounter
         {
             public int OrderNumber { get; private set; }
             public int OrderFrequency { get; private set; }
@@ -53,9 +70,14 @@ namespace GOO.Model
 
                 OrderOccurrences = 0;
             }
-            
+
             public Boolean IsOrderCompleted()
             {
+#if DEBUG // Debug, test if order occurrs to many times
+                if (OrderOccurrences > OrderFrequency)
+                    Console.WriteLine("Order {0} has occurred to many times, {1}/{3} times", OrderNumber, OrderOccurrences, OrderFrequency);
+#endif
+
                 return OrderFrequency == OrderOccurrences;
             }
         }
