@@ -15,6 +15,21 @@ namespace GOO.Model
         public double traveltime { get; set; } // the total travel time
         public int weight { get; set; } //the filled weight of the route
 
+
+        public void CreateRouteList(int maxWeight, double maxTravelTime, int maxSteps)
+        {
+            int steps = 0;
+            while(weight < maxWeight && traveltime < maxTravelTime && maxSteps > steps) //nog een max step count
+            {
+                //add nodes
+                //get current node location
+                //select one of the nearest <?number> locations from the current node
+
+                steps++;
+            }
+        }
+
+
         /// <summary>
         /// This function removes the specified order from the order list and updates the traveltime and weight
         /// </summary>
