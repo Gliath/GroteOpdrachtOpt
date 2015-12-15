@@ -64,6 +64,7 @@
     <Compile Include="Model\Optimizers\opt2.5.cs" />
     <Compile Include="Model\Optimizers\opt2.cs" />
     <Compile Include="Model\Optimizers\opt3.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\AnnealingSchedule.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\SimulatedAnnealingOptimizer.cs" />
     <Compile Include="Model\OrdersCounter.cs" />
     <Compile Include="Model\Route.cs" />
