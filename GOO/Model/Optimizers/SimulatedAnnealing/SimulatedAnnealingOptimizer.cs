@@ -9,9 +9,11 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
     public class SimulatedAnnealingOptimizer
     {
         private AnnealingSchedule annealingSchedule;
+        private Random random;
 
         public SimulatedAnnealingOptimizer() {
             annealingSchedule = new AnnealingSchedule();
+            random = new Random();
         }
 
         // Annealing schedule 
@@ -27,7 +29,14 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
                 {
                     currentSolution = newSolution;
                 }
-
+                else if (random.NextDouble() <= annealingSchedule.AnnealingTemperature)
+                {
+                    currentSolution = newSolution;
+                }
+                else
+                {
+                    // No new solution accepted.
+                }
             }
                 // For all iterations until annealing temperature is 0
 

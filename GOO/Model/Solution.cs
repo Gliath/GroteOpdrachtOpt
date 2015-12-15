@@ -9,6 +9,7 @@ namespace GOO.Model
         private static readonly int NUMBER_OF_DAYS = 5;
 
         private Day[] days;
+        private OrdersCounter ordersCounter;
 
         public Solution()
         {
@@ -17,7 +18,10 @@ namespace GOO.Model
 
         public double GetSolutionScore()
         {
-            return 0;
+            double travelTime = 0.0;
+            double penaltyTime = 0.0;
+
+            return travelTime + penaltyTime;
         }
 
         // To do optimize method, by storing it in a variable and know when it has been changed (and where)
