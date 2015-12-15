@@ -16,6 +16,28 @@ namespace GOO.Model
         public int X { get; private set; }
         public int Y { get; private set; }
 
+        public int FrequencyNumber
+        {
+            get
+            {
+                switch (Frequency)
+                {
+                    case OrderFrequency.PWK1:
+                        return 1;
+                    case OrderFrequency.PWK2:
+                        return 2;
+                    case OrderFrequency.PWK3:
+                        return 3;
+                    case OrderFrequency.PWK4:
+                        return 4;
+                    case OrderFrequency.PWK5:
+                        return 5;
+                }
+
+                return 0;
+            }
+        }
+
         public Order(int OrderNumber, String Place, OrderFrequency Frequency, int NumberOfContainers, int VolumePerContainer, float EmptyingTimeInMinutes, int MatrixID, int X, int Y)
         {
             this.OrderNumber = OrderNumber;
@@ -26,7 +48,7 @@ namespace GOO.Model
             this.EmptyingTimeInMinutes = EmptyingTimeInMinutes;
             this.MatrixID = MatrixID;
             this.X = X;
-            this.Y = Y; 
+            this.Y = Y;
         }
     }
 }
