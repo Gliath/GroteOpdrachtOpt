@@ -24,6 +24,10 @@ namespace GOO.Model
             }
         }
 
+        /// <summary>
+        /// This function will add an order at the end of the current Order list.
+        /// </summary>
+        /// <param name="ord">The order id to be added at the end of the list </param>
         public void AddOrder(Order ord)
         {
             int midA = 0; // the previous coordinate
@@ -47,6 +51,11 @@ namespace GOO.Model
             Orders.Add(ord); // adds the order to the order list
         }
 
+        /// <summary>
+        /// This function will add a new order afther the specified order in the orderlist.
+        /// </summary>
+        /// <param name="ordnew"> The new Order to be added </param>
+        /// <param name="aftherord"> The Order the new it will be placed after </param>
         public void AddOrder(Order ordnew, Order aftherord)
         {
             int midA = aftherord.MatrixID; //the coord this order will be placed afhter
