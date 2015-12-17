@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace GOO.Model.Optimizers.SimulatedAnnealing
 {
-    public class RandomSwitchOrdersInRouteStrategy : Strategy
+    public class StrategyFactory
     {
-
-        public override Solution executeStrategy(Solution toStartFrom)
+        public static Strategy[] getAllStrategies()
         {
-           
-            return base.executeStrategy(toStartFrom);
+            return new Strategy[] {new RandomSwitchOrdersInRouteStrategy()};
         }
     }
 }

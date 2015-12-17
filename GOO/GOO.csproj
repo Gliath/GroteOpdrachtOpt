@@ -68,6 +68,7 @@
     <Compile Include="Model\Optimizers\SimulatedAnnealing\RandomSwitchOrdersInRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\SimulatedAnnealingOptimizer.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategy.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\StrategyFactory.cs" />
     <Compile Include="Model\OrdersCounter.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="Model\RouteScore.cs" />
