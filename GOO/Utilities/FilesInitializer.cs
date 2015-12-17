@@ -79,12 +79,12 @@ namespace GOO.Utilities
 
                 int NumberOfContainers = int.Parse(variables[3].Trim());
                 int VolumePerContainer = int.Parse(variables[4].Trim());
-                float EmptyingTimeInMinutes = float.Parse(variables[0].Trim());
+                float EmptyingTimeInSeconds = float.Parse(variables[5].Trim())*60f;
                 int MatrixID = int.Parse(variables[6].Trim());
                 int X = int.Parse(variables[7].Trim());
                 int Y = int.Parse(variables[8].Trim());
 
-                _Orders[i] = new Order(OrderNumber, Place, Frequency, NumberOfContainers, VolumePerContainer, EmptyingTimeInMinutes, MatrixID, X, Y);
+                _Orders[i] = new Order(OrderNumber, Place, Frequency, NumberOfContainers, VolumePerContainer, EmptyingTimeInSeconds, MatrixID, X, Y);
             }
         }
 
