@@ -12,14 +12,14 @@ namespace GOO.Model
         // add variable to indicate for which day this route is meant for
 
         public List<Order> Orders { get; set; } // List of orders for this route
-        public float traveltime { get; set; } // the total travel time
+        public double traveltime { get; set; } // the total travel time
         public int weight { get; set; } //the filled weight of the route
         static Random rnd = new Random();
 
         public Route()
         {
             Orders = new List<Order>();
-            traveltime = 0f;
+            traveltime = 0f+30f*60f;
             //nothing to do here init
         }
 
@@ -53,33 +53,47 @@ namespace GOO.Model
             List<Order> OrderArray = new List<Order>(FilesInitializer._Orders);
             while (weight < maxWeight && traveltime < maxTravelTime && maxSteps > steps) //nog een max step count
             {
-                int r = rnd.Next(1,OrderArray.Count); //-1????
-                    matrixB = OrderArray[r].MatrixID;
-                    if (Orders.Contains(OrderArray[r]) == false) //check if order is already in the order list
+                int r = rnd.Next(1, OrderArray.Count); //-1????
+                int bestOrder = OrderArray[r].MatrixID;
+                //make 5 points and get the nearest one
+                for (int i = 0; i < 10; i++)
+                {
+                    int r2 = rnd.Next(1, OrderArray.Count);
+                    int travel1 = FilesInitializer._DistanceMatrix.Matrix[matrixA, OrderArray[r].MatrixID].TravelTime;
+                    int travel2 = FilesInitializer._DistanceMatrix.Matrix[matrixA, OrderArray[r2].MatrixID].TravelTime;
+                    if(travel2 < travel1)
                     {
-                        //check if the weight and travel time does not exceed thier max values
-                        if (weight + (OrderArray[r].NumberOfContainers * OrderArray[r].VolumePerContainer) <= maxWeight &&
-                            traveltime + 
-                            FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime +
-                            FilesInitializer._DistanceMatrix.Matrix[matrixB, depositPoint].TravelTime - 
-                            FilesInitializer._DistanceMatrix.Matrix[matrixA, depositPoint].TravelTime +
-                            OrderArray[r].EmptyingTimeInSeconds <= 
-                            maxTravelTime-(30 * 60))
-                        {
-                            //add the order to the orderlist and update the matrix check value for the next run
-                            Console.WriteLine(OrderArray[r].OrderNumber + "  Current travel time :" + traveltime + " Added route time: "+FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime+"/"+OrderArray[r].EmptyingTimeInSeconds);
-                            matrixA = OrderArray[r].MatrixID;
-                            AddOrder(OrderArray[r]);
-                            
-                        }
-                        else
-                        {
-                            steps += 10;
-                        }
+                        bestOrder = OrderArray[r2].MatrixID;
+                        r = r2;
                     }
+                }
+                matrixB = bestOrder;
+
+                if (Orders.Contains(OrderArray[r]) == false) //check if order is already in the order list
+                {
+                    //check if the weight and travel time does not exceed thier max values
+                    if (weight + (OrderArray[r].NumberOfContainers * OrderArray[r].VolumePerContainer) <= maxWeight &&
+                        traveltime + 
+                        FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime +
+                        FilesInitializer._DistanceMatrix.Matrix[matrixB, depositPoint].TravelTime - 
+                        FilesInitializer._DistanceMatrix.Matrix[matrixA, depositPoint].TravelTime +
+                        OrderArray[r].EmptyingTimeInSeconds <= 
+                        maxTravelTime)
+                    {
+                        //add the order to the orderlist and update the matrix check value for the next run
+                        Console.WriteLine(OrderArray[r].OrderNumber + "  Current travel time :" + traveltime + " Added route time: "+FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime+"/"+OrderArray[r].EmptyingTimeInSeconds);
+                        matrixA = OrderArray[r].MatrixID;
+                        AddOrder(OrderArray[r]);
+                            
+                    }
+                    else
+                    {
+                        steps += 10;
+                    }
+                }
                 steps++;
             }
-            Console.WriteLine("DONE Creating Route: Truck weight["+weight+"/"+maxWeight+"] traveltime["+traveltime+"/"+(maxTravelTime-(30 * 60)) + "] steps["+steps+"/"+maxSteps+"].");
+            Console.WriteLine("DONE Creating Route: Truck weight["+weight+"/"+maxWeight+"] traveltime["+traveltime+"/"+maxTravelTime+ "] steps["+steps+"/"+maxSteps+"].");
             printRouteToFile();
         }
 
