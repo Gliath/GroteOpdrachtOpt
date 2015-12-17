@@ -16,6 +16,9 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
 
         }
 
-        public virtual Solution executeStrategy(Solution toStartFrom);
+        public virtual Solution executeStrategy(Solution toStartFrom)
+        {
+            return null;
+        }
     }
 }

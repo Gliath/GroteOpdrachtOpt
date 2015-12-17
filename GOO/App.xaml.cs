@@ -5,6 +5,7 @@ using System.Windows;
 using GOO.View;
 using GOO.ViewModel;
 using GOO.Utilities;
+using GOO.Model;
 
 namespace GOO
 {
@@ -31,6 +32,8 @@ namespace GOO
 
             FilesInitializer.InitializeFiles();
             Console.WriteLine("Files have been processed");
+            Route route = new Route();
+            route.CreateRouteList(100000, 43200f, 200);
 
             new MainView() { DataContext = new MainViewModel() }.Show();
         }
