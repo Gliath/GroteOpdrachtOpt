@@ -55,6 +55,11 @@ namespace GOO.Model
         {
             return days;
         }
+
+        public void SetRoutes(Day[] newDayArray)
+        {
+            this.days = newDayArray;
+        }
         
         public OrdersCounter GetOrdersCounter()
         {
@@ -86,6 +91,11 @@ namespace GOO.Model
             }
 
             return sb.ToString();
+        }
+
+        public Solution GetShallowCopy()
+        {
+            return (Solution) this.MemberwiseClone();
         }
     }
 }

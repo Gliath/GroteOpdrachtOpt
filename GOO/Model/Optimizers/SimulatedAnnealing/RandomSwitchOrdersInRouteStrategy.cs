@@ -11,12 +11,15 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            Day[] days = toStartFrom.GetRoutes();
+            Solution toReturn = toStartFrom.GetShallowCopy();
+
+            Day[] days = toReturn.GetRoutes();
             int day = random.Next(days.Length);
             Day randomDay = days[day];
-            List<Route> randomRoutes = DeepCopy<List<Route>>.CopyFrom(randomDay.GetRoutes(random.Next(Day.NUMBER_OF_TRUCKS)));
-            int route = random.Next(randomRoutes.Count);
-            Route randomRoute = randomRoutes[route];
+            int randomTruck = random.Next(Day.NUMBER_OF_TRUCKS);
+            List<Route> randomRoutes = DeepCopy<List<Route>>.CopyFrom(randomDay.GetRoutes(randomTruck));
+            int routeNumber = random.Next(randomRoutes.Count);
+            Route randomRoute = randomRoutes[routeNumber];
 
             List<Order> orders = DeepCopy<List<Order>>.CopyFrom(randomRoute.Orders);
             int ordersLength = orders.Count;
@@ -31,7 +34,23 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
             orders[orderIndex1] = orders[orderIndex2];
             orders[orderIndex2] = toSwitch;
 
-            return base.executeStrategy(toStartFrom);
+            randomRoutes[routeNumber] = randomRoute;
+
+            Day copyOfDay = new Day();
+            copyOfDay.SetRoutes(randomTruck, randomRoutes);
+            int otherTruckNumber = otherTruck(randomTruck);
+            copyOfDay.SetRoutes(otherTruckNumber, randomDay.GetRoutes(otherTruckNumber));
+
+            days[day] = copyOfDay;
+
+            return toReturn;
+        }
+
+        private int otherTruck(int truckNumber)
+        {
+            if (truckNumber > 1)
+                return 0;
+            return 1;
         }
     }
 }
