@@ -48,6 +48,11 @@ namespace GOO.Model
                 }
             } // penaltyTime has been calculated
 
+            for (int i = 0; i < days.Length; i++)
+                for (int j = 0; j < Day.NUMBER_OF_TRUCKS; j++)
+                    for (int k = 0; k < days[i].GetRoutes(j).Count; k++)
+                        travelTime += days[i].GetRoutes(j)[k].traveltime;
+
             return travelTime + penaltyTime;
         }
 
