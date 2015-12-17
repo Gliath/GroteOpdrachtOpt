@@ -51,6 +51,16 @@ namespace GOO.Model
             return travelTime + penaltyTime;
         }
 
+        public Day[] GetRoutes()
+        {
+            return days;
+        }
+        
+        public OrdersCounter GetOrdersCounter()
+        {
+            return ordersCounter;
+        }
+
         // To do optimize method, by storing it in a variable and know when it has been changed (and where)
         public override string ToString()
         {
