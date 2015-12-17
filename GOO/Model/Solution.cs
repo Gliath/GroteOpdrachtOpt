@@ -27,6 +27,7 @@ namespace GOO.Model
             #if DEBUG
             Console.WriteLine("Solution contains every order: {0}", ordersCounter.IsCompleted());
             #endif
+
             List<int> uncompleteOrders = new List<int>();
             for (int i = 0; i < ordersCounter.CounterList.Count; i++)
             {
