@@ -43,21 +43,21 @@ namespace GOO.Model
         {
             get
             {
-                if(_penaltyTime == null || _penaltyTime == 0.0)
-                    _penaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInSeconds) * Convert.ToDouble(FrequencyNumber); // 2x FrequencyNumber? Zegt Checker.jar source code
+                if(_penaltyTime == 0.0d)
+                    _penaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInSeconds) * 3.0d;
 
                 return _penaltyTime;
             }
         }
 
-        public Order(int OrderNumber, String Place, OrderFrequency Frequency, int NumberOfContainers, int VolumePerContainer, float EmptyingTimeInMinutes, int MatrixID, int X, int Y)
+        public Order(int OrderNumber, String Place, OrderFrequency Frequency, int NumberOfContainers, int VolumePerContainer, float EmptyingTimeInSeconds, int MatrixID, int X, int Y)
         {
             this.OrderNumber = OrderNumber;
             this.Place = Place;
             this.Frequency = Frequency;
             this.NumberOfContainers = NumberOfContainers;
             this.VolumePerContainer = VolumePerContainer;
-            this.EmptyingTimeInSeconds = EmptyingTimeInMinutes;
+            this.EmptyingTimeInSeconds = EmptyingTimeInSeconds;
             this.MatrixID = MatrixID;
             this.X = X;
             this.Y = Y;

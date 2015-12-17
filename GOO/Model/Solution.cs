@@ -21,12 +21,13 @@ namespace GOO.Model
 
         public double GetSolutionScore()
         {
-            double travelTime = 0.0;
-            double penaltyTime = 0.0;
+            double travelTime = 0.0d;
+            double penaltyTime = 0.0d;
 
             #if DEBUG
             Console.WriteLine("Solution contains every order: {0}", ordersCounter.IsCompleted());
             #endif
+
             List<int> uncompleteOrders = new List<int>();
             for (int i = 0; i < ordersCounter.CounterList.Count; i++)
             {
@@ -48,6 +49,16 @@ namespace GOO.Model
             } // penaltyTime has been calculated
 
             return travelTime + penaltyTime;
+        }
+
+        public Day[] GetRoutes()
+        {
+            return days;
+        }
+        
+        public OrdersCounter GetOrdersCounter()
+        {
+            return ordersCounter;
         }
 
         // To do optimize method, by storing it in a variable and know when it has been changed (and where)

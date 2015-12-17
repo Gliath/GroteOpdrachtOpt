@@ -21,7 +21,7 @@ namespace GOO.Model
 
         public OrdersCounter()
         {
-            CounterList = BasicEmpty<List<OrderCounter>>.CopyTo(BasicEmptyCounterList);
+            CounterList = DeepCopy<List<OrderCounter>>.CopyFrom(BasicEmptyCounterList);
         }
 
         public void AddOccurrence(int OrderNumber)
@@ -30,6 +30,28 @@ namespace GOO.Model
                 if (order.OrderNumber == OrderNumber)
                 {
                     order.OrderOccurrences++;
+
+                    #if DEBUG
+                    if (order.OrderOccurrences > order.OrderFrequency)
+                        Console.WriteLine("Order {0} has occurred to many times, {1}/{2} times", OrderNumber, order.OrderOccurrences, order.OrderFrequency);
+                    #endif
+
+                    break;
+                }
+        }
+
+        public void RemoveOccurrence(int OrderNumber)
+        {
+            foreach (OrderCounter order in CounterList)
+                if (order.OrderNumber == OrderNumber)
+                {
+                    order.OrderOccurrences--;
+
+                    #if DEBUG
+                    if (order.OrderOccurrences < 0)
+                        Console.WriteLine("Order {0} has occurred negative amount of times, {1} times", OrderNumber, order.OrderOccurrences);
+                    #endif
+
                     break;
                 }
         }
@@ -41,20 +63,6 @@ namespace GOO.Model
                     return false;
 
             return true;
-        }
-
-        private static class BasicEmpty<T>
-        {
-            public static T CopyTo(object objectToCopy)
-            {
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    BinaryFormatter binaryFormatter = new BinaryFormatter();
-                    binaryFormatter.Serialize(memoryStream, objectToCopy);
-                    memoryStream.Seek(0, SeekOrigin.Begin);
-                    return (T)binaryFormatter.Deserialize(memoryStream);
-                }
-            }
         }
 
         public class OrderCounter
@@ -73,10 +81,10 @@ namespace GOO.Model
 
             public Boolean IsOrderCompleted()
             {
-#if DEBUG // Debug, test if order occurrs to many times
+                #if DEBUG // Debug, test if order occurrs to many times
                 if (OrderOccurrences > OrderFrequency)
-                    Console.WriteLine("Order {0} has occurred to many times, {1}/{3} times", OrderNumber, OrderOccurrences, OrderFrequency);
-#endif
+                    Console.WriteLine("Order {0} has occurred to many times, {1}/{2} times", OrderNumber, OrderOccurrences, OrderFrequency);
+                #endif
 
                 return OrderFrequency == OrderOccurrences;
             }

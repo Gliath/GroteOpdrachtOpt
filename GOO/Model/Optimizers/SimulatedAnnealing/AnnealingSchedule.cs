@@ -1,19 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GOO.Model.Optimizers.SimulatedAnnealing
 {
     public class AnnealingSchedule
     {
+        public readonly double standardStartingTemperature = 1.0d;
+        public readonly double standardAnnealingTemperatureStep = 0.0000001d;
+        public readonly int standardMaxIterationsBeforeAnnealing = 100;
+
+        private readonly double AnnealingTemperatureStep;
+        private readonly int MaxIterationsBeforeAnnealing;
+
+        private int iterations;
+
         public AnnealingSchedule()
         {
             this.AnnealingTemperatureStep = standardAnnealingTemperatureStep;
             this.MaxIterationsBeforeAnnealing = standardMaxIterationsBeforeAnnealing;
 
-            this.temperature = standardStartingTemperature;
+            AnnealingTemperature = standardStartingTemperature;
             this.iterations = 0;
         }
 
@@ -22,35 +27,26 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
             this.AnnealingTemperatureStep = AnnealingTemperatureStep;
             this.MaxIterationsBeforeAnnealing = MaxIterationsBeforeAnnealing;
 
-            this.temperature = 0;
+            AnnealingTemperature = initialAnnealingTemperature;
             this.iterations = 0;
         }
 
-        public double AnnealingTemperature { 
-            get {return temperature;} 
-            set {temperature = value;} 
-        }
+        public double AnnealingTemperature { get; set; }
 
         public int AnnealingIterations
         {
-            get { return iterations; } 
-            
-            set{ 
-                int toWork = value;
-                iterations = toWork > MaxIterationsBeforeAnnealing ? 0 : toWork;
+            get { return iterations; }
+
+            set
+            {
+                if(value >= MaxIterationsBeforeAnnealing)
+                {
+                    iterations = 0;
+                    AnnealingTemperature -= AnnealingTemperatureStep;
+                }
+                else
+                    iterations = value;
             }
- 
         }
-
-        public readonly double standardStartingTemperature = 1.0d;
-        public readonly double standardAnnealingTemperatureStep = 0.0000001d;
-        public readonly int standardMaxIterationsBeforeAnnealing = 100;
-
-        private readonly double AnnealingTemperatureStep;
-        private readonly int MaxIterationsBeforeAnnealing;
-
-        private double temperature;
-        private int iterations;
-
     }
 }

@@ -65,12 +65,16 @@
     <Compile Include="Model\Optimizers\Opt2.cs" />
     <Compile Include="Model\Optimizers\Opt3.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\AnnealingSchedule.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\RandomSwitchOrdersInRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\SimulatedAnnealingOptimizer.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategy.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\StrategyFactory.cs" />
     <Compile Include="Model\OrdersCounter.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="Model\RouteScore.cs" />
     <Compile Include="Model\Solution.cs" />
     <Compile Include="Model\StartSolution.cs" />
+    <Compile Include="Utilities\DeepCopy.cs" />
     <Compile Include="Utilities\DistanceMatrixItem.cs" />
     <Compile Include="Utilities\Distances.cs" />
     <Compile Include="Utilities\OrderFrequencyEnum.cs" />
