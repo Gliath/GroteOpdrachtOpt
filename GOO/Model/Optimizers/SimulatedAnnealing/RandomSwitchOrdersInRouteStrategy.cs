@@ -17,7 +17,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
             int day = random.Next(days.Length);
             Day randomDay = days[day];
             int randomTruck = random.Next(Day.NUMBER_OF_TRUCKS);
-            List<Route> randomRoutes = DeepCopy<List<Route>>.CopyFrom(randomDay.GetRoutes(randomTruck));
+            List<Route> randomRoutes = DeepCopy<List<Route>>.CopyFrom(randomDay.GetRoutes(randomTruck)); // todo deepcopy the route, not the entire list (shallow copy it and then deepcopyswap (patent pending) the specified route)
             int routeNumber = random.Next(randomRoutes.Count);
             Route randomRoute = randomRoutes[routeNumber];
 

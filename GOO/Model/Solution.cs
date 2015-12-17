@@ -19,6 +19,25 @@ namespace GOO.Model
             ordersCounter = new OrdersCounter();
         }
 
+        private Solution(Solution toCopy)
+        {
+            this.ordersCounter = toCopy.GetOrdersCounter();
+            this.days = _SC_days(toCopy.days);
+        }
+
+        private Day[] _SC_days(Day[] toCopyFrom)
+        {
+            this.days = new Day[toCopyFrom.Length];
+            for(int i = 0; i < toCopyFrom.Length; i++){
+                this.days[i] = toCopyFrom[i].GetShallowCopy();
+            }
+            return this.days;
+        }
+        public Solution GetShallowCopy()
+        {
+            return new Solution(this);
+        }
+
         public double GetSolutionScore()
         {
             double travelTime = 0.0d;
@@ -96,11 +115,6 @@ namespace GOO.Model
             }
 
             return sb.ToString();
-        }
-
-        public Solution GetShallowCopy()
-        {
-            return (Solution) this.MemberwiseClone();
         }
     }
 }

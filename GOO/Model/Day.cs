@@ -10,9 +10,36 @@ namespace GOO.Model
 
         private List<Route>[] routesPerTruck;
 
+        private Day(Day toCopy)
+        {
+            _SC_routesPerTruck(toCopy.routesPerTruck);
+        }
+
         public Day()
         {
             routesPerTruck = new List<Route>[NUMBER_OF_TRUCKS];
+        }
+
+        public Day GetShallowCopy()
+        {
+            return new Day(this);
+        }
+
+        private List<Route>[] _SC_routesPerTruck(List<Route>[] toCopyFrom)
+        {
+            this.routesPerTruck = new List<Route>[toCopyFrom.Length - 1]; //ToDo: DOUBLE CHECK
+            for (int i = 0; i < routesPerTruck.Length; i++)
+            {
+                List<Route> l = routesPerTruck[i];
+                List<Route> toAdd = new List<Route>(l.Count);
+
+                for (int j = 0; j < l.Count; j++)
+                {
+                    toAdd[j] = l[j].GetShallowCopy();
+                }
+                routesPerTruck[i] = toAdd;
+            }
+            return routesPerTruck;
         }
 
         public void SetRoutes(int truckID, List<Route> routes)
