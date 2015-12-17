@@ -21,8 +21,8 @@ namespace GOO.Model
 
         public double GetSolutionScore()
         {
-            double travelTime = 0.0;
-            double penaltyTime = 0.0;
+            double travelTime = 0.0d;
+            double penaltyTime = 0.0d;
 
             #if DEBUG
             Console.WriteLine("Solution contains every order: {0}", ordersCounter.IsCompleted());

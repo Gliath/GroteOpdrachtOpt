@@ -11,7 +11,7 @@ namespace GOO.Model
         public OrderFrequency Frequency { get; private set; }
         public int NumberOfContainers { get; private set; }
         public int VolumePerContainer { get; private set; }
-        public float EmptyingTimeInMinutes { get; private set; }
+        public float EmptyingTimeInSeconds { get; private set; }
         public int MatrixID { get; private set; }
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -43,21 +43,21 @@ namespace GOO.Model
         {
             get
             {
-                if(_penaltyTime == null || _penaltyTime == 0.0)
-                    _penaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInMinutes) * Convert.ToDouble(FrequencyNumber); // 2x FrequencyNumber? Zegt Checker.jar source code
+                if(_penaltyTime == 0.0d)
+                    _penaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInSeconds) * 3.0d;
 
                 return _penaltyTime;
             }
         }
 
-        public Order(int OrderNumber, String Place, OrderFrequency Frequency, int NumberOfContainers, int VolumePerContainer, float EmptyingTimeInMinutes, int MatrixID, int X, int Y)
+        public Order(int OrderNumber, String Place, OrderFrequency Frequency, int NumberOfContainers, int VolumePerContainer, float EmptyingTimeInSeconds, int MatrixID, int X, int Y)
         {
             this.OrderNumber = OrderNumber;
             this.Place = Place;
             this.Frequency = Frequency;
             this.NumberOfContainers = NumberOfContainers;
             this.VolumePerContainer = VolumePerContainer;
-            this.EmptyingTimeInMinutes = EmptyingTimeInMinutes;
+            this.EmptyingTimeInSeconds = EmptyingTimeInSeconds;
             this.MatrixID = MatrixID;
             this.X = X;
             this.Y = Y;

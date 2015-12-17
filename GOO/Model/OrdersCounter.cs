@@ -21,7 +21,7 @@ namespace GOO.Model
 
         public OrdersCounter()
         {
-            CounterList = BasicEmpty<List<OrderCounter>>.CopyFrom(BasicEmptyCounterList);
+            CounterList = DeepCopy<List<OrderCounter>>.CopyFrom(BasicEmptyCounterList);
         }
 
         public void AddOccurrence(int OrderNumber)
@@ -63,20 +63,6 @@ namespace GOO.Model
                     return false;
 
             return true;
-        }
-
-        private static class BasicEmpty<T>
-        {
-            public static T CopyFrom(object objectToCopy)
-            {
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    BinaryFormatter binaryFormatter = new BinaryFormatter();
-                    binaryFormatter.Serialize(memoryStream, objectToCopy);
-                    memoryStream.Seek(0, SeekOrigin.Begin);
-                    return (T)binaryFormatter.Deserialize(memoryStream);
-                }
-            }
         }
 
         public class OrderCounter

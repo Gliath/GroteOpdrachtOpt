@@ -71,6 +71,7 @@
     <Compile Include="Model\RouteScore.cs" />
     <Compile Include="Model\Solution.cs" />
     <Compile Include="Model\StartSolution.cs" />
+    <Compile Include="Utilities\DeepCopy.cs" />
     <Compile Include="Utilities\DistanceMatrixItem.cs" />
     <Compile Include="Utilities\Distances.cs" />
     <Compile Include="Utilities\OrderFrequencyEnum.cs" />
