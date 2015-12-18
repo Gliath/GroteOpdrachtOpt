@@ -11,28 +11,27 @@ namespace GOO.Model
     {
         // add variable to indicate for which day this route is meant for
 
-        private List<Order> Orders { get; set; } // List of orders for this route
-        private double traveltime { get; set; } // the total travel time
-        private int weight { get; set; } //the filled weight of the route
-        static Random random = new Random(); // TODO: <- a new random doesnt have to be made for every route
+        public List<Order> Orders { get; private set; } // List of orders for this route
+        public double traveltime { get; private set; } // the total travel time
+        public int weight { get; private set; } //the filled weight of the route
+        static Random random = new Random();
 
         private Route(Route toCopy)
         {
             this.traveltime = toCopy.traveltime;
             this.weight = toCopy.weight;
-            this._SC_Orders(toCopy.Orders);
+            this.Orders = SC_Orders(toCopy.Orders);
         }
 
         public Route()
         {
             Orders = new List<Order>();
-            traveltime = 0.0d + 30.0d * 60.0d;
-            //nothing to do here init
+            traveltime = 1800.0d;
         }
 
-        private void _SC_Orders(List<Order> listToCopy)
+        private List<Order> SC_Orders(List<Order> listToCopy)
         {
-            this.Orders = new List<Order>(listToCopy);
+            return new List<Order>(listToCopy);
         }
 
         public Route GetShallowCopy()

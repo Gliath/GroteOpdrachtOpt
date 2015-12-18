@@ -12,7 +12,7 @@ namespace GOO.Model
 
         private Day(Day toCopy)
         {
-            this.routesPerTruck = _SC_routesPerTruck(toCopy.routesPerTruck);
+            this.routesPerTruck = SC_routesPerTruck(toCopy.routesPerTruck);
         }
 
         public Day()
@@ -25,21 +25,22 @@ namespace GOO.Model
             return new Day(this);
         }
 
-        private List<Route>[] _SC_routesPerTruck(List<Route>[] toCopyFrom)
+        private List<Route>[] SC_routesPerTruck(List<Route>[] toCopyFrom)
         {
-            List<Route>[] toFill = new List<Route>[toCopyFrom.Length];
-            for (int i = 0; i < toFill.Length; i++)
-            {
-                List<Route> l = toFill[i];
-                List<Route> toAdd = new List<Route>(l.Count);
+            List<Route>[] anArrayOfListsToReturn = new List<Route>[toCopyFrom.Length];
 
-                for (int j = 0; j < l.Count; j++)
-                {
-                    toAdd[j] = l[j].GetShallowCopy();
-                }
-                toFill[i] = toAdd;
+            for (int i = 0; i < toCopyFrom.Length; i++)
+            {
+                List<Route> listToCopy = toCopyFrom[i];
+                List<Route> listToAdd = new List<Route>(listToCopy.Count);
+
+                for (int j = 0; j < listToCopy.Count; j++)
+                    listToAdd[j] = listToCopy[j].GetShallowCopy();
+
+                anArrayOfListsToReturn[i] = listToAdd;
             }
-            return toFill;
+
+            return anArrayOfListsToReturn;
         }
 
         public void SetRoutes(int truckID, List<Route> routes)

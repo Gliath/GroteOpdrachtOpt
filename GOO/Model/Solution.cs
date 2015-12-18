@@ -21,11 +21,11 @@ namespace GOO.Model
 
         private Solution(Solution toCopy)
         {
-            this.ordersCounter = toCopy.GetOrdersCounter();
-            this.days = _SC_days(toCopy.days);
+            this.ordersCounter = DeepCopy<OrdersCounter>.CopyFrom(toCopy.GetOrdersCounter());
+            this.days = SC_days(toCopy.days);
         }
 
-        private Day[] _SC_days(Day[] toCopyFrom)
+        private Day[] SC_days(Day[] toCopyFrom)
         {
             Day[] toFill = new Day[toCopyFrom.Length];
             for (int i = 0; i < toFill.Length; i++)

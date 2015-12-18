@@ -7,6 +7,7 @@ using GOO.Utilities;
 
 namespace GOO.Model
 {
+    [Serializable]
     public class OrdersCounter
     {
         private static readonly List<OrderCounter> BasicEmptyCounterList;
@@ -65,6 +66,7 @@ namespace GOO.Model
             return true;
         }
 
+        [Serializable]
         public class OrderCounter
         {
             public int OrderNumber { get; private set; }

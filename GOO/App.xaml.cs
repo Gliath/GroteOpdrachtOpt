@@ -37,9 +37,16 @@ namespace GOO
             Stopwatch sw = Stopwatch.StartNew();
             route.CreateRouteList(100000, 43200.0d, 200);
             sw.Stop();
-            Console.WriteLine("Elapsed time: {0}", sw.ElapsedMilliseconds);
+            Console.WriteLine("Elapsed time: {0}ms", sw.ElapsedMilliseconds);
 
             new MainView() { DataContext = new MainViewModel() }.Show();
         }
+
+        /* Santa's TODO list
+
+           - On the first day of christmas, santa gave this advice to me: Do not DeepCopy the entire OrdersCounter object in the solution class, only DeepCopy the OrderCounter items that need to be changed
+           - 
+           - 
+        */
     }
 }
