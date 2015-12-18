@@ -1,17 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GOO.Model.Optimizers.SimulatedAnnealing
 {
     public class SimulatedAnnealingOptimizer
     {
         private AnnealingSchedule annealingSchedule;
-        private object strategy;
+        private Strategy[] strategies;
         private Random random;
 
         public SimulatedAnnealingOptimizer()
         {
             annealingSchedule = new AnnealingSchedule();
-            strategy = new object();
+            strategies = StrategyFactory.GetAllStrategies();
             random = new Random();
         }
 
@@ -37,8 +38,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
 
         private Solution createNewSolution(Solution currentSolution)
         {
-            // TODO use strategy!
-            return currentSolution;
+            return strategies[random.Next(strategies.Length)].executeStrategy(currentSolution);
         }
 
         // For all iterations until annealing temperature is 0

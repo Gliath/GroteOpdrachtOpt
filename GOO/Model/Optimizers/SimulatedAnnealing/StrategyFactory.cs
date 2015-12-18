@@ -8,7 +8,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
 {
     public class StrategyFactory
     {
-        public static Strategy[] getAllStrategies()
+        public static Strategy[] GetAllStrategies()
         {
             return new Strategy[] {new RandomSwitchOrdersInRouteStrategy()};
         }
