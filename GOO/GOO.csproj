@@ -65,8 +65,15 @@
     <Compile Include="Model\Optimizers\Opt2.cs" />
     <Compile Include="Model\Optimizers\Opt3.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\AnnealingSchedule.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\RandomSwitchDayStrategy.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\GeneticDayStrategy.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\GeneticRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\GeneticSolutionStrategy.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\RandomRouteOpt3Strategy.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\RandomRouteOpt2Strategy.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\RandomSwitchOrdersInRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\SimulatedAnnealingOptimizer.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\RandomSwitchRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\Strategy.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\StrategyFactory.cs" />
     <Compile Include="Model\OrdersCounter.cs" />
