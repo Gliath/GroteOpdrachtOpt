@@ -27,6 +27,7 @@ namespace GOO.Model
         {
             Orders = new List<Order>();
             TravelTime = 1800.0d;
+            Orders.Add(FilesInitializer.GetOrder0());
         }
 
         private List<Order> SC_Orders(List<Order> listToCopy)
@@ -102,7 +103,7 @@ namespace GOO.Model
                 steps++;
             }
 
-            Orders.Add(FilesInitializer.GetOrder0());
+            //Orders.Add(FilesInitializer.GetOrder0());
             //Console.WriteLine("DONE Creating Route: Truck weight[" + Weight + "/" + maxWeight + "] traveltime[" + TravelTime + "/" + maxTravelTime + "] steps[" + steps + "/" + maxSteps + "].");
         }
 
@@ -121,7 +122,7 @@ namespace GOO.Model
             {
                 previousOrder = Orders[indexNumber - 1].MatrixID;
             }
-            if (indexNumber < Orders.Count - 1) //if the removed node is not the last node
+            if (indexNumber < Orders.Count - 2) //if the removed node is not the last node
             {
                 nextOrder = Orders[indexNumber + 1].MatrixID;
             }
@@ -145,13 +146,13 @@ namespace GOO.Model
             int matrixIDB = order.MatrixID; // new added coordinate
             int matrixIDC = 287; // the dropping coordinate
 
-            if (Orders.Count < 1)
+            if (Orders.Count < 2)
             {
                 matrixIDA = matrixIDC; // dropping coordinate 
             }
             else
             {
-                matrixIDA = Orders[Orders.Count - 1].MatrixID; // last coordinate
+                matrixIDA = Orders[Orders.Count - 2].MatrixID; // last coordinate
             }
 
             Weight += order.VolumePerContainer * order.NumberOfContainers; //adds the weight of this order
@@ -161,7 +162,8 @@ namespace GOO.Model
             TravelTime += FilesInitializer._DistanceMatrix.Matrix[matrixIDA, matrixIDB].TravelTime; //adds the travel time from last node to this node
             TravelTime += FilesInitializer._DistanceMatrix.Matrix[matrixIDB, matrixIDC].TravelTime; //adds the new travel time to base from the added node
 
-            Orders.Add(order); // adds the order to the order list
+            //Orders.Add(order); // adds the order to the order list
+            Orders.Insert(Orders.Count - 1, order);
         }
 
         /// <summary>
@@ -174,8 +176,8 @@ namespace GOO.Model
             int matrixIDA = afterOrder.MatrixID; //the coord this order will be placed afhter
             int matrixIDB = newOrder.MatrixID; // new added coordinate
             int matrixIDC = 287; // the dropping coordinate
-
-            if (Orders.FindIndex(o => o.OrderNumber == afterOrder.OrderNumber) == Orders.Count - 1) //if order is added on the end of the list
+            int Ordernext = Orders.Count - 2;
+            if (Orders.FindIndex(o => o.OrderNumber == afterOrder.OrderNumber) == Orders.Count - 2) //if order is added on the end of the list
             {
                 TravelTime -= FilesInitializer._DistanceMatrix.Matrix[matrixIDA, matrixIDC].TravelTime; //remove travel time to end if was last item on list
                 TravelTime += FilesInitializer._DistanceMatrix.Matrix[matrixIDB, matrixIDC].TravelTime; //adds the new travel time to base from the added node
@@ -184,7 +186,7 @@ namespace GOO.Model
             }
             else
             {
-                int Ordernext = Orders.FindIndex(o => o.OrderNumber == afterOrder.OrderNumber) + 1; //gets the orderid in the orderlist
+                Ordernext = Orders.FindIndex(o => o.OrderNumber == afterOrder.OrderNumber) + 1; //gets the orderid in the orderlist
                 matrixIDC = Orders[Ordernext].MatrixID; // gets the matric id of the obtained orderid
                 TravelTime -= FilesInitializer._DistanceMatrix.Matrix[matrixIDA, matrixIDC].TravelTime; //remove travel time to next node from previous node
                 TravelTime += FilesInitializer._DistanceMatrix.Matrix[matrixIDA, matrixIDB].TravelTime; //adds the new travel time from previous to the new node
@@ -193,7 +195,7 @@ namespace GOO.Model
             }
 
             Weight += newOrder.VolumePerContainer * newOrder.NumberOfContainers; //adds the weight of this order
-            Orders.Add(newOrder); // adds the order to the order list
+            Orders.Insert(Ordernext, newOrder); // adds the order to the order list
         }
     }
 }
