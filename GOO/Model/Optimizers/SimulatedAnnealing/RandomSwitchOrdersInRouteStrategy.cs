@@ -13,15 +13,11 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
         {
             Solution toReturn = toStartFrom.GetShallowCopy();
 
-            Day[] days = toReturn.GetRoutes();
-            int day = random.Next(days.Length);
-            Day randomDay = days[day];
-            int randomTruck = random.Next(Day.NUMBER_OF_TRUCKS);
-            List<Route> randomRoutes = DeepCopy<List<Route>>.CopyFrom(randomDay.GetRoutes(randomTruck)); // todo deepcopy the route, not the entire list (shallow copy it and then deepcopyswap (patent pending) the specified route)
-            int routeNumber = random.Next(randomRoutes.Count);
-            Route randomRoute = randomRoutes[routeNumber];
+            Day randomDay = toReturn.GetRoutes()[random.Next(toReturn.GetRoutes().Length)];
+            
+            List<Route> randomRoutes = randomDay.GetRoutes(random.Next(Day.NUMBER_OF_TRUCKS));
+            List<Order> orders = randomRoutes[random.Next(randomRoutes.Count)].Orders;
 
-            List<Order> orders = DeepCopy<List<Order>>.CopyFrom(randomRoute.Orders);
             int ordersLength = orders.Count;
             int orderIndex1 = random.Next(ordersLength);
             int orderIndex2 = -1;
@@ -33,16 +29,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
             Order toSwitch = orders[orderIndex1];
             orders[orderIndex1] = orders[orderIndex2];
             orders[orderIndex2] = toSwitch;
-
-            randomRoutes[routeNumber] = randomRoute;
-
-            Day copyOfDay = new Day();
-            copyOfDay.SetRoutes(randomTruck, randomRoutes);
-            int otherTruckNumber = otherTruck(randomTruck);
-            copyOfDay.SetRoutes(otherTruckNumber, randomDay.GetRoutes(otherTruckNumber));
-
-            days[day] = copyOfDay;
-
+            
             return toReturn;
         }
 
