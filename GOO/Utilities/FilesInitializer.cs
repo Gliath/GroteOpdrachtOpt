@@ -80,7 +80,7 @@ namespace GOO.Utilities
 
                 int NumberOfContainers = int.Parse(variables[3].Trim());
                 int VolumePerContainer = int.Parse(variables[4].Trim());
-                float EmptyingTimeInSeconds = float.Parse(variables[5].Trim(), CultureInfo.InvariantCulture) * 60f;
+                double EmptyingTimeInSeconds = double.Parse(variables[5].Trim(), CultureInfo.InvariantCulture) * 60.0d;
                 int MatrixID = int.Parse(variables[6].Trim());
                 int X = int.Parse(variables[7].Trim());
                 int Y = int.Parse(variables[8].Trim());

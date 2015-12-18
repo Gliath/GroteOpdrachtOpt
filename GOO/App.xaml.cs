@@ -35,9 +35,9 @@ namespace GOO
             Console.WriteLine("Files have been processed");
             Route route = new Route();
             Stopwatch sw = Stopwatch.StartNew();
-            route.CreateRouteList(100000, 43200f, 200);
+            route.CreateRouteList(100000, 43200.0d, 200);
             sw.Stop();
-            Console.WriteLine("WWWWWW"+sw.ElapsedMilliseconds);
+            Console.WriteLine("Elapsed time: {0}", sw.ElapsedMilliseconds);
 
             new MainView() { DataContext = new MainViewModel() }.Show();
         }

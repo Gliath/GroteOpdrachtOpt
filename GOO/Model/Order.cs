@@ -11,7 +11,7 @@ namespace GOO.Model
         public OrderFrequency Frequency { get; private set; }
         public int NumberOfContainers { get; private set; }
         public int VolumePerContainer { get; private set; }
-        public float EmptyingTimeInSeconds { get; private set; }
+        public double EmptyingTimeInSeconds { get; private set; }
         public int MatrixID { get; private set; }
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -50,7 +50,7 @@ namespace GOO.Model
             }
         }
 
-        public Order(int OrderNumber, String Place, OrderFrequency Frequency, int NumberOfContainers, int VolumePerContainer, float EmptyingTimeInSeconds, int MatrixID, int X, int Y)
+        public Order(int OrderNumber, String Place, OrderFrequency Frequency, int NumberOfContainers, int VolumePerContainer, double EmptyingTimeInSeconds, int MatrixID, int X, int Y)
         {
             this.OrderNumber = OrderNumber;
             this.Place = Place;
