@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using GOO.Utilities;
 
-namespace GOO.Model.Optimizers.SimulatedAnnealing
+namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 {
     public class RandomSwitchOrdersInRouteStrategy : Strategy
     {

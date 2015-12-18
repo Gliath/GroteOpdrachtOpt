@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using GOO.Model.Optimizers.SimulatedAnnealing.Strategies;
+
 namespace GOO.Model.Optimizers.SimulatedAnnealing
 {
     public class SimulatedAnnealingOptimizer

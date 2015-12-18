@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GOO.Model.Optimizers.SimulatedAnnealing
+namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 {
     public abstract class Strategy
     {

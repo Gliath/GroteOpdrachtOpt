@@ -75,6 +75,7 @@ namespace GOO
            - On the first day of Christmas, Santa gave this advice to me: Do not DeepCopy the entire OrdersCounter object in the solution class, only DeepCopy the OrderCounter items that need to be changed
            - On the second day of Christmas, Santa gave this advice to me: Optimize the ToString method in Solution class, by recycling
            - On the third day of Christmas, Santa gave this advice to me: Utilize the window by using a progressbar for Simulated Annealing
+           - On the fourth day of Christmas, Santa gave this advice to me: Make the following stategies: 
            - 
            - 
         */
