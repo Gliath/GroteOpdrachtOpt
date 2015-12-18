@@ -46,7 +46,7 @@ namespace GOO.Model
         /// <param name="maxWeight">The max weght for this route</param>
         /// <param name="maxTravelTime">The max travel time for this route</param>
         /// <param name="maxSteps">The max itterations for this route to create</param>
-        public void CreateRouteList(int maxWeight, double maxTravelTime, int maxSteps)
+        public void CreateRouteList(int maxWeight, double maxTravelTime, int maxSteps, OrdersCounter ordersCounter)
         {
             //stepper and matrix values for travel time checks
             int steps = 0;
@@ -92,8 +92,7 @@ namespace GOO.Model
                         //add the order to the orderlist and update the matrix check value for the next run
                         //Console.WriteLine(OrderArray[randomInt].OrderNumber + "  Current travel time :" + TravelTime + " Added route time: " + FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime + "/" + OrderArray[randomInt].EmptyingTimeInSeconds);
                         matrixA = OrderArray[randomInt].MatrixID;
-                        AddOrder(OrderArray[randomInt]);
-
+                        AddOrder(OrderArray[randomInt], ordersCounter);
                     }
                     else
                     {
@@ -111,7 +110,7 @@ namespace GOO.Model
         /// This function removes the specified order from the order list and updates the traveltime and weight
         /// </summary>
         /// <param name="order"> Removes the given order from the list </param>
-        public void RemoveOrder(Order order)
+        public void RemoveOrder(Order order, OrdersCounter ordersCounter)
         {
             int previousOrder = 287; //node before the removed node
             int currentOrder = order.MatrixID; // the removed node
@@ -134,13 +133,14 @@ namespace GOO.Model
             TravelTime -= order.EmptyingTimeInSeconds; //remove empty time
             Weight -= order.VolumePerContainer * order.NumberOfContainers; //adds the weight of this order
             Orders.Remove(order);
+            ordersCounter.RemoveOccurrence(order.OrderNumber);
         }
 
         /// <summary>
         /// This function will add an order at the end of the current Order list.
         /// </summary>
         /// <param name="order">The order id to be added at the end of the list </param>
-        public void AddOrder(Order order)
+        public void AddOrder(Order order, OrdersCounter ordersCounter)
         {
             int matrixIDA = 287; // the previous coordinate
             int matrixIDB = order.MatrixID; // new added coordinate
@@ -164,6 +164,7 @@ namespace GOO.Model
 
             //Orders.Add(order); // adds the order to the order list
             Orders.Insert(Orders.Count - 1, order);
+            ordersCounter.AddOccurrence(order.OrderNumber);
         }
 
         /// <summary>
@@ -171,7 +172,7 @@ namespace GOO.Model
         /// </summary>
         /// <param name="newOrder"> The new Order to be added </param>
         /// <param name="afterOrder"> The Order the new it will be placed after </param>
-        public void AddOrder(Order newOrder, Order afterOrder)
+        public void AddOrder(Order newOrder, Order afterOrder, OrdersCounter ordersCounter)
         {
             int matrixIDA = afterOrder.MatrixID; //the coord this order will be placed afhter
             int matrixIDB = newOrder.MatrixID; // new added coordinate
@@ -196,6 +197,7 @@ namespace GOO.Model
 
             Weight += newOrder.VolumePerContainer * newOrder.NumberOfContainers; //adds the weight of this order
             Orders.Insert(Ordernext, newOrder); // adds the order to the order list
+            ordersCounter.AddOccurrence(newOrder.OrderNumber);
         }
     }
 }

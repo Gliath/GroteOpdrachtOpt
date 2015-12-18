@@ -38,7 +38,7 @@ namespace GOO.Model
             routesPerTruck = new List<Route>[NUMBER_OF_TRUCKS];
         }
 
-        public void GenerateRoutes()
+        public void GenerateRoutes(OrdersCounter ordersCounter)
         {
             for (int truckID = 0; truckID < routesPerTruck.Length; truckID++)
             {
@@ -49,7 +49,7 @@ namespace GOO.Model
                 for (int numOfTries = 50; numOfTries > 0; numOfTries--) // Tries to make 5 routes for a day (for each truck)
                 {
                     Route route = new Route();
-                    route.CreateRouteList(100000, maxTimeLeft, 200);
+                    route.CreateRouteList(100000, maxTimeLeft, 200, ordersCounter);
 
                     if (route.Orders.Count == 0)
                         route = null;

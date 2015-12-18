@@ -40,7 +40,7 @@ namespace GOO.Model
             for (int i = 0; i < days.Length; i++)
             {
                 days[i] = new Day();
-                days[i].GenerateRoutes();
+                days[i].GenerateRoutes(ordersCounter);
             }
         }
 
