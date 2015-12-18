@@ -49,6 +49,7 @@ namespace GOO
             Console.WriteLine("Elapsed time for generating the solution string: {0}ms", sw.ElapsedMilliseconds);
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
             Console.WriteLine();
+            Console.ReadKey();
 
             Console.WriteLine("Commence the Simulated Annealing!");
             sw = Stopwatch.StartNew();

@@ -46,7 +46,7 @@ namespace GOO.Model
         /// <param name="maxWeight">The max weght for this route</param>
         /// <param name="maxTravelTime">The max travel time for this route</param>
         /// <param name="maxSteps">The max itterations for this route to create</param>
-        public void CreateRouteList(int maxWeight, double maxTravelTime, int maxSteps, OrdersCounter ordersCounter)
+        public void CreateRouteList(int maxWeight, double maxTravelTime, int maxSteps, List<Order> orderOfTheDay, OrdersCounter ordersCounter)
         {
             //stepper and matrix values for travel time checks
             int steps = 0;
@@ -78,7 +78,7 @@ namespace GOO.Model
                 }
                 matrixB = bestOrder;
 
-                if (!Orders.Contains(OrderArray[randomInt])) //check if order is already in the order list
+                if (!Orders.Contains(OrderArray[randomInt]) && !orderOfTheDay.Contains(OrderArray[randomInt]) && !ordersCounter.IsOrderCompleted(OrderArray[randomInt].OrderNumber)) //check if order is already in the order list
                 {
                     //check if the weight and travel time does not exceed thier max values
                     if (Weight + (OrderArray[randomInt].NumberOfContainers * OrderArray[randomInt].VolumePerContainer) <= maxWeight &&

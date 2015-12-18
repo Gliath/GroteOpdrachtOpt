@@ -64,10 +64,19 @@ namespace GOO.Model
         public Boolean IsCompleted()
         {
             foreach (OrderCounter order in CounterList)
-                if (!order.IsOrderCompleted())
+                if (!order.IsCompleted())
                     return false;
 
             return true;
+        }
+
+        public Boolean IsOrderCompleted(int OrderNumber)
+        {
+            foreach (OrderCounter order in CounterList)
+                if (order.OrderNumber == OrderNumber)
+                    return order.IsCompleted();
+
+            return false;
         }
 
         [Serializable]
@@ -85,7 +94,7 @@ namespace GOO.Model
                 OrderOccurrences = 0;
             }
 
-            public Boolean IsOrderCompleted()
+            public Boolean IsCompleted()
             {
                 #if DEBUG // Debug, test if order occurrs to many times
                 if (OrderOccurrences > OrderFrequency)

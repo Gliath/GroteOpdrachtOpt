@@ -57,7 +57,7 @@ namespace GOO.Model
             List<int> uncompleteOrders = new List<int>();
             for (int i = 0; i < ordersCounter.CounterList.Count; i++)
             {
-                if (!ordersCounter.CounterList[i].IsOrderCompleted())
+                if (!ordersCounter.CounterList[i].IsCompleted())
                 {
                     int orderNumber = ordersCounter.CounterList[i].OrderNumber;
                     if (uncompleteOrders.Contains(orderNumber)) // Has already been punished

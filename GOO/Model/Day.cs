@@ -40,29 +40,35 @@ namespace GOO.Model
 
         public void GenerateRoutes(OrdersCounter ordersCounter)
         {
+            List<Order> ordersOfTheDay = new List<Order>();
+
             for (int truckID = 0; truckID < routesPerTruck.Length; truckID++)
             {
                 routesPerTruck[truckID] = new List<Route>();
-
                 double maxTimeLeft = 43200.0d;
 
                 for (int numOfTries = 50; numOfTries > 0; numOfTries--) // Tries to make 5 routes for a day (for each truck)
                 {
                     Route route = new Route();
-                    route.CreateRouteList(100000, maxTimeLeft, 200, ordersCounter);
+                    route.CreateRouteList(100000, maxTimeLeft, 200, ordersOfTheDay, ordersCounter);
 
-                    if (route.Orders.Count == 0)
+                    if (route.Orders.Count == 1)
                         route = null;
                     else
                     {
                         maxTimeLeft -= route.TravelTime;
                         routesPerTruck[truckID].Add(route);
+
+                        foreach (Order order in route.Orders)
+                            ordersOfTheDay.Add(order);
                     }
 
                     if (maxTimeLeft <= 1800.0d)
                         break;
                 }
             }
+
+            ordersOfTheDay = null;
         }
 
         public Day GetShallowCopy()
