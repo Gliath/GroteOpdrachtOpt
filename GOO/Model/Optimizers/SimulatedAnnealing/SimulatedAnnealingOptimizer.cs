@@ -38,7 +38,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
 
         private Solution createNewSolution(Solution currentSolution)
         {
-            return strategies[random.Next(strategies.Length)].executeStrategy(currentSolution);
+            return strategies[random.Next(strategies.Length - 1 <= 0 ? 0 : strategies.Length - 1)].executeStrategy(currentSolution);
         }
 
         // For all iterations until annealing temperature is 0

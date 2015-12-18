@@ -7,6 +7,7 @@ using GOO.ViewModel;
 using GOO.Utilities;
 using GOO.Model;
 using System.Diagnostics;
+using GOO.Model.Optimizers.SimulatedAnnealing;
 
 namespace GOO
 {
@@ -50,6 +51,16 @@ namespace GOO
             Console.WriteLine();
 
             Console.WriteLine("Commence the Simulated Annealing!");
+            sw = Stopwatch.StartNew();
+            
+            SimulatedAnnealingOptimizer optimizer = new SimulatedAnnealingOptimizer();
+            Solution OPTIMAL_PRIME = optimizer.runOptimizer(THE_SOLUTION);
+            THE_SOLUTION_STRING = THE_SOLUTION.ToString();
+            sw.Stop();
+
+            Console.WriteLine("Elapsed time for generating the optimal solution string: {0}ms", sw.ElapsedMilliseconds);
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/OPTIMAL_Route_orders.txt", THE_SOLUTION_STRING);
+            Console.WriteLine();
 
             // Temporarily
             Console.ReadKey();
