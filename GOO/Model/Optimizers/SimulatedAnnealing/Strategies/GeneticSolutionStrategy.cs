@@ -8,7 +8,8 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 {
     public class GeneticSolutionStrategy : Strategy
     {
-        public GeneticSolutionStrategy() : base(new Random())
+        public GeneticSolutionStrategy()
+            : base()
         {
 
         }

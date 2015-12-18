@@ -9,7 +9,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
     public class RandomSwitchRouteStrategy : Strategy
     {
         public RandomSwitchRouteStrategy()
-            : base(new Random())
+            : base()
         {
 
         }

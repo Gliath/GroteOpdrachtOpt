@@ -4,12 +4,10 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 {
     public abstract class Strategy
     {
-        protected Random random;
+        protected static Random random = new Random();
 
-        public Strategy(Random random)
+        public Strategy()
         {
-            this.random = random;
-
         }
 
         public virtual Solution executeStrategy(Solution toStartFrom)

@@ -6,7 +6,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
     public class RandomSwitchDayStrategy : Strategy
     {
         public RandomSwitchDayStrategy()
-            : base(new Random())
+            : base()
         {
 
         }

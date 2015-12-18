@@ -7,7 +7,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 {
     public class RandomSwitchOrdersInRouteStrategy : Strategy
     {
-        public RandomSwitchOrdersInRouteStrategy() : base(new Random()) { }
+        public RandomSwitchOrdersInRouteStrategy() : base() { }
 
         public override Solution executeStrategy(Solution toStartFrom)
         {

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 {
-    public class RandomRouteOpt2Strategy : Strategy
+    public class RandomRouteOpt3Strategy : Strategy
     {
-        public RandomRouteOpt2Strategy()
-            : base(new Random())
+        public RandomRouteOpt3Strategy()
+            : base()
         {
 
         }

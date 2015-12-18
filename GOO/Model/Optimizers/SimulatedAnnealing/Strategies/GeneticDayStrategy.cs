@@ -6,7 +6,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
     public class GeneticDayStrategy : Strategy
     {
         public GeneticDayStrategy()
-            : base(new Random())
+            : base()
         {
 
         }
