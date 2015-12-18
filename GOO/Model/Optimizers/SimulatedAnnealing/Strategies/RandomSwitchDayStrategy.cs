@@ -11,7 +11,8 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 
         }
 
-        public override Solution executeStrategy(Solution toStartFrom){
+        public override Solution executeStrategy(Solution toStartFrom)
+        {
             return toStartFrom;
         }
     }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 {
@@ -14,7 +11,8 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 
         }
 
-        public override Solution executeStrategy(Solution toStartFrom){
+        public override Solution executeStrategy(Solution toStartFrom)
+        {
             return toStartFrom;
         }
     }

@@ -72,12 +72,18 @@ namespace GOO
 
         /* Santa's TODO list
 
-           - On the first day of Christmas, Santa gave this advice to me: Do not DeepCopy the entire OrdersCounter object in the solution class, only DeepCopy the OrderCounter items that need to be changed
-           - On the second day of Christmas, Santa gave this advice to me: Optimize the ToString method in Solution class, by recycling
-           - On the third day of Christmas, Santa gave this advice to me: Utilize the window by using a progressbar for Simulated Annealing
-           - On the fourth day of Christmas, Santa gave this advice to me: Make the following stategies: 
+           - On the first day of Christmas, Santa gave this advice to me:   Do not DeepCopy the entire OrdersCounter object in the solution class, only DeepCopy the OrderCounter items that need to be changed
+           - On the second day of Christmas, Santa gave this advice to me:  Optimize the ToString method in Solution class, by recycling
+           - On the third day of Christmas, Santa gave this advice to me:   Utilize the window by using a progressbar for Simulated Annealing
+           - On the fourth day of Christmas, Santa gave this advice to me:  Make the following stategies: 
+           - On the fifth day of Christmas, Santa gave this advice to me:   
+           - On the sixth day of Christmas, Santa gave this advice to me:   
+           - On the seventh day of Christmas, Santa gave this advice to me: 
+           - On the eighth day of Christmas, Santa gave this advice to me:  
+           - On the ninth day of Christmas, Santa gave this advice to me:   
+           - On the tenth day of Christmas, Santa gave this advice to me:   
            - 
-           - 
+        
         */
     }
 }
