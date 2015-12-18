@@ -15,16 +15,6 @@ namespace GOO.Model
             this.routesPerTruck = SC_routesPerTruck(toCopy.routesPerTruck);
         }
 
-        public Day()
-        {
-            routesPerTruck = new List<Route>[NUMBER_OF_TRUCKS];
-        }
-
-        public Day GetShallowCopy()
-        {
-            return new Day(this);
-        }
-
         private List<Route>[] SC_routesPerTruck(List<Route>[] toCopyFrom)
         {
             List<Route>[] anArrayOfListsToReturn = new List<Route>[toCopyFrom.Length];
@@ -41,6 +31,43 @@ namespace GOO.Model
             }
 
             return anArrayOfListsToReturn;
+        }
+
+        public Day()
+        {
+            routesPerTruck = new List<Route>[NUMBER_OF_TRUCKS];
+        }
+
+        public void GenerateRoutes()
+        {
+            for (int truckID = 0; truckID < routesPerTruck.Length; truckID++)
+            {
+                routesPerTruck[truckID] = new List<Route>();
+
+                double maxTimeLeft = 43200.0d;
+
+                for (int numOfTries = 50; numOfTries > 0; numOfTries--) // Tries to make 5 routes for a day (for each truck)
+                {
+                    Route route = new Route();
+                    route.CreateRouteList(100000, maxTimeLeft, 200);
+
+                    if (route.Orders.Count == 0)
+                        route = null;
+                    else
+                    {
+                        maxTimeLeft -= route.TravelTime;
+                        routesPerTruck[truckID].Add(route);
+                    }
+
+                    if (maxTimeLeft <= 1800.0d)
+                        break;
+                }
+            }
+        }
+
+        public Day GetShallowCopy()
+        {
+            return new Day(this);
         }
 
         public void SetRoutes(int truckID, List<Route> routes)

@@ -13,12 +13,6 @@ namespace GOO.Model
         private Day[] days;
         private OrdersCounter ordersCounter;
 
-        public Solution()
-        {
-            days = new Day[NUMBER_OF_DAYS];
-            ordersCounter = new OrdersCounter();
-        }
-
         private Solution(Solution toCopy)
         {
             this.ordersCounter = DeepCopy<OrdersCounter>.CopyFrom(toCopy.GetOrdersCounter());
@@ -34,6 +28,22 @@ namespace GOO.Model
             }
             return toFill;
         }
+
+        public Solution()
+        {
+            days = new Day[NUMBER_OF_DAYS];
+            ordersCounter = new OrdersCounter();
+        }
+
+        public void GenerateSolution()
+        {
+            for (int i = 0; i < days.Length; i++)
+            {
+                days[i] = new Day();
+                days[i].GenerateRoutes();
+            }
+        }
+
         public Solution GetShallowCopy()
         {
             return new Solution(this);
@@ -71,7 +81,7 @@ namespace GOO.Model
             for (int i = 0; i < days.Length; i++)
                 for (int j = 0; j < Day.NUMBER_OF_TRUCKS; j++)
                     for (int k = 0; k < days[i].GetRoutes(j).Count; k++)
-                        travelTime += days[i].GetRoutes(j)[k].traveltime;
+                        travelTime += days[i].GetRoutes(j)[k].TravelTime;
 
             return travelTime + penaltyTime;
         }
@@ -91,7 +101,6 @@ namespace GOO.Model
             return ordersCounter;
         }
 
-        // To do optimize method, by storing it in a variable and know when it has been changed (and where)
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -109,7 +118,7 @@ namespace GOO.Model
                         {
                             Order order = routes[routeID].Orders[orderID];
 
-                            sb.AppendLine(String.Format("{0};{1};{2};{3}", dayID + 1, truckID + 1, ++sequenceID, order.OrderNumber));
+                            sb.AppendLine(String.Format("{0};{1};{2};{3}", truckID + 1, dayID + 1, ++sequenceID, order.OrderNumber));
                         }
                     }
                 }

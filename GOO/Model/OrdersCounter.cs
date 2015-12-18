@@ -10,18 +10,22 @@ namespace GOO.Model
     [Serializable]
     public class OrdersCounter
     {
-        private static readonly List<OrderCounter> BasicEmptyCounterList;
-        static OrdersCounter()
+        private static List<OrderCounter> BasicEmptyCounterList;
+        private static void GenerateBasicEmptyCounterList()
         {
             BasicEmptyCounterList = new List<OrderCounter>();
             foreach (Order order in FilesInitializer._Orders)
-                BasicEmptyCounterList.Add(new OrderCounter(order.OrderNumber, order.FrequencyNumber));
+                if(order != null)
+                    BasicEmptyCounterList.Add(new OrderCounter(order.OrderNumber, order.FrequencyNumber));
         }
 
         public List<OrderCounter> CounterList { get; set; }
 
         public OrdersCounter()
         {
+            if (BasicEmptyCounterList == null)
+                OrdersCounter.GenerateBasicEmptyCounterList();
+
             CounterList = DeepCopy<List<OrderCounter>>.CopyFrom(BasicEmptyCounterList);
         }
 

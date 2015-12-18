@@ -33,18 +33,37 @@ namespace GOO
 
             FilesInitializer.InitializeFiles();
             Console.WriteLine("Files have been processed");
-            Route route = new Route();
-            Stopwatch sw = Stopwatch.StartNew();
-            route.CreateRouteList(100000, 43200.0d, 200);
-            sw.Stop();
-            Console.WriteLine("Elapsed time: {0}ms", sw.ElapsedMilliseconds);
 
-            new MainView() { DataContext = new MainViewModel() }.Show();
+            Stopwatch sw = Stopwatch.StartNew();
+            Solution THE_SOLUTION = new Solution();
+            THE_SOLUTION.GenerateSolution();
+            sw.Stop();
+            Console.WriteLine("Elapsed time for generating route: {0}ms", sw.ElapsedMilliseconds);
+
+            Console.WriteLine();
+            string THE_SOLUTION_STRING;
+            sw = Stopwatch.StartNew();
+            THE_SOLUTION_STRING = THE_SOLUTION.ToString();
+            sw.Stop();
+            Console.WriteLine("Elapsed time for generating the solution string: {0}ms", sw.ElapsedMilliseconds);
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Route_orders.txt", THE_SOLUTION_STRING);
+            Console.WriteLine();
+
+            Console.WriteLine("Commence the Simulated Annealing!");
+
+            // Temporarily
+            Console.ReadKey();
+            FreeConsole();
+            Environment.Exit(0);
+
+            //new MainView() { DataContext = new MainViewModel() }.Show();
         }
 
         /* Santa's TODO list
 
-           - On the first day of christmas, santa gave this advice to me: Do not DeepCopy the entire OrdersCounter object in the solution class, only DeepCopy the OrderCounter items that need to be changed
+           - On the first day of Christmas, Santa gave this advice to me: Do not DeepCopy the entire OrdersCounter object in the solution class, only DeepCopy the OrderCounter items that need to be changed
+           - On the second day of Christmas, Santa gave this advice to me: Optimize the ToString method in Solution class, by recycling
+           - On the third day of Christmas, Santa gave this advice to me: Utilize the window by using a progressbar for Simulated Annealing
            - 
            - 
         */

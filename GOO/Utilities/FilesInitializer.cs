@@ -13,6 +13,7 @@ namespace GOO.Utilities
 
         public static Distances _DistanceMatrix { get; private set; }
         public static Order[] _Orders { get; private set; }
+        private static Order order0;
 
         public static void InitializeFiles()
         {
@@ -87,6 +88,14 @@ namespace GOO.Utilities
 
                 _Orders[i] = new Order(OrderNumber, Place, Frequency, NumberOfContainers, VolumePerContainer, EmptyingTimeInSeconds, MatrixID, X, Y);
             }
+        }
+
+        public static Order GetOrder0()
+        {
+            if(order0 == null)
+                order0 = new Order(0, "MAARHEEZE", OrderFrequency.PWK5, 0, 0, 0.0d, 287, 0, 0);
+
+            return order0;
         }
 
         private static void CleanUpDistanceMatrix()
