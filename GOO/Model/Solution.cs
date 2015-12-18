@@ -27,11 +27,12 @@ namespace GOO.Model
 
         private Day[] _SC_days(Day[] toCopyFrom)
         {
-            this.days = new Day[toCopyFrom.Length];
-            for(int i = 0; i < toCopyFrom.Length; i++){
-                this.days[i] = toCopyFrom[i].GetShallowCopy();
+            Day[] toFill = new Day[toCopyFrom.Length];
+            for (int i = 0; i < toFill.Length; i++)
+            {
+                toFill[i] = toCopyFrom[i].GetShallowCopy();
             }
-            return this.days;
+            return toFill;
         }
         public Solution GetShallowCopy()
         {
