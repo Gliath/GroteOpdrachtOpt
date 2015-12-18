@@ -16,23 +16,23 @@ namespace GOO.Model
         public int weight { get; set; } //the filled weight of the route
         static Random rnd = new Random(); // TODO: <- a new random doesnt have to be made for every route
 
+        public Route()
+        {
+            Orders = new List<Order>();
+            traveltime = 1800f;
+            //nothing to do here init
+        }
+
         private Route(Route toCopy)
         {
             this.traveltime = toCopy.traveltime;
             this.weight = toCopy.weight;
-            this._SC_Orders(toCopy.Orders);
+            this.Orders = this._SC_Orders(toCopy.Orders);
         }
 
-        public Route()
+        private List<Order> _SC_Orders(List<Order> listToCopy)
         {
-            Orders = new List<Order>();
-            traveltime = 0f+30f*60f;
-            //nothing to do here init
-        }
-
-        private void _SC_Orders(List<Order> listToCopy)
-        {
-            this.Orders = new List<Order>(listToCopy);
+            return new List<Order>(listToCopy);
         }
 
         public Route GetShallowCopy()
