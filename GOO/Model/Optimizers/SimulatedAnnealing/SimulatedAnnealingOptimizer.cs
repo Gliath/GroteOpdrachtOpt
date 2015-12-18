@@ -33,7 +33,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
                 } // No new solution accepted.
             }
 
-            return startSolution;
+            return currentSolution;
         }
 
         private Solution createNewSolution(Solution currentSolution)

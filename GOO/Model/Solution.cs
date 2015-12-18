@@ -54,10 +54,6 @@ namespace GOO.Model
             double travelTime = 0.0d;
             double penaltyTime = 0.0d;
 
-            #if DEBUG
-            Console.WriteLine("Solution contains every order: {0}", ordersCounter.IsCompleted());
-            #endif
-
             List<int> uncompleteOrders = new List<int>();
             for (int i = 0; i < ordersCounter.CounterList.Count; i++)
             {
@@ -70,11 +66,12 @@ namespace GOO.Model
                         uncompleteOrders.Add(orderNumber); // Is going to be punished, add it to the list
 
                     foreach (Order order in FilesInitializer._Orders)
-                        if (order.OrderNumber == orderNumber)
-                        {
-                            penaltyTime += order.PenaltyTime;
-                            break;
-                        }
+                        if (order != null)
+                            if (order.OrderNumber == orderNumber)
+                            {
+                                penaltyTime += order.PenaltyTime;
+                                break;
+                            }
                 }
             } // penaltyTime has been calculated
 
@@ -86,16 +83,16 @@ namespace GOO.Model
             return travelTime + penaltyTime;
         }
 
-        public Day[] GetRoutes()
+        public Day[] GetDays()
         {
             return days;
         }
 
-        public void SetRoutes(Day[] newDayArray)
+        public void SetDays(Day[] newDayArray)
         {
             this.days = newDayArray;
         }
-        
+
         public OrdersCounter GetOrdersCounter()
         {
             return ordersCounter;

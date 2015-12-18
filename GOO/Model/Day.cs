@@ -25,7 +25,7 @@ namespace GOO.Model
                 List<Route> listToAdd = new List<Route>(listToCopy.Count);
 
                 for (int j = 0; j < listToCopy.Count; j++)
-                    listToAdd[j] = listToCopy[j].GetShallowCopy();
+                    listToAdd.Add(listToCopy[j].GetShallowCopy());
 
                 anArrayOfListsToReturn[i] = listToAdd;
             }

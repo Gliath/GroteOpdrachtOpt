@@ -47,19 +47,18 @@ namespace GOO
             THE_SOLUTION_STRING = THE_SOLUTION.ToString();
             sw.Stop();
             Console.WriteLine("Elapsed time for generating the solution string: {0}ms", sw.ElapsedMilliseconds);
-            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Route_orders.txt", THE_SOLUTION_STRING);
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
             Console.WriteLine();
 
             Console.WriteLine("Commence the Simulated Annealing!");
             sw = Stopwatch.StartNew();
-            
             SimulatedAnnealingOptimizer optimizer = new SimulatedAnnealingOptimizer();
             Solution OPTIMAL_PRIME = optimizer.runOptimizer(THE_SOLUTION);
-            THE_SOLUTION_STRING = THE_SOLUTION.ToString();
+            THE_SOLUTION_STRING = OPTIMAL_PRIME.ToString();
             sw.Stop();
 
             Console.WriteLine("Elapsed time for generating the optimal solution string: {0}ms", sw.ElapsedMilliseconds);
-            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/OPTIMAL_Route_orders.txt", THE_SOLUTION_STRING);
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/OptimalSolution.txt", THE_SOLUTION_STRING);
             Console.WriteLine();
 
             // Temporarily
