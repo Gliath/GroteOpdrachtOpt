@@ -10,6 +10,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
         private AnnealingSchedule annealingSchedule;
         private Strategy[] strategies;
         private Random random;
+        private static double theX = 0.5d;
 
         public SimulatedAnnealingOptimizer()
         {
@@ -25,11 +26,17 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
                 Solution newSolution = createNewSolution(startSolution);
-                if (newSolution.GetSolutionScore() > currentSolution.GetSolutionScore())
+                double currentSolutionScore = currentSolution.GetSolutionScore();
+                double newSolutionScore = newSolution.GetSolutionScore();
+
+                double chanceToBeAccepted =  Math.Pow(theX, ((currentSolutionScore - newSolutionScore)*annealingSchedule.AnnealingTemperature));
+
+                if (newSolutionScore > currentSolutionScore)
                 {
                     currentSolution = newSolution;
                 }
-                else if (random.NextDouble() <= annealingSchedule.AnnealingTemperature)
+                    
+                else if (random.NextDouble() <= chanceToBeAccepted)
                 {
                     currentSolution = newSolution;
                 } // No new solution accepted.

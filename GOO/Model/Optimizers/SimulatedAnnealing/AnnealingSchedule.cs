@@ -8,11 +8,6 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
         public readonly double standardAnnealingTemperatureStep = 0.001d; // 0.0000001d
         public readonly int standardMaxIterationsBeforeAnnealing = 2; // 100
 
-        /*
-         * standardStartingTemperature = 1.0d + standardAnnealingTemperatureStep = 0.001d + standardMaxIterationsBeforeAnnealing = 2 ~= 50000ms processingtime
-         * standardStartingTemperature = 1.0d + standardAnnealingTemperatureStep = 0.0000001d + standardMaxIterationsBeforeAnnealing = 100 ==(estimated) 350 days processingtime
-        */
-
         private readonly double AnnealingTemperatureStep;
         private readonly int MaxIterationsBeforeAnnealing;
 
@@ -55,3 +50,8 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
         }
     }
 }
+
+/*
+ * standardStartingTemperature = 1.0d + standardAnnealingTemperatureStep = 0.001d + standardMaxIterationsBeforeAnnealing = 2 ~= 50000ms processingtime
+ * standardStartingTemperature = 1.0d + standardAnnealingTemperatureStep = 0.0000001d + standardMaxIterationsBeforeAnnealing = 100 ==(estimated) 350 days processingtime
+*/
