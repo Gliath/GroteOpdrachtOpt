@@ -8,5 +8,9 @@ namespace GOO.KMeansModel
 {
     public class KSolution
     {
+        public double GetSolutionScore()
+        {
+            return 0.0d;
+        }
     }
 }
