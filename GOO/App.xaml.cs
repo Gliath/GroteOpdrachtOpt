@@ -8,6 +8,7 @@ using GOO.Utilities;
 using GOO.Model;
 using System.Diagnostics;
 using GOO.Model.Optimizers.SimulatedAnnealing;
+using GOO.KMeansModel;
 
 namespace GOO
 {
@@ -24,6 +25,34 @@ namespace GOO
         public static extern void FreeConsole();
         #endif
 
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+#if DEBUG
+            AllocConsole();
+#endif
+            Console.WriteLine("Program booting up...");
+
+            FilesInitializer.InitializeFiles();
+            Console.WriteLine("Files have been processed");
+
+            Stopwatch sw = Stopwatch.StartNew();
+            
+            KSolver.generateSolution();
+
+            sw.Stop();
+            Console.WriteLine("Elapsed time for generating clusters: {0}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine();
+
+            // Temporarily
+            Console.ReadKey();
+            FreeConsole();
+            Environment.Exit(0);
+
+            //new MainView() { DataContext = new MainViewModel() }.Show();
+        }
+
+        /*
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -69,6 +98,7 @@ namespace GOO
 
             //new MainView() { DataContext = new MainViewModel() }.Show();
         }
+        */
 
         /* Santa's TODO list
 

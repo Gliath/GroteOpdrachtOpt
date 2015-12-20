@@ -60,6 +60,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="KMeansModel\Cluster.cs" />
+    <Compile Include="KMeansModel\KMeansClusterer.cs" />
+    <Compile Include="KMeansModel\KRoute.cs" />
+    <Compile Include="KMeansModel\KSimulatedAnnealingOptimizer.cs" />
+    <Compile Include="KMeansModel\KSolution.cs" />
+    <Compile Include="KMeansModel\KSolver.cs" />
     <Compile Include="Model\Day.cs" />
     <Compile Include="Model\Optimizers\Opt2.5.cs" />
     <Compile Include="Model\Optimizers\Opt2.cs" />

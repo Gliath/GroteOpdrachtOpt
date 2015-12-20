@@ -16,19 +16,27 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
             Day randomDay = toReturn.GetDays()[random.Next(toReturn.GetDays().Length)];
 
             List<Route> randomRoutes = randomDay.GetRoutes(random.Next(Day.NUMBER_OF_TRUCKS));
-            List<Order> orders = randomRoutes[random.Next(randomRoutes.Count)].Orders;
+            Route randomChosenRoute = randomRoutes[random.Next(randomRoutes.Count)];
+            List<Order> orders = randomChosenRoute.Orders;
 
             int ordersLength = orders.Count;
-            int orderIndex1 = random.Next(ordersLength);
+            int orderIndex1 = random.Next(1, ordersLength);
             int orderIndex2 = -1;
             do
             {
-                orderIndex2 = random.Next(ordersLength);
+                orderIndex2 = random.Next(1, ordersLength);
             } while (!(orderIndex2 >= 0 && orderIndex2 != orderIndex1));
 
             Order toSwitch = orders[orderIndex1];
-            orders[orderIndex1] = orders[orderIndex2];
-            orders[orderIndex2] = toSwitch;
+            Order toSwitch2 = orders[orderIndex2];
+
+            Order toAddAfter = orders[orderIndex1 - 1];
+            Order toAddAfter2 = orders[orderIndex2 - 1];
+
+            randomChosenRoute.RemoveOrder(toSwitch, toReturn.GetOrdersCounter());
+            randomChosenRoute.RemoveOrder(toSwitch2, toReturn.GetOrdersCounter());
+            randomChosenRoute.AddOrder(toSwitch, toAddAfter2, toReturn.GetOrdersCounter());           
+            randomChosenRoute.AddOrder(toSwitch, toAddAfter, toReturn.GetOrdersCounter());
 
             return toReturn;
         }

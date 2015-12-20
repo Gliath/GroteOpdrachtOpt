@@ -47,7 +47,7 @@ namespace GOO.Utilities
         private static void InitializeOrders()
         {
             string[] lines = Orders.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            _Orders = new Order[lines.Length];
+            _Orders = new Order[lines.Length-1];
 
             for (int i = 1; i < lines.Length; i++) // Skip the first line
             {
@@ -86,7 +86,7 @@ namespace GOO.Utilities
                 int X = int.Parse(variables[7].Trim());
                 int Y = int.Parse(variables[8].Trim());
 
-                _Orders[i] = new Order(OrderNumber, Place, Frequency, NumberOfContainers, VolumePerContainer, EmptyingTimeInSeconds, MatrixID, X, Y);
+                _Orders[i-1] = new Order(OrderNumber, Place, Frequency, NumberOfContainers, VolumePerContainer, EmptyingTimeInSeconds, MatrixID, X, Y);
             }
         }
 
