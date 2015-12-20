@@ -23,16 +23,14 @@ namespace GOO.KMeansModel
         public void AddNewItemToPlanning(Days day, int truckID, List<Route> routes)
         {
             this.truckPlanning.Add(new Tuple<Days, int, List<Route>>(day, truckID, routes));
+            updateOrdersCounterAfterAdding(routes);
         }
-
-        public Tuple<Days, int, List<Route>> getPlanningForATruck(Days day, int truckID)
-        {
-            return this.truckPlanning.Find(t => t.Item1 == day && t.Item2 == truckID);
-        }
-
+        
         public void RemoveItemFromPlanning(Days day, int truckID)
         {
-            this.truckPlanning.RemoveAll(t => t.Item1 == day && t.Item2 == truckID);
+            Tuple<Days, int, List<Route>> toRemove = getPlanningForATruck(day, truckID);
+            this.truckPlanning.Remove(toRemove);
+            updateOrdersCounterAfterRemoval(toRemove.Item3);
         }
 
         public void recountOrdersCounter()
@@ -64,6 +62,11 @@ namespace GOO.KMeansModel
                     ordersCounter.AddOccurrence(order.OrderNumber);
                 }
             }
+        }
+
+        public Tuple<Days, int, List<Route>> getPlanningForATruck(Days day, int truckID)
+        {
+            return this.truckPlanning.Find(t => t.Item1 == day && t.Item2 == truckID);
         }
 
         public double GetSolutionScore() // TODO: Maybe start working with delta's instead of recalculating everytime
