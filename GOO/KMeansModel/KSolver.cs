@@ -40,7 +40,7 @@ namespace GOO.KMeansModel
             return new KSolution(clusters);
         }
 
-        public static string generateRouteSolution()
+        public static string TEST_generateRouteSolution()
         {
             List<System.Text.StringBuilder> sbList = new List<System.Text.StringBuilder>();
             System.Text.StringBuilder sb = null;
