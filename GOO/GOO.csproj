@@ -61,7 +61,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="KMeansModel\Cluster.cs" />
-    <Compile Include="KMeansModel\DayEnum.cs" />
+    <Compile Include="Utilities\DaysEnum.cs" />
+    <Compile Include="KMeansModel\DayRestrictionFactory.cs" />
     <Compile Include="KMeansModel\KMeansClusterer.cs" />
     <Compile Include="KMeansModel\KRoute.cs" />
     <Compile Include="KMeansModel\KSimulatedAnnealingOptimizer.cs" />
