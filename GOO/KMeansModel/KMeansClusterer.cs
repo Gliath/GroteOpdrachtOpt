@@ -36,7 +36,22 @@ namespace GOO.KMeansModel
             for (int i = 0; i < 3000; i++) // Try to reposition the center-point 3000 times for each cluster
             {
                 assignOrdersToClusters(toReturn, allOrders);
-                toReturn.RemoveAll(c => c.ordersInCluster.Count == 0);
+                toReturn.RemoveAll(c => c.OrdersInCluster.Count == 0);
+            }
+
+            foreach (Cluster cluster in toReturn)
+            {
+                List<Days> restrictions = new List<Days>();
+                List<OrderFrequency> frequenciesPresent = new List<OrderFrequency>();
+
+                foreach (Order order in cluster.OrdersInCluster)
+                    if (order.Frequency != OrderFrequency.PWK1 && !frequenciesPresent.Contains(order.Frequency))
+                    {
+                        restrictions.AddRange(DayRestrictionFactory.GetDayRestrictions(order.Frequency));
+                        frequenciesPresent.Add(order.Frequency);
+                    }
+
+                cluster.DaysRestrictions = restrictions;
             }
             
             return toReturn;
@@ -56,8 +71,8 @@ namespace GOO.KMeansModel
                 Cluster nearest = null;
                 double nearestEuclidianDistance = Double.MaxValue;
                 foreach (Cluster cluster in clusters)
-                {                    
-                    double distance = Math.Pow(order.X - cluster.centerPoint.X, 2) + Math.Pow(order.Y - cluster.centerPoint.Y, 2);
+                {
+                    double distance = Math.Pow(order.X - cluster.CenterPoint.X, 2) + Math.Pow(order.Y - cluster.CenterPoint.Y, 2);
                     if (distance < nearestEuclidianDistance)
                     {
                         nearestEuclidianDistance = distance;

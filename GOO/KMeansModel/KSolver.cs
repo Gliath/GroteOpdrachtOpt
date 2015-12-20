@@ -23,7 +23,7 @@ namespace GOO.KMeansModel
                 int numOfEmptyClusters = 0;
                 for (int k = 0; k < clusters.Count; k++)
                 {
-                    if (clusters[k].ordersInCluster.Count == 0)
+                    if (clusters[k].OrdersInCluster.Count == 0)
                         numOfEmptyClusters++;
                 }
                 sw.Stop();
