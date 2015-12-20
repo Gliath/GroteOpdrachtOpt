@@ -62,6 +62,7 @@
     </Compile>
     <Compile Include="KMeansModel\Cluster.cs" />
     <Compile Include="KMeansModel\DayEnum.cs" />
+    <Compile Include="KMeansModel\KDay.cs" />
     <Compile Include="KMeansModel\KMeansClusterer.cs" />
     <Compile Include="KMeansModel\KRoute.cs" />
     <Compile Include="KMeansModel\KSimulatedAnnealingOptimizer.cs" />
