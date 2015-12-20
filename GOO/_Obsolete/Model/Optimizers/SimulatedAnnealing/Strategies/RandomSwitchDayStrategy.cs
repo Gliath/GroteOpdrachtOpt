@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
+namespace GOO.Obsolete.Model.Optimizers.SimulatedAnnealing.Strategies
 {
     public class RandomSwitchDayStrategy : Strategy
     {

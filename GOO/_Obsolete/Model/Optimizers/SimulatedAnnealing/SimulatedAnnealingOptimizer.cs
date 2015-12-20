@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using GOO.Model.Optimizers.SimulatedAnnealing.Strategies;
+using GOO.Obsolete.Model.Optimizers.SimulatedAnnealing.Strategies;
 
-namespace GOO.Model.Optimizers.SimulatedAnnealing
+namespace GOO.Obsolete.Model.Optimizers.SimulatedAnnealing
 {
     public class SimulatedAnnealingOptimizer
     {
@@ -35,7 +35,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
                 {
                     currentSolution = newSolution;
                 }
-                    
+
                 else if (random.NextDouble() <= chanceToBeAccepted)
                 {
                     currentSolution = newSolution;
@@ -71,7 +71,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
             neighbor ← a highest-valued successor of current
             if neighbor.VALUE ≤ current.VALUE then return current.STATE
             current ← neighbor
-            * 
+            *
             * function SIMULATED-ANNEALING(problem, schedule) returns a solution state
             inputs: problem, a problem
             schedule, a mapping from time to “temperature”
@@ -83,7 +83,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing
             ΔE ← next.VALUE – current.VALUE
             if ΔE > 0 then current ← next
             else current ← next only with probability eΔE/T
-            * 
+            *
             */
     }
 }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using GOO.Utilities;
 
-using GOO.Utilities;
+using System;
 
-namespace GOO.Model
+namespace GOO.Obsolete.Model
 {
     public class Order
     {

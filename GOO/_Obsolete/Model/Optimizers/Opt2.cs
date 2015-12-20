@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace GOO.Model.Optimizers
+namespace GOO.Obsolete.Model.Optimizers
 {
     public class Opt2
     {
-        
+
     }
 }

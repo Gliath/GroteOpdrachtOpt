@@ -60,35 +60,18 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="KMeansModel\Cluster.cs" />
-    <Compile Include="KMeansModel\DayRestrictionFactory.cs" />
-    <Compile Include="KMeansModel\KMeansClusterer.cs" />
-    <Compile Include="KMeansModel\KRoute.cs" />
-    <Compile Include="KMeansModel\KSimulatedAnnealingOptimizer.cs" />
-    <Compile Include="KMeansModel\KSolution.cs" />
-    <Compile Include="KMeansModel\KSolver.cs" />
-    <Compile Include="KMeansModel\KStrategy.cs" />
-    <Compile Include="KMeansModel\KStrategyFactory.cs" />
-    <Compile Include="Model\Day.cs" />
-    <Compile Include="Model\Optimizers\Opt2.5.cs" />
-    <Compile Include="Model\Optimizers\Opt2.cs" />
-    <Compile Include="Model\Optimizers\Opt3.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\AnnealingSchedule.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\RandomSwitchDayStrategy.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\GeneticDayStrategy.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\GeneticRouteStrategy.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\GeneticSolutionStrategy.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\RandomRouteOpt3Strategy.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\RandomRouteOpt2Strategy.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\RandomSwitchOrdersInRouteStrategy.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\SimulatedAnnealingOptimizer.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\RandomSwitchRouteStrategy.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\Strategy.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealing\StrategyFactory.cs" />
+    <Compile Include="Model\Cluster.cs" />
+    <Compile Include="Model\Optimizers\AnnealingSchedule.cs" />
+    <Compile Include="Utilities\DayRestrictionFactory.cs" />
+    <Compile Include="Model\Clusterer.cs" />
+    <Compile Include="Model\Route.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealingOptimizer.cs" />
+    <Compile Include="Model\Solution.cs" />
+    <Compile Include="Model\Solver.cs" />
+    <Compile Include="Model\Optimizers\Strategies\Strategy.cs" />
+    <Compile Include="Model\Optimizers\StrategyFactory.cs" />
     <Compile Include="Model\OrdersCounter.cs" />
     <Compile Include="Model\Order.cs" />
-    <Compile Include="Model\Route.cs" />
-    <Compile Include="Model\Solution.cs" />
     <Compile Include="Utilities\DaysEnum.cs" />
     <Compile Include="Utilities\DeepCopy.cs" />
     <Compile Include="Utilities\DistanceMatrixItem.cs" />

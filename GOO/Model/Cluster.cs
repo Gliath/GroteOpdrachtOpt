@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 
-using GOO.Model;
 using GOO.Utilities;
 
-namespace GOO.KMeansModel
+namespace GOO.Model
 {
     public class Cluster
     {

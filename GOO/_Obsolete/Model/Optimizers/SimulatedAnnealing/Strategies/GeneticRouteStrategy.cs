@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
+namespace GOO.Obsolete.Model.Optimizers.SimulatedAnnealing.Strategies
 {
-    public class RandomSwitchRouteStrategy : Strategy
+    public class GeneticRouteStrategy: Strategy
     {
-        public RandomSwitchRouteStrategy()
+        public GeneticRouteStrategy()
             : base()
         {
 

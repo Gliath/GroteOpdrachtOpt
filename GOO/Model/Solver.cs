@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 
 using GOO.Utilities;
-using GOO.Model;
 
-namespace GOO.KMeansModel
+namespace GOO.Model
 {
-    public class KSolver
+    public class Solver
     {
-        private static KMeansClusterer clusterer;
+        private static Clusterer clusterer;
         private static List<Cluster> clusters;
 
-        public static KSolution generateSolution()
+        public static Solution generateSolution()
         {
             System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
             for (int i = 10; i <= 100; i += 5)
             {
                 sw.Restart();
-                clusterer = new KMeansClusterer(FilesInitializer._Orders, i);
+                clusterer = new Clusterer(FilesInitializer._Orders, i);
                 clusters = clusterer.createKClusters();
 
                 int numOfEmptyClusters = 0;
@@ -37,7 +36,7 @@ namespace GOO.KMeansModel
             foreach (Cluster cluster in clusters)
                 Console.WriteLine(cluster);
 
-            return new KSolution(clusters);
+            return new Solution(clusters);
         }
 
         public static string generateRouteSolution()

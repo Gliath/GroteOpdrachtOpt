@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 using GOO.Utilities;
 
-namespace GOO.Model
+namespace GOO.Obsolete.Model
 {
+    [Serializable]
     public class OrdersCounter
     {
         private static List<OrderCounter> BasicEmptyCounterList;
@@ -82,6 +85,7 @@ namespace GOO.Model
             return false;
         }
 
+        [Serializable]
         public class OrderCounter
         {
             public int OrderNumber { get; private set; }

@@ -1,8 +1,8 @@
 ﻿using System;
 
-using GOO.Model.Optimizers.SimulatedAnnealing.Strategies;
+using GOO.Obsolete.Model.Optimizers.SimulatedAnnealing.Strategies;
 
-namespace GOO.Model.Optimizers.SimulatedAnnealing
+namespace GOO.Obsolete.Model.Optimizers.SimulatedAnnealing
 {
     public class StrategyFactory
     {

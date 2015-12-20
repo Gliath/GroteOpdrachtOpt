@@ -1,32 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-using GOO.Model.Optimizers.SimulatedAnnealing;
+using GOO.Model.Optimizers.Strategies;
 
-namespace GOO.KMeansModel
+namespace GOO.Model.Optimizers
 {
-    public class KSimulatedAnnealingOptimizer
+    public class SimulatedAnnealingOptimizer
     {
         private AnnealingSchedule annealingSchedule;
-        private KStrategy[] strategies;
+        private Strategy[] strategies;
         private Random random;
         private static double theX = 2d;
 
-        public KSimulatedAnnealingOptimizer()
+        public SimulatedAnnealingOptimizer()
         {
             annealingSchedule = new AnnealingSchedule();
-            strategies = KStrategyFactory.GetAllStrategies();
+            strategies = StrategyFactory.GetAllStrategies();
             random = new Random();
         }
 
-        public KSolution runOptimizer(KSolution startSolution)
+        public Solution runOptimizer(Solution startSolution)
         {
-            KSolution currentSolution = startSolution;
+            Solution currentSolution = startSolution;
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
-                KSolution newSolution = createNewSolution(startSolution);
+                Solution newSolution = createNewSolution(startSolution);
                 double currentSolutionScore = currentSolution.GetSolutionScore();
                 double newSolutionScore = newSolution.GetSolutionScore();
                 double deltaScore = currentSolutionScore - newSolutionScore;
@@ -46,7 +44,7 @@ namespace GOO.KMeansModel
             return currentSolution;
         }
 
-        private KSolution createNewSolution(KSolution currentSolution) // TODO : Change
+        private Solution createNewSolution(Solution currentSolution) // TODO : Change
         {
             return strategies[(random.Next(strategies.Length - 1 <= 0 ? 0 : strategies.Length - 1))].executeStrategy(currentSolution);
         }

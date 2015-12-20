@@ -2,26 +2,25 @@
 using System.Collections.Generic;
 using System.Windows;
 
-using GOO.Model;
 using GOO.Utilities;
 
-namespace GOO.KMeansModel
+namespace GOO.Model
 {
-    public class KMeansClusterer
+    public class Clusterer
     {
         private static int startingAmountOfClusters = 30;
 
         private Order[] allOrders;
 
-        public KMeansClusterer(Order[] allOrders, int startingAmountOfClusters)
+        public Clusterer(Order[] allOrders, int startingAmountOfClusters)
         {
             this.allOrders = allOrders;
-            KMeansClusterer.startingAmountOfClusters = startingAmountOfClusters;
+            Clusterer.startingAmountOfClusters = startingAmountOfClusters;
         }
 
         public List<Cluster> createKClusters()
         {
-            return createKClusters(KMeansClusterer.startingAmountOfClusters, this.createStartOrders(this.allOrders, KMeansClusterer.startingAmountOfClusters), this.allOrders);
+            return createKClusters(Clusterer.startingAmountOfClusters, this.createStartOrders(this.allOrders, Clusterer.startingAmountOfClusters), this.allOrders);
         }
 
         public List<Cluster> createKClusters(int amountOfClusters, List<Order> startingPoints, Order[] allOrders)

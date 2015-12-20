@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GOO.Model.Optimizers.SimulatedAnnealing
+namespace GOO.Obsolete.Model.Optimizers.SimulatedAnnealing
 {
     public class AnnealingSchedule
     {

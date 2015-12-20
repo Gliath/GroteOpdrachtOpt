@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using GOO.Utilities;
 
-namespace GOO.KMeansModel
+namespace GOO.Utilities
 {
     public class DayRestrictionFactory
     {

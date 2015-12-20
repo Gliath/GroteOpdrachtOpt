@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 
+using GOO.Model;
+using GOO.Model.Optimizers;
+using GOO.Utilities;
 using GOO.View;
 using GOO.ViewModel;
-using GOO.Utilities;
-using GOO.Model;
-using System.Diagnostics;
-using GOO.Model.Optimizers.SimulatedAnnealing;
-using GOO.KMeansModel;
 
 namespace GOO
 {
@@ -28,16 +27,16 @@ namespace GOO
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-#if DEBUG
+            #if DEBUG
             AllocConsole();
-#endif
+            #endif
             Console.WriteLine("Program booting up...");
 
             FilesInitializer.InitializeFiles();
             Console.WriteLine("Files have been processed");
 
             Stopwatch sw = Stopwatch.StartNew();
-            KSolver.generateSolution();
+            Solver.generateSolution();
             sw.Stop();
 
             Console.WriteLine("Elapsed time for generating clusters: {0}ms", sw.ElapsedMilliseconds);

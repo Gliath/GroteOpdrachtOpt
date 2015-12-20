@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GOO.Model
+namespace GOO.Obsolete.Model
 {
     public class Day
     {

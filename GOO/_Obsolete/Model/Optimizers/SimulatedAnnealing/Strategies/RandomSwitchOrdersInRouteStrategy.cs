@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using GOO.Utilities;
 
-namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
+namespace GOO.Obsolete.Model.Optimizers.SimulatedAnnealing.Strategies
 {
     public class RandomSwitchOrdersInRouteStrategy : Strategy
     {
@@ -35,7 +35,7 @@ namespace GOO.Model.Optimizers.SimulatedAnnealing.Strategies
 
             randomChosenRoute.RemoveOrder(toSwitch, toReturn.GetOrdersCounter());
             randomChosenRoute.RemoveOrder(toSwitch2, toReturn.GetOrdersCounter());
-            randomChosenRoute.AddOrder(toSwitch, toAddAfter2, toReturn.GetOrdersCounter());           
+            randomChosenRoute.AddOrder(toSwitch, toAddAfter2, toReturn.GetOrdersCounter());
             randomChosenRoute.AddOrder(toSwitch, toAddAfter, toReturn.GetOrdersCounter());
 
             return toReturn;
