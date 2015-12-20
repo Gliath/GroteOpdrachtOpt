@@ -73,7 +73,7 @@ namespace GOO.KMeansModel
         {
             List<Order> toReturn = new List<Order>();
 
-            List<List<Order>> freqOrders = new List<List<Order>>();
+            List<List<Order>> freqOrders = new List<List<Order>>(); // The following order is intentional!
             freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK3));
             freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK4));
             freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK2));

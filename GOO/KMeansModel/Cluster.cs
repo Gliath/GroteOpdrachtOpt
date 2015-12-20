@@ -76,10 +76,11 @@ namespace GOO.KMeansModel
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("CenterPoint = " + point.ToString());
             builder.AppendLine("Orders = {");
-            foreach (Order order in ordersInCluster)
-            {
-                builder.AppendLine(order.ToString());
-            }
+            //foreach (Order order in ordersInCluster)
+            //{
+            //    builder.AppendLine(order.ToString());
+            //}
+            builder.AppendLine("" + ordersInCluster.Count);
             builder.AppendLine("}");
             builder.AppendLine("");
             return builder.ToString();
