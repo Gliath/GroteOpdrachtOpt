@@ -61,7 +61,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="KMeansModel\Cluster.cs" />
-    <Compile Include="Utilities\DaysEnum.cs" />
     <Compile Include="KMeansModel\DayRestrictionFactory.cs" />
     <Compile Include="KMeansModel\KMeansClusterer.cs" />
     <Compile Include="KMeansModel\KRoute.cs" />
@@ -87,15 +86,16 @@
     <Compile Include="Model\Optimizers\SimulatedAnnealing\Strategies\Strategy.cs" />
     <Compile Include="Model\Optimizers\SimulatedAnnealing\StrategyFactory.cs" />
     <Compile Include="Model\OrdersCounter.cs" />
+    <Compile Include="Model\Order.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="Model\Solution.cs" />
+    <Compile Include="Utilities\DaysEnum.cs" />
     <Compile Include="Utilities\DeepCopy.cs" />
     <Compile Include="Utilities\DistanceMatrixItem.cs" />
     <Compile Include="Utilities\Distances.cs" />
     <Compile Include="Utilities\OrderFrequencyEnum.cs" />
     <Compile Include="Utilities\FilesInitializer.cs" />
     <Compile Include="Utilities\INPC.cs" />
-    <Compile Include="Model\Order.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -131,7 +131,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

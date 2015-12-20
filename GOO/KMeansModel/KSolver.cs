@@ -37,7 +37,7 @@ namespace GOO.KMeansModel
             foreach (Cluster cluster in clusters)
                 Console.WriteLine(cluster);
 
-            return new KSolution();
+            return new KSolution(clusters);
         }
 
         public static string generateRouteSolution()
