@@ -37,11 +37,18 @@ namespace GOO
             Console.WriteLine("Files have been processed");
 
             Stopwatch sw = Stopwatch.StartNew();
-            
             KSolver.generateSolution();
-
             sw.Stop();
+
             Console.WriteLine("Elapsed time for generating clusters: {0}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine();
+
+            string THE_CLUSTER_SOLUTION = "";
+            sw = Stopwatch.StartNew();
+            //THE_CLUSTER_SOLUTION = KSolver.generateRouteSolution();
+            sw.Stop();
+
+            Console.WriteLine("Elapsed time for generating clusters as route solution: {0}ms", sw.ElapsedMilliseconds);
             Console.WriteLine();
 
             // Temporarily

@@ -9,13 +9,14 @@ namespace GOO.KMeansModel
 {
     public class KMeansClusterer
     {
-        private static readonly int startingAmountOfClusters = 30;
+        private static int startingAmountOfClusters = 30;
 
         private Order[] allOrders;
 
-        public KMeansClusterer(Order[] allOrders)
+        public KMeansClusterer(Order[] allOrders, int startingAmountOfClusters)
         {
             this.allOrders = allOrders;
+            KMeansClusterer.startingAmountOfClusters = startingAmountOfClusters;
         }
 
         public List<Cluster> createKClusters()
@@ -32,10 +33,10 @@ namespace GOO.KMeansModel
                 toReturn.Add(new Cluster(new Point(order.X, order.Y)));
             }
 
-
             for (int i = 0; i < 3000; i++) // Try to reposition the center-point 3000 times for each cluster
             {
                 assignOrdersToClusters(toReturn, allOrders);
+                toReturn.RemoveAll(c => c.ordersInCluster.Count == 0);
             }
             
             return toReturn;
@@ -64,8 +65,6 @@ namespace GOO.KMeansModel
                     }
                 }
                 nearest.AddOrderToCluster(order);
-                nearest = null;
-                nearestEuclidianDistance = Double.MaxValue;
             }
         }
 
@@ -76,8 +75,11 @@ namespace GOO.KMeansModel
             List<List<Order>> freqOrders = new List<List<Order>>(); // The following order is intentional!
             freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK3));
             freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK4));
-            freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK2));
-            freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK1));
+
+            int numMaxAdditions = (amountOfClusters - freqOrders.Count + 1) / 2;
+
+            freqOrders.Add(this.findOrdersWithFrequencyRandomly(allOrders, OrderFrequency.PWK2, numMaxAdditions));
+            freqOrders.Add(this.findOrdersWithFrequencyRandomly(allOrders, OrderFrequency.PWK1, numMaxAdditions));
 
             foreach (List<Order> orders in freqOrders)
             {
@@ -95,15 +97,37 @@ namespace GOO.KMeansModel
         private List<Order> findOrdersWithFrequency(Order[] toLookIn, OrderFrequency toLookFor)
         {
             List<Order> toReturn = new List<Order>();
-            
+
             for (int i = 0; i < toLookIn.Length; i++)
             {
                 Order order = toLookIn[i];
                 if (order.Frequency == toLookFor)
+                    toReturn.Add(order);
+            }
+            return toReturn;
+        }
+
+        private List<Order> findOrdersWithFrequencyRandomly(Order[] toLookIn, OrderFrequency toLookFor, int maxAdditions)
+        {
+            int numAdditions = 0;
+            List<Order> toReturn = new List<Order>();
+            Random random = new Random();
+
+            for (int i = 0; i < toLookIn.Length; i++)
+            {
+                Order order = toLookIn[random.Next(toLookIn.Length)];
+                if (order.Frequency == toLookFor)
                 {
-                    toReturn.Add(order);                    
+                    if (numAdditions > maxAdditions)
+                        return toReturn;
+                    else if(!toReturn.Contains(order))
+                    {
+                        toReturn.Add(order);
+                        numAdditions++;
+                    }
                 }
             }
+
             return toReturn;
         }
     }

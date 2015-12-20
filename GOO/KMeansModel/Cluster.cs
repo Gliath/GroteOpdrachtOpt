@@ -85,5 +85,17 @@ namespace GOO.KMeansModel
             builder.AppendLine("");
             return builder.ToString();
         }
+
+        public string ToRouteString(int truckNr, int dayNr)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            int seqNr = 1;
+            foreach (Order order in ordersInCluster)
+                builder.AppendLine(String.Format("{0};{1};{2};{3}", truckNr, dayNr, seqNr++, order.OrderNumber));
+
+            builder.AppendLine(String.Format("{0};{1};{2};0", truckNr, dayNr, seqNr));
+            return builder.ToString();
+        }
     }
 }
