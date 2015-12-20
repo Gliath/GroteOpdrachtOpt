@@ -29,6 +29,12 @@ namespace GOO.Model
             CounterList = DeepCopy<List<OrderCounter>>.CopyFrom(BasicEmptyCounterList);
         }
 
+        public void ClearAllOccurences()
+        {
+            foreach (OrderCounter order in CounterList)
+                order.OrderOccurrences = 0;
+        }
+
         public void AddOccurrence(int OrderNumber)
         {
             foreach (OrderCounter order in CounterList)
