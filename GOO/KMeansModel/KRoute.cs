@@ -11,6 +11,9 @@ namespace GOO.KMeansModel
         List<Cluster> partOfClusters;
         List<Order> orders;
 
+        public double TravelTime { get; private set; }
+        public int Weight { get; private set; }
+
         public KRoute()
         {
 
