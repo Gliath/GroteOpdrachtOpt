@@ -24,21 +24,20 @@ namespace GOO.Model
         {
             if(!CounterList.Exists(o => o.OrderNumber == OrderNumber))
             {
-                CounterList.Add(new OrderCounter(OrderNumber, FilesInitializer._Orders[OrderNumber].DayRestrictions));    
+                CounterList.Add(new OrderCounter(OrderNumber, new List<Days>(FilesInitializer._Orders[OrderNumber].DayRestrictions)));
             }
 
             foreach (OrderCounter order in CounterList)
                 if (order.OrderNumber == OrderNumber)
                 {
-                    if (order.OrderDayOccurrences.HasFlag(OccurredOn))
+                    if ((order.OrderDayOccurrences & OccurredOn) == Days.None)
                     {
                         #if DEBUG
                         Console.WriteLine("Order {0} has already occurred on {1}", OrderNumber, OccurredOn);
                         #endif
                     }
-                    else
-                        order.OrderDayOccurrences |= OccurredOn;
 
+                    order.OrderDayOccurrences |= OccurredOn;
                     break;
                 }
         }
@@ -48,17 +47,23 @@ namespace GOO.Model
             foreach (OrderCounter order in CounterList)
                 if (order.OrderNumber == OrderNumber)
                 {
-                    if (!order.OrderDayOccurrences.HasFlag(OccurredOn))
+                    if (!((order.OrderDayOccurrences & OccurredOn) == Days.None))
                     {
                         #if DEBUG
                         Console.WriteLine("Order {0} has yet to occur on {1}", OrderNumber, OccurredOn);
                         #endif
                     }
-                    else
-                        order.OrderDayOccurrences |= OccurredOn;
 
+                    order.OrderDayOccurrences ^= (order.OrderDayOccurrences & OccurredOn);
                     break;
                 }
+
+            CounterList.RemoveAll(o => o.OrderNumber == OrderNumber && o.OrderDayOccurrences.Equals(Days.None));
+        }
+
+        public Boolean HasOccurence(Days day, int OrderNumber)
+        {
+            return CounterList.Find(o => o.OrderNumber == OrderNumber && o.OrderDayOccurrences.HasFlag(day)) != null;
         }
 
         public Boolean IsCompleted()

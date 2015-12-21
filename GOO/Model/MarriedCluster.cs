@@ -9,14 +9,24 @@ namespace GOO.Model
 {
     public class MarriedCluster : AbstractCluster
     {
-        public Cluster Groom { get; set; }
-        public Cluster Bride { get; set; }
+        public Cluster Groom { get; private set; }
+        public Cluster Bride { get; private set; }
+
+        public MarriedCluster(Cluster Groom, Cluster Bride)
+        {
+            this.Groom = Groom;
+            this.Bride = Bride;
+        }
 
         public override List<Order> OrdersInCluster
         {
             get
             {
-                return null;
+                List<Order> UnifiedOrdersInCluster = new List<Order>();
+                UnifiedOrdersInCluster.AddRange(Groom.OrdersInCluster);
+                UnifiedOrdersInCluster.AddRange(Bride.OrdersInCluster);
+
+                return UnifiedOrdersInCluster;
             }
 
             set { return; }
@@ -26,36 +36,53 @@ namespace GOO.Model
         {
             get
             {
-                return null;
+                List<Days> UnifiedDaysRestrictions = new List<Days>();
+                UnifiedDaysRestrictions.AddRange(Groom.DaysRestrictions);
+
+                foreach (Days restriction in UnifiedDaysRestrictions)
+                    if (!UnifiedDaysRestrictions.Contains(restriction))
+                        UnifiedDaysRestrictions.Add(restriction);
+
+                return UnifiedDaysRestrictions;
             }
 
             set { return; }
         }
 
+        private Days UnifiedDaysPlannedFor = Days.None;
         public override Days DaysPlannedFor
         {
             get
             {
-                return Days.None;
+                if (UnifiedDaysPlannedFor == Days.None)
+                {
+                    UnifiedDaysPlannedFor = Groom.DaysPlannedFor;
+                    if (!UnifiedDaysPlannedFor.HasFlag(Bride.DaysPlannedFor))
+                        UnifiedDaysPlannedFor |= Bride.DaysPlannedFor;
+                }
+
+                return UnifiedDaysPlannedFor;
             }
 
-            set { return; }
+            set { UnifiedDaysPlannedFor = value; }
         }
 
         public override OrdersCounter OrdersCounter
         {
             get
             {
-                return null;
+                OrdersCounter UnifiedOrdersCounter = new OrdersCounter();
+
+                foreach (GOO.Model.OrdersCounter.OrderCounter orderCounter in Groom.OrdersCounter.CounterList)
+                    UnifiedOrdersCounter.AddOccurrence(orderCounter.OrderNumber, orderCounter.OrderDayOccurrences);
+
+                foreach (GOO.Model.OrdersCounter.OrderCounter orderCounter in Bride.OrdersCounter.CounterList)
+                    UnifiedOrdersCounter.AddOccurrence(orderCounter.OrderNumber, orderCounter.OrderDayOccurrences);
+
+                return UnifiedOrdersCounter;
             }
 
             set { return; }
-        }
-
-        public MarriedCluster(Cluster Groom, Cluster Bride)
-        {
-            this.Groom = Groom;
-            this.Bride = Bride;
         }
     }
 }
