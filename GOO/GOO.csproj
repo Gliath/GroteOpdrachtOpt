@@ -62,6 +62,7 @@
     </Compile>
     <Compile Include="Model\Cluster.cs" />
     <Compile Include="Model\Optimizers\AnnealingSchedule.cs" />
+    <Compile Include="Model\RouteGenerator.cs" />
     <Compile Include="Utilities\DayRestrictionFactory.cs" />
     <Compile Include="Model\Clusterer.cs" />
     <Compile Include="Model\Route.cs" />

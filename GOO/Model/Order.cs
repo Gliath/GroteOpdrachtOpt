@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using GOO.Utilities;
 
@@ -38,17 +39,8 @@ namespace GOO.Model
             }
         }
 
-        private double _penaltyTime;
-        public double PenaltyTime
-        {
-            get
-            {
-                if(_penaltyTime == 0.0d)
-                    _penaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInSeconds) * 3.0d;
-
-                return _penaltyTime;
-            }
-        }
+        public double PenaltyTime { get; private set; }
+        public List<Days> DayRestrictions { get; private set; }
 
         public Order(int OrderNumber, String Place, OrderFrequency Frequency, int NumberOfContainers, int VolumePerContainer, double EmptyingTimeInSeconds, int MatrixID, int X, int Y)
         {
@@ -61,6 +53,9 @@ namespace GOO.Model
             this.MatrixID = MatrixID;
             this.X = X;
             this.Y = Y;
+
+            PenaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInSeconds) * 3.0d;
+            DayRestrictions = DayRestrictionFactory.GetDayRestrictions(Frequency);
         }
     }
 }

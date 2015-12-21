@@ -24,7 +24,7 @@ namespace GOO.Model
             this.truckPlanning.Add(new Tuple<Days, int, List<Route>>(day, truckID, routes));
             updateOrdersCounterAfterAdding(routes);
         }
-        
+
         public void RemoveItemFromPlanning(Days day, int truckID)
         {
             Tuple<Days, int, List<Route>> toRemove = getPlanningForATruck(day, truckID);
@@ -37,7 +37,7 @@ namespace GOO.Model
             ordersCounter.ClearAllOccurences();
             foreach (Tuple<Days, int, List<Route>> tuple in truckPlanning)
             {
-                updateOrdersCounterAfterAdding(tuple.Item3);   
+                updateOrdersCounterAfterAdding(tuple.Item3);
             }
         }
 
@@ -47,7 +47,7 @@ namespace GOO.Model
             {
                 foreach (Order order in route.Orders)
 	            {
-                    ordersCounter.RemoveOccurrence(order.OrderNumber);
+                    ordersCounter.RemoveOccurrence(order.OrderNumber, route.Day);
 	            }
             }
         }
@@ -58,7 +58,7 @@ namespace GOO.Model
             {
                 foreach (Order order in route.Orders)
                 {
-                    ordersCounter.AddOccurrence(order.OrderNumber);
+                    ordersCounter.AddOccurrence(order.OrderNumber, route.Day);
                 }
             }
         }
@@ -84,13 +84,8 @@ namespace GOO.Model
                     else
                         uncompleteOrders.Add(orderNumber); // Is going to be punished, add it to the list
 
-                    foreach (Order order in FilesInitializer._Orders)
-                        if (order != null)
-                            if (order.OrderNumber == orderNumber)
-                            {
-                                penaltyTime += order.PenaltyTime;
-                                break;
-                            }
+                    penaltyTime += FilesInitializer._Orders[orderNumber].PenaltyTime;
+                    break;
                 }
             } // penaltyTime has been calculated
 

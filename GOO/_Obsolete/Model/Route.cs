@@ -1,6 +1,7 @@
-﻿using GOO.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
+
+using GOO.Utilities;
 
 namespace GOO.Obsolete.Model
 {

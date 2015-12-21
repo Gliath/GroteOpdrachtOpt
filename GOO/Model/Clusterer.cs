@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 using GOO.Utilities;
@@ -10,9 +11,9 @@ namespace GOO.Model
     {
         private static int startingAmountOfClusters = 30;
 
-        private Order[] allOrders;
+        private Dictionary<int, Order> allOrders;
 
-        public Clusterer(Order[] allOrders, int startingAmountOfClusters)
+        public Clusterer(Dictionary<int, Order> allOrders, int startingAmountOfClusters)
         {
             this.allOrders = allOrders;
             Clusterer.startingAmountOfClusters = startingAmountOfClusters;
@@ -23,7 +24,7 @@ namespace GOO.Model
             return createKClusters(Clusterer.startingAmountOfClusters, this.createStartOrders(this.allOrders, Clusterer.startingAmountOfClusters), this.allOrders);
         }
 
-        public List<Cluster> createKClusters(int amountOfClusters, List<Order> startingPoints, Order[] allOrders)
+        public List<Cluster> createKClusters(int amountOfClusters, List<Order> startingPoints, Dictionary<int, Order> allOrders)
         {
             List<Cluster> toReturn = new List<Cluster>();
 
@@ -52,11 +53,11 @@ namespace GOO.Model
 
                 cluster.DaysRestrictions = restrictions;
             }
-            
+
             return toReturn;
         }
 
-        private void assignOrdersToClusters(List<Cluster> clusters, Order[] toAssign)
+        private void assignOrdersToClusters(List<Cluster> clusters, Dictionary<int, Order> toAssign)
         {
             // Grouping orders based on Euclidean distance method
             // Note : calculating the root is currently not neccessary due to look at relative points
@@ -65,7 +66,7 @@ namespace GOO.Model
                 cluster.RemoveAllOrdersFromCluster();
             }
 
-            foreach (Order order in allOrders)
+            foreach (Order order in allOrders.Values)
             {
                 Cluster nearest = null;
                 double nearestEuclidianDistance = Double.MaxValue;
@@ -82,7 +83,7 @@ namespace GOO.Model
             }
         }
 
-        private List<Order> createStartOrders(Order[] allOrders, int amountOfClusters)
+        private List<Order> createStartOrders(Dictionary<int, Order> allOrders, int amountOfClusters)
         {
             List<Order> toReturn = new List<Order>();
 
@@ -108,33 +109,32 @@ namespace GOO.Model
             return toReturn;
         }
 
-        private List<Order> findOrdersWithFrequency(Order[] toLookIn, OrderFrequency toLookFor)
+        private List<Order> findOrdersWithFrequency(Dictionary<int, Order> toLookIn, OrderFrequency toLookFor)
         {
             List<Order> toReturn = new List<Order>();
 
-            for (int i = 0; i < toLookIn.Length; i++)
-            {
-                Order order = toLookIn[i];
+            foreach (Order order in toLookIn.Values)
                 if (order.Frequency == toLookFor)
                     toReturn.Add(order);
-            }
+
             return toReturn;
         }
 
-        private List<Order> findOrdersWithFrequencyRandomly(Order[] toLookIn, OrderFrequency toLookFor, int maxAdditions)
+        private List<Order> findOrdersWithFrequencyRandomly(Dictionary<int, Order> toLookIn, OrderFrequency toLookFor, int maxAdditions)
         {
             int numAdditions = 0;
             List<Order> toReturn = new List<Order>();
             Random random = new Random();
 
-            for (int i = 0; i < toLookIn.Length; i++)
+            for (int i = 0; i < toLookIn.Count; i++)
             {
-                Order order = toLookIn[random.Next(toLookIn.Length)];
+                Order order = toLookIn.ElementAt(random.Next(toLookIn.Count)).Value;
+
                 if (order.Frequency == toLookFor)
                 {
                     if (numAdditions > maxAdditions)
                         return toReturn;
-                    else if(!toReturn.Contains(order))
+                    else if (!toReturn.Contains(order))
                     {
                         toReturn.Add(order);
                         numAdditions++;

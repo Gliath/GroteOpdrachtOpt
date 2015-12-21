@@ -7,58 +7,55 @@ namespace GOO.Model
 {
     public class OrdersCounter
     {
-        private static List<OrderCounter> BasicEmptyCounterList;
-        private static void GenerateBasicEmptyCounterList()
-        {
-            BasicEmptyCounterList = new List<OrderCounter>();
-            foreach (Order order in FilesInitializer._Orders)
-                if(order != null)
-                    BasicEmptyCounterList.Add(new OrderCounter(order.OrderNumber, order.FrequencyNumber));
-        }
-
         public List<OrderCounter> CounterList { get; set; }
 
         public OrdersCounter()
         {
-            if (BasicEmptyCounterList == null)
-                OrdersCounter.GenerateBasicEmptyCounterList();
-
-            CounterList = DeepCopy<List<OrderCounter>>.CopyFrom(BasicEmptyCounterList);
+            CounterList = new List<OrderCounter>();
         }
 
         public void ClearAllOccurences()
         {
-            foreach (OrderCounter order in CounterList)
-                order.OrderOccurrences = 0;
+            CounterList.Clear();
+            CounterList = new List<OrderCounter>();
         }
 
-        public void AddOccurrence(int OrderNumber)
+        public void AddOccurrence(int OrderNumber, Days OccurredOn)
         {
+            if(!CounterList.Exists(o => o.OrderNumber == OrderNumber))
+            {
+                CounterList.Add(new OrderCounter(OrderNumber, FilesInitializer._Orders[OrderNumber].DayRestrictions));    
+            }
+
             foreach (OrderCounter order in CounterList)
                 if (order.OrderNumber == OrderNumber)
                 {
-                    order.OrderOccurrences++;
-
-                    #if DEBUG
-                    if (order.OrderOccurrences > order.OrderFrequency)
-                        Console.WriteLine("Order {0} has occurred to many times, {1}/{2} times", OrderNumber, order.OrderOccurrences, order.OrderFrequency);
-                    #endif
+                    if (order.OrderDayOccurrences.HasFlag(OccurredOn))
+                    {
+                        #if DEBUG
+                        Console.WriteLine("Order {0} has already occurred on {1}", OrderNumber, OccurredOn);
+                        #endif
+                    }
+                    else
+                        order.OrderDayOccurrences |= OccurredOn;
 
                     break;
                 }
         }
 
-        public void RemoveOccurrence(int OrderNumber)
+        public void RemoveOccurrence(int OrderNumber, Days OccurredOn)
         {
             foreach (OrderCounter order in CounterList)
                 if (order.OrderNumber == OrderNumber)
                 {
-                    order.OrderOccurrences--;
-
-                    #if DEBUG
-                    if (order.OrderOccurrences < 0)
-                        Console.WriteLine("Order {0} has occurred negative amount of times, {1} times", OrderNumber, order.OrderOccurrences);
-                    #endif
+                    if (!order.OrderDayOccurrences.HasFlag(OccurredOn))
+                    {
+                        #if DEBUG
+                        Console.WriteLine("Order {0} has yet to occur on {1}", OrderNumber, OccurredOn);
+                        #endif
+                    }
+                    else
+                        order.OrderDayOccurrences |= OccurredOn;
 
                     break;
                 }
@@ -85,25 +82,29 @@ namespace GOO.Model
         public class OrderCounter
         {
             public int OrderNumber { get; private set; }
-            public int OrderFrequency { get; private set; }
-            public int OrderOccurrences { get; set; }
+            public List<Days> OrderDayRestrictions { get; private set; }
+            public Days OrderDayOccurrences { get; set; }
 
-            public OrderCounter(int OrderNumber, int OrderFrequency)
+            public OrderCounter(int OrderNumber, List<Days> OrderDayRestrictions)
             {
                 this.OrderNumber = OrderNumber;
-                this.OrderFrequency = OrderFrequency;
+                this.OrderDayRestrictions = OrderDayRestrictions;
 
-                OrderOccurrences = 0;
+                OrderDayOccurrences = Days.None;
             }
 
             public Boolean IsCompleted()
             {
                 #if DEBUG // Debug, test if order occurrs to many times
-                if (OrderOccurrences > OrderFrequency)
-                    Console.WriteLine("Order {0} has occurred to many times, {1}/{2} times", OrderNumber, OrderOccurrences, OrderFrequency);
+                //if (OrderDayOccurrences > OrderDayRestrictions) // TODO FIXZ THIS DEBUG CODE
+                //    Console.WriteLine("Order {0} has occurred to many times, {1}/{2} times", OrderNumber, OrderDayOccurrences, OrderDayRestrictions);
                 #endif
 
-                return OrderFrequency == OrderOccurrences;
+                foreach (Days restrictions in OrderDayRestrictions)
+                    if(OrderDayOccurrences.Equals(restrictions))
+                        return true;
+
+                return false;
             }
         }
     }
