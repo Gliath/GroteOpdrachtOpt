@@ -29,12 +29,15 @@ namespace GOO.Model.Optimizers.Strategies
                 if (targetCluster.Routes.Count > 1)
                 {
                     List<int> visitedIndices = new List<int>();
-                    int numOfMaximumTries = 256;
-                    while ((firstRouteIndex == -1 || secondRouteIndex == -1) && numOfMaximumTries > 0)
+                    int numOfMaximumTriesFindingAMatchingRoute = 256;
+                    while ((firstRouteIndex == -1 || secondRouteIndex == -1) && numOfMaximumTriesFindingAMatchingRoute > 0)
                     {
                         int randomIndex = random.Next(targetCluster.Routes.Count);
                         if (targetCluster.Routes[randomIndex].Orders.Count < 3 || visitedIndices.Contains(randomIndex))
+                        {
+                            numOfMaximumTriesFindingAMatchingRoute--;
                             continue;
+                        }
 
                         if (firstRouteIndex != -1)
                         {
@@ -46,7 +49,7 @@ namespace GOO.Model.Optimizers.Strategies
                         else
                             firstRouteIndex = -1;
 
-                        numOfMaximumTries--;
+                        numOfMaximumTriesFindingAMatchingRoute--;
                     }
                 }
                 else
