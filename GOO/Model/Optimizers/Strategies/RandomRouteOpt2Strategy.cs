@@ -60,6 +60,7 @@ namespace GOO.Model.Optimizers.Strategies
                         }
                     }
                 }
+                improvestep++;
             }
             return toReturn;
         }
