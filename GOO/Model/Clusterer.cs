@@ -44,14 +44,14 @@ namespace GOO.Model
                 List<Days> restrictions = new List<Days>();
                 List<OrderFrequency> frequenciesPresent = new List<OrderFrequency>();
 
-                foreach (Order order in cluster.OrdersInCluster)
-                    if (order.Frequency != OrderFrequency.PWK1 && !frequenciesPresent.Contains(order.Frequency))
-                    {
-                        restrictions.AddRange(DayRestrictionFactory.GetDayRestrictions(order.Frequency));
-                        frequenciesPresent.Add(order.Frequency);
-                    }
+                //foreach (Order order in cluster.OrdersInCluster)
+                //    if (order.Frequency != OrderFrequency.PWK1 && !frequenciesPresent.Contains(order.Frequency))
+                //    {
+                //        restrictions.AddRange(DayRestrictionFactory.GetDayRestrictions(order.Frequency));
+                //        frequenciesPresent.Add(order.Frequency);
+                //    }
 
-                cluster.DaysRestrictions = restrictions;
+                //cluster.DaysRestrictions = restrictions;
             }
 
             return toReturn;

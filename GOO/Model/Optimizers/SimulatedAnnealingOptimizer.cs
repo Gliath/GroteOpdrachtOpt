@@ -39,11 +39,11 @@ namespace GOO.Model.Optimizers
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
-                // Phase 1 : Marry / Divorce & Schedule Clusters
+                // Phase 1 : Marry / Divorce Clusters
 
                 // Phase 2 : Create routes and use either Opt2, Opt2.5, Opt3, Genetic, Random to optimize
 
-                // Phase 3 : Assign routes to truckers
+                // Phase 3 : Schedule Clusters & Assign routes to truckers
 
                 // Phase 4 : Accept or reject new solution
 

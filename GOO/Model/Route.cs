@@ -22,6 +22,13 @@ namespace GOO.Model
             Orders.Add(FilesInitializer.GetOrder0());
         }
 
+        public bool CanAddOrder(Order order)
+        {
+
+
+            return true;
+        }
+
         public void AddOrder(Order order)
         {
             int LastMatrixID = 287;

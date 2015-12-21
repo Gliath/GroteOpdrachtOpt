@@ -12,15 +12,17 @@ namespace GOO.Model
         public Point CenterPoint { get; private set; }
         public List<Order> OrdersInCluster { get; private set; }
         public List<Days> DaysRestrictions { get; set; }
+        public Days DaysPlannedFor { get; set; }
 
         public Cluster(Point centerPoint)
-            : this(centerPoint, new List<Order>())
+            : this(centerPoint, new List<Order>(), Days.None)
         {}
 
-        public Cluster(Point centerPoint, List<Order> ordersInCluster)
+        public Cluster(Point centerPoint, List<Order> ordersInCluster, Days daysPlannedFor)
         {
             this.CenterPoint = centerPoint;
             this.OrdersInCluster = ordersInCluster;
+            this.DaysPlannedFor = daysPlannedFor;
         }
 
         public bool ReCenterPoint()
