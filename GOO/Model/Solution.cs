@@ -123,7 +123,7 @@ namespace GOO.Model
                 {
                     for (int orderID = 0; orderID < routes[routeID].Orders.Count; orderID++)
                     {
-                        sb.AppendLine(String.Format("{0};{1};{2};{3}", tuple.Item2 + 1, tuple.Item1, ++sequenceID, routes[routeID].Orders[orderID].OrderNumber));
+                        sb.AppendLine(String.Format("{0};{1};{2};{3}", tuple.Item2 + 1, (int)tuple.Item1, ++sequenceID, routes[routeID].Orders[orderID].OrderNumber));
                     }
                 }
             }
