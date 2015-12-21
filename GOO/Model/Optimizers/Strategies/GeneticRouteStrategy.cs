@@ -6,7 +6,6 @@ namespace GOO.Model.Optimizers.Strategies
     public class GeneticRouteStrategy : Strategy
     {
         private Route firstRouteToModify;
-        private Route secondRouteToModify;
         private Random random;
 
         public GeneticRouteStrategy()
@@ -19,38 +18,17 @@ namespace GOO.Model.Optimizers.Strategies
         {
             Cluster targetCluster = null;
             int firstRouteIndex = -1;
-            int secondRouteIndex = -1;
 
-            int numOfMaximumTriesFindingACluster = 128;
+            int numOfMaximumTriesFindingACluster = 32;
             while (targetCluster == null && numOfMaximumTriesFindingACluster > 0)
             {
                 targetCluster = toStartFrom.getRandomCluster();
 
-                if (targetCluster.Routes.Count > 1)
+                if (targetCluster.Routes.Count > 0)
                 {
-                    List<int> visitedIndices = new List<int>();
-                    int numOfMaximumTriesFindingAMatchingRoute = 256;
-                    while ((firstRouteIndex == -1 || secondRouteIndex == -1) && numOfMaximumTriesFindingAMatchingRoute > 0)
-                    {
-                        int randomIndex = random.Next(targetCluster.Routes.Count);
-                        if (targetCluster.Routes[randomIndex].Orders.Count < 3 || visitedIndices.Contains(randomIndex))
-                        {
-                            numOfMaximumTriesFindingAMatchingRoute--;
-                            continue;
-                        }
-
-                        if (firstRouteIndex != -1)
-                        {
-                            firstRouteIndex = randomIndex;
-                            visitedIndices.Add(randomIndex);
-                        }
-                        else if (targetCluster.Routes[firstRouteIndex].Day == targetCluster.Routes[randomIndex].Day)
-                            secondRouteIndex = randomIndex;
-                        else
-                            firstRouteIndex = -1;
-
-                        numOfMaximumTriesFindingAMatchingRoute--;
-                    }
+                    for (int i = 0; i < targetCluster.Routes.Count; i++)
+                        if (targetCluster.Routes[i].Orders.Count > 2)
+                            firstRouteIndex = i; // TODO: Randomize route selection?
                 }
                 else
                     targetCluster = null;
@@ -58,11 +36,10 @@ namespace GOO.Model.Optimizers.Strategies
                 numOfMaximumTriesFindingACluster--;
             }
 
-            if (targetCluster == null && numOfMaximumTriesFindingACluster == 0)
-                return null; // Solution does not have (is very hard to find) 
+            if (targetCluster == null)
+                return null; // Just in case something weird happens
 
             firstRouteToModify = targetCluster.Routes[firstRouteIndex];
-            secondRouteToModify = targetCluster.Routes[secondRouteIndex];
 
 
 
