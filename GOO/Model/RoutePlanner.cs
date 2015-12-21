@@ -43,59 +43,84 @@ namespace GOO.Model
             int matrixB = 287;
             
             // Order array to choose orders from with a random
-            List<Order> OrderArray = cluster.OrdersInCluster;
+            List<Order> AvailableClusterOrders = cluster.OrdersInCluster;
             List<Order> OrdersInRoute = toFill.Orders;
-            List<Order> AvailableOrders = new List<Order>(); // TODO : <--- Make this based on the OrdersCounter
-            OrdersCounter clusterCounter = cluster.OrdersCounter;
 
-            while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps)
+            OrdersCounter ClusterCounter = cluster.OrdersCounter;
+
+            // Build for Monday - Friday
+                // Do i need to build for <day>? 
+                    // Yes -> Make new route and update available orders
+                    // No -> Skip iteration
+
+            foreach (Days Day in Enum.GetValues(typeof(Days)))
             {
-                int randomInt = random.Next(0, OrderArray.Count);
-                int bestOrder = OrderArray[randomInt].MatrixID;
-                int randomAmountOfLoops = random.Next(5, 50);
+                if(cluster.DaysRestrictions.Find(d => d.HasFlag(Day)) == null)
+                    continue;
 
-                //make 5 ~ 50 points and get the best one
-                for (int i = 0; i < randomAmountOfLoops; i++)
+                List<Order> AvailableOrders = createAvailableOrdersForDay(Day, ClusterCounter, AvailableClusterOrders);
+
+                while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps)
                 {
-                    int randomInt2 = random.Next(1, OrderArray.Count);
-                    int travelLocation1 = FilesInitializer._DistanceMatrix.Matrix[matrixA, OrderArray[randomInt].MatrixID].TravelTime;
-                    int travelLocation2 = FilesInitializer._DistanceMatrix.Matrix[matrixA, OrderArray[randomInt2].MatrixID].TravelTime;
-                    if (travelLocation2 < travelLocation1)
+                    int randomInt = random.Next(0, AvailableClusterOrders.Count);
+                    int bestOrder = AvailableClusterOrders[randomInt].MatrixID;
+                    int randomAmountOfLoops = random.Next(5, 50);
+
+                    //make 5 ~ 50 points and get the best one
+                    for (int i = 0; i < randomAmountOfLoops; i++)
                     {
-                        if (!OrdersInRoute.Contains(OrderArray[randomInt2]))
+                        int randomInt2 = random.Next(1, AvailableClusterOrders.Count);
+                        int travelLocation1 = FilesInitializer._DistanceMatrix.Matrix[matrixA, AvailableClusterOrders[randomInt].MatrixID].TravelTime;
+                        int travelLocation2 = FilesInitializer._DistanceMatrix.Matrix[matrixA, AvailableClusterOrders[randomInt2].MatrixID].TravelTime;
+                        if (travelLocation2 < travelLocation1)
                         {
-                            bestOrder = OrderArray[randomInt2].MatrixID;
-                            randomInt = randomInt2;
+                            if (!OrdersInRoute.Contains(AvailableClusterOrders[randomInt2]))
+                            {
+                                bestOrder = AvailableClusterOrders[randomInt2].MatrixID;
+                                randomInt = randomInt2;
+                            }
                         }
                     }
-                }
-                matrixB = bestOrder;
+                    matrixB = bestOrder;
 
-                if (!OrdersInRoute.Contains(OrderArray[randomInt]) && !AvailableOrders.Contains(OrderArray[randomInt]) && !clusterCounter.IsOrderCompleted(OrderArray[randomInt].OrderNumber)) //check if order is already in the order list
-                {
-                    //check if the weight and travel time does not exceed thier max values
-                    if (toFill.Weight + (OrderArray[randomInt].NumberOfContainers * OrderArray[randomInt].VolumePerContainer) <= maxWeight &&
-                        toFill.TravelTime +
-                        FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime +
-                        FilesInitializer._DistanceMatrix.Matrix[matrixB, depositPoint].TravelTime -
-                        FilesInitializer._DistanceMatrix.Matrix[matrixA, depositPoint].TravelTime +
-                        OrderArray[randomInt].EmptyingTimeInSeconds <=
-                        maxTravelTime)
+                    if (!OrdersInRoute.Contains(AvailableClusterOrders[randomInt]) && !AvailableOrders.Contains(AvailableClusterOrders[randomInt]) && !ClusterCounter.IsOrderCompleted(AvailableClusterOrders[randomInt].OrderNumber)) //check if order is already in the order list
                     {
-                        //add the order to the orderlist and update the matrix check value for the next run
-                        //Console.WriteLine(OrderArray[randomInt].OrderNumber + "  Current travel time :" + TravelTime + " Added route time: " + FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime + "/" + OrderArray[randomInt].EmptyingTimeInSeconds);
-                        matrixA = OrderArray[randomInt].MatrixID;
-                        toFill.AddOrder(OrderArray[randomInt]);
+                        //check if the weight and travel time does not exceed thier max values
+                        if (toFill.Weight + (AvailableClusterOrders[randomInt].NumberOfContainers * AvailableClusterOrders[randomInt].VolumePerContainer) <= maxWeight &&
+                            toFill.TravelTime +
+                            FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime +
+                            FilesInitializer._DistanceMatrix.Matrix[matrixB, depositPoint].TravelTime -
+                            FilesInitializer._DistanceMatrix.Matrix[matrixA, depositPoint].TravelTime +
+                            AvailableClusterOrders[randomInt].EmptyingTimeInSeconds <=
+                            maxTravelTime)
+                        {
+                            //add the order to the orderlist and update the matrix check value for the next run
+                            //Console.WriteLine(OrderArray[randomInt].OrderNumber + "  Current travel time :" + TravelTime + " Added route time: " + FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime + "/" + OrderArray[randomInt].EmptyingTimeInSeconds);
+                            matrixA = AvailableClusterOrders[randomInt].MatrixID;
+                            toFill.AddOrder(AvailableClusterOrders[randomInt]);
+                        }
+                        else
+                        {
+                            steps += 10;
+                        }
                     }
-                    else
-                    {
-                        steps += 10;
-                    }
+                    steps++;
                 }
-                steps++;
+
             }
+            return toReturn;
+        }
 
-
+        private static List<Order> createAvailableOrdersForDay(Days day, OrdersCounter orderCounter, List<Order> ordersToUse)
+        {
+            List<Order> toReturn = new List<Order>();
+            foreach (Order order in ordersToUse)
+            {
+                if (!orderCounter.HasOccurence(day, order.OrderNumber) && !orderCounter.IsOrderCompleted(order.OrderNumber))
+                {
+                    toReturn.Add(order);
+                }
+            }
             return toReturn;
         }
     }

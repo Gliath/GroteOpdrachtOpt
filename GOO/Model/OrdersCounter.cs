@@ -61,6 +61,11 @@ namespace GOO.Model
                 }
         }
 
+        public Boolean HasOccurence(Days day, int OrderNumber)
+        {
+            return CounterList.Find(o => o.OrderNumber == OrderNumber && o.OrderDayOccurrences.HasFlag(day)) != null;
+        }
+
         public Boolean IsCompleted()
         {
             foreach (OrderCounter order in CounterList)
