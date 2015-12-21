@@ -75,6 +75,37 @@ namespace GOO.Model.Optimizers
 
         private Solution Phase_2_dealWithRoutes(Solution toStartFrom)
         {
+            //weighted value of each strategy
+            double opt2Chance = 10d;
+            double opt25Chance = 3d;
+            double opt3Chance = 2d;
+            double geneticChance = 1d;
+            double randomChance = 4d;
+
+            Random random = new Random();
+            Strategy strategy = null;
+
+            double select = random.NextDouble() * (opt2Chance + opt25Chance + opt3Chance + geneticChance + randomChance);
+
+            //opt2
+            if(select < opt2Chance)
+                strategy = new Strategies.RandomRouteOpt2Strategy();
+            //opt2.5
+            else if (select < opt2Chance + opt25Chance)
+                strategy = new Strategies.RandomRouteOpt2Strategy();
+            //opt3
+            else if (select < opt2Chance + opt25Chance + opt3Chance)
+                strategy = new Strategies.RandomRouteOpt2Strategy();
+            //genetic
+            else if (select < opt2Chance + opt25Chance + opt3Chance + geneticChance)
+                strategy = new Strategies.GeneticRouteStrategy();
+            //total random
+            else if (select < opt2Chance + opt25Chance + opt3Chance + geneticChance + randomChance)
+                strategy = new Strategies.RandomRouteOpt2Strategy();
+            else //do nothing wich should never happen actualy
+                return toStartFrom;
+
+            strategy.executeStrategy(toStartFrom);
             return toStartFrom;
         }
 
