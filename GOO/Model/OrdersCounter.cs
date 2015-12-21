@@ -24,7 +24,7 @@ namespace GOO.Model
         {
             if(!CounterList.Exists(o => o.OrderNumber == OrderNumber))
             {
-                CounterList.Add(new OrderCounter(OrderNumber, FilesInitializer._Orders[OrderNumber].DayRestrictions));    
+                CounterList.Add(new OrderCounter(OrderNumber, new List<Days>(FilesInitializer._Orders[OrderNumber].DayRestrictions)));
             }
 
             foreach (OrderCounter order in CounterList)
