@@ -52,42 +52,43 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="View\MainView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\Optimizers\Strategies\GeneticRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt2Strategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\Strategy.cs" />
+    <Compile Include="Model\Optimizers\AnnealingSchedule.cs" />
+    <Compile Include="Model\Optimizers\SimulatedAnnealingOptimizer.cs" />
+    <Compile Include="Model\Optimizers\StrategyFactory.cs" />
     <Compile Include="Model\AbstractCluster.cs" />
     <Compile Include="Model\Cluster.cs" />
-    <Compile Include="Model\Optimizers\AnnealingSchedule.cs" />
     <Compile Include="Model\MarriedCluster.cs" />
-    <Compile Include="Model\Optimizers\Strategies\GeneticRouteStrategy.cs" />
-    <Compile Include="Model\RoutePlanner.cs" />
-    <Compile Include="Utilities\DayRestrictionFactory.cs" />
     <Compile Include="Model\Clusterer.cs" />
+    <Compile Include="Model\Order.cs" />
+    <Compile Include="Model\OrdersCounter.cs" />
     <Compile Include="Model\Route.cs" />
-    <Compile Include="Model\Optimizers\SimulatedAnnealingOptimizer.cs" />
+    <Compile Include="Model\RoutePlanner.cs" />
     <Compile Include="Model\Solution.cs" />
     <Compile Include="Model\Solver.cs" />
-    <Compile Include="Model\Optimizers\Strategies\Strategy.cs" />
-    <Compile Include="Model\Optimizers\StrategyFactory.cs" />
-    <Compile Include="Model\OrdersCounter.cs" />
-    <Compile Include="Model\Order.cs" />
+    <Compile Include="Utilities\DayRestrictionFactory.cs" />
     <Compile Include="Utilities\DaysEnum.cs" />
     <Compile Include="Utilities\DeepCopy.cs" />
     <Compile Include="Utilities\DistanceMatrixItem.cs" />
     <Compile Include="Utilities\Distances.cs" />
-    <Compile Include="Utilities\OrderFrequencyEnum.cs" />
     <Compile Include="Utilities\FilesInitializer.cs" />
     <Compile Include="Utilities\INPC.cs" />
+    <Compile Include="Utilities\OrderFrequencyEnum.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
