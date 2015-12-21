@@ -7,12 +7,13 @@ using GOO.Utilities;
 
 namespace GOO.Model
 {
-    public class Cluster
+    public class Cluster : AbstractCluster
     {
         public Point CenterPoint { get; private set; }
-        public List<Order> OrdersInCluster { get; private set; }
-        public List<Days> DaysRestrictions { get; set; }
-        public Days DaysPlannedFor { get; set; }
+        public override List<Order> OrdersInCluster { get; set; }
+        public override List<Days> DaysRestrictions { get; set; }
+        public override Days DaysPlannedFor { get; set; }
+        public override OrdersCounter OrdersCounter { get; set; }
 
         public Cluster(Point centerPoint)
             : this(centerPoint, new List<Order>(), Days.None)
@@ -72,18 +73,6 @@ namespace GOO.Model
             //builder.AppendLine("}");
             builder.AppendLine("Number of Orders: " + OrdersInCluster.Count);
             builder.AppendLine("");
-            return builder.ToString();
-        }
-
-        public string ToRouteString(int truckNr, int dayNr)
-        {
-            StringBuilder builder = new StringBuilder();
-
-            int seqNr = 1;
-            foreach (Order order in OrdersInCluster)
-                builder.AppendLine(String.Format("{0};{1};{2};{3}", truckNr, dayNr, seqNr++, order.OrderNumber));
-
-            builder.AppendLine(String.Format("{0};{1};{2};0", truckNr, dayNr, seqNr));
             return builder.ToString();
         }
     }
