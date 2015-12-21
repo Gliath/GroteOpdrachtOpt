@@ -1,21 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
 
+using GOO.Model;
+using GOO.Model.Optimizers;
 using GOO.Model.Optimizers.Strategies;
 
-namespace GOO.Model.Optimizers
+namespace GOO.KMeansModel
 {
-    public class SimulatedAnnealingOptimizer
+    public class KSimulatedAnnealingOptimizer
     {
-        private AnnealingSchedule annealingSchedule;
-        private Strategy[] strategies;
-        private Random random;
         private static double theX = 2d;
 
-        public SimulatedAnnealingOptimizer()
+        private Strategy[] phase_1_strategies;
+        private Strategy[] phase_2_strategies;
+        private Strategy[] phase_3_strategies;
+
+        private AnnealingSchedule annealingSchedule;
+
+        private Random random;
+
+        private double oldSolutionScore;
+
+        public KSimulatedAnnealingOptimizer()
         {
+            phase_1_strategies = StrategyFactory.GetAllStrategies();
+            phase_2_strategies = StrategyFactory.GetAllStrategies();
+            phase_3_strategies = StrategyFactory.GetAllStrategies();
+
             annealingSchedule = new AnnealingSchedule();
-            strategies = StrategyFactory.GetAllStrategies();
+
             random = new Random();
+
+            oldSolutionScore = Double.MaxValue;
         }
 
         public Solution runOptimizer(Solution startSolution)
@@ -24,29 +40,54 @@ namespace GOO.Model.Optimizers
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
-                Solution newSolution = createNewSolution(startSolution);
+                // Phase 1 : Marry / Divorce & Schedule Clusters
+
+                // Phase 2 : Create routes and use either Opt2, Opt2.5, Opt3, Genetic, Random to optimize
+
+                // Phase 3 : Assign routes to truckers
+
+                // Phase 4 : Accept or reject new solution
+
+                /* OLD stuff
                 double currentSolutionScore = currentSolution.GetSolutionScore();
-                double newSolutionScore = newSolution.GetSolutionScore();
+
                 double deltaScore = currentSolutionScore - newSolutionScore;
-                double chanceToBeAccepted =  Math.Pow(theX, (deltaScore/annealingSchedule.AnnealingTemperature));
+                double chanceToBeAccepted = Math.Pow(theX, (deltaScore / annealingSchedule.AnnealingTemperature));
 
                 if (deltaScore > 0)
                 {
                     currentSolution = newSolution;
                 }
-                    
+
                 else if (random.NextDouble() <= chanceToBeAccepted)
                 {
                     currentSolution = newSolution;
                 } // No new solution accepted.
+                */
             }
 
             return currentSolution;
         }
 
-        private Solution createNewSolution(Solution currentSolution) // TODO : Change
+        private List<Cluster> Phase_1_dealWithClusters(Solution toStartFrom)
         {
-            return strategies[(random.Next(strategies.Length - 1 <= 0 ? 0 : strategies.Length - 1))].executeStrategy(currentSolution);
+            return new List<Cluster>();
         }
+
+        private Solution Phase_2_dealWithRoutes(Solution toStartFrom)
+        {
+            return toStartFrom;
+        }
+
+        private Solution Phase_3_distributeRoutesToTruckers(Solution toStartFrom)
+        {
+            return toStartFrom;
+        }
+
+        private Solution Phase_4_AcceptOrReject(Solution toAcceptOrReject)
+        {
+            return toAcceptOrReject;
+        }
+
     }
 }
