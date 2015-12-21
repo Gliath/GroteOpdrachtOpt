@@ -23,21 +23,16 @@ namespace GOO.Model.Optimizers.Strategies
             day = Planning.Item1;
             truck = Planning.Item2;
             RoutesFromSolution = Planning.Item3;
-            
+
             //save the begin route for rollback
             old_route = RoutesFromSolution[new Random().Next(RoutesFromSolution.Count)];
 
-            //copy the begin route for the 2-opt
+            //copy the begin route for the 2-opt and create the route for the 2-opt check
             routeToWorkWith = new Route(day);
-            foreach(Order order in old_route.Orders)
-            {
-                routeToWorkWith.AddOrder(order); 
-            }
-
-            //create the route for the 2-opt check
             new_route = new Route(day);
             foreach (Order order in old_route.Orders)
             {
+                routeToWorkWith.AddOrder(order);
                 new_route.AddOrder(order);
             }
 
@@ -46,28 +41,31 @@ namespace GOO.Model.Optimizers.Strategies
             double new_traveltime = double.MaxValue;
 
             int improvestep = 0;
-            while( improvestep < 30)
+            while (improvestep < 30)
             {
-                for ( int i = 0; i < routeToWorkWith.Orders.Count-1; i ++)
+                for (int i = 0; i < routeToWorkWith.Orders.Count - 2; i++)
                 {
                     for (int k = i + 1; k < routeToWorkWith.Orders.Count - 1; k++)
                     {
                         //swap the 2 coords
-                        swapOrders(routeToWorkWith.Orders[i], routeToWorkWith.Orders[k], new_route);
+                        swapOrders(routeToWorkWith.Orders[i], routeToWorkWith.Orders[k], routeToWorkWith);
                         new_traveltime = routeToWorkWith.TravelTime;
-                        if(new_traveltime < best_traveltime)
+                        if (new_traveltime < best_traveltime)
                         {
                             improvestep = 0;
                             new_route = routeToWorkWith;
                             best_traveltime = new_traveltime;
+
                             routeToWorkWith = new Route(day);
                             foreach (Order order in new_route.Orders)
                             {
-                                routeToWorkWith.AddOrder(order);
+                                if(order.OrderNumber != 0)
+                                    routeToWorkWith.AddOrder(order);
                             }
                         }
                     }
                 }
+
                 improvestep++;
             }
 
