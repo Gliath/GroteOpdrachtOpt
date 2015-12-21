@@ -65,7 +65,7 @@ namespace GOO.Model
         {
             int OldMatrixID = order.MatrixID;
             int indexOfOldOrder = Orders.FindIndex(o => o.MatrixID == OldMatrixID);
-            int PreviousMatrixID = (indexOfOldOrder - 1) > 0 ? Orders[indexOfOldOrder - 1].MatrixID : 287;
+            int PreviousMatrixID = (indexOfOldOrder - 1) >= 0 ? Orders[indexOfOldOrder - 1].MatrixID : 287;
             int NextMatrixID = indexOfOldOrder < Orders.Count - 2 ? Orders[indexOfOldOrder + 1].MatrixID : 287;
 
             TravelTime -= FilesInitializer._DistanceMatrix.Matrix[OldMatrixID, NextMatrixID].TravelTime;
