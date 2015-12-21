@@ -23,9 +23,7 @@ namespace GOO.Model
         }
 
         public bool CanAddOrder(Order order)
-        {
-
-
+        { // TODO: ?
             return true;
         }
 
