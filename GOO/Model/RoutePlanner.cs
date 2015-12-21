@@ -46,7 +46,7 @@ namespace GOO.Model
             List<Order> OrderArray = cluster.OrdersInCluster;
             List<Order> OrdersInRoute = toFill.Orders;
             List<Order> AvailableOrders = new List<Order>(); // TODO : <--- Make this based on the OrdersCounter
-            //OrdersCounter clusterCounter = cluster.OrdersCounter;
+            OrdersCounter clusterCounter = cluster.OrdersCounter;
 
             while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps)
             {
@@ -71,7 +71,7 @@ namespace GOO.Model
                 }
                 matrixB = bestOrder;
 
-                if (!OrdersInRoute.Contains(OrderArray[randomInt]) && !AvailableOrders.Contains(OrderArray[randomInt]) && !AvailableOrders.IsOrderCompleted(OrderArray[randomInt].OrderNumber)) //check if order is already in the order list
+                if (!OrdersInRoute.Contains(OrderArray[randomInt]) && !AvailableOrders.Contains(OrderArray[randomInt]) && !clusterCounter.IsOrderCompleted(OrderArray[randomInt].OrderNumber)) //check if order is already in the order list
                 {
                     //check if the weight and travel time does not exceed thier max values
                     if (toFill.Weight + (OrderArray[randomInt].NumberOfContainers * OrderArray[randomInt].VolumePerContainer) <= maxWeight &&
