@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 
 using GOO.Model;
-using GOO.Model.Optimizers;
 using GOO.Model.Optimizers.Strategies;
 
-namespace GOO.KMeansModel
+namespace GOO.Model.Optimizers
 {
-    public class KSimulatedAnnealingOptimizer
+    public class SimulatedAnnealingOptimizer
     {
         private static double theX = 2d;
 
@@ -21,7 +20,7 @@ namespace GOO.KMeansModel
 
         private double oldSolutionScore;
 
-        public KSimulatedAnnealingOptimizer()
+        public SimulatedAnnealingOptimizer()
         {
             phase_1_strategies = StrategyFactory.GetAllStrategies();
             phase_2_strategies = StrategyFactory.GetAllStrategies();
