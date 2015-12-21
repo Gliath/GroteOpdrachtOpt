@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -8,6 +10,7 @@ using GOO.Model.Optimizers;
 using GOO.Utilities;
 using GOO.View;
 using GOO.ViewModel;
+using GOO.Model.Optimizers.Strategies;
 
 namespace GOO
 {
@@ -27,36 +30,92 @@ namespace GOO
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            #if DEBUG
+#if DEBUG
             AllocConsole();
-            #endif
+#endif
             Console.WriteLine("Program booting up...");
 
             FilesInitializer.InitializeFiles();
             Console.WriteLine("Files have been processed");
 
             Stopwatch sw = Stopwatch.StartNew();
-            Solver.generateSolution();
+
+            Route testRoute = new Route(Days.Monday);
+            Random random = new Random();
+
+            List<int> alreadyUsedINTS = new List<int>();
+            Solution w00tSolution = new Solution(new List<Cluster>());
+            Dictionary<int, Order> allOrders = FilesInitializer._Orders;
+            Order order;
+            for (int i = 1; i < 50; i++)
+            {
+                int index;
+                do{
+                    index = random.Next(1, allOrders.Count);
+                }
+                while(alreadyUsedINTS.Contains(index));
+
+                alreadyUsedINTS.Add(index);
+                order = allOrders[allOrders.Keys.ToArray()[index]];
+                if (order.OrderNumber != 0)
+                    testRoute.AddOrder(order);
+                else
+                    i--;
+            }
+
+            w00tSolution.AddNewItemToPlanning(Days.Monday, 1, new List<Route>() { testRoute });
             sw.Stop();
+            Console.WriteLine("Elapsed time for generating test solution: {0}ms", sw.ElapsedMilliseconds);
 
-            Console.WriteLine("Elapsed time for generating clusters: {0}ms", sw.ElapsedMilliseconds);
-            Console.WriteLine();
+            string THE_SOLUTION_STRING = w00tSolution.ToString();
 
-            string THE_CLUSTER_SOLUTION = "";
-            sw = Stopwatch.StartNew();
-            //THE_CLUSTER_SOLUTION = KSolver.generateRouteSolution();
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
+
+            sw.Restart();
+            RandomRouteOpt2Strategy strategy = new RandomRouteOpt2Strategy();
+            
+            strategy.executeStrategy(w00tSolution);
+
+            THE_SOLUTION_STRING = w00tSolution.ToString();
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/AfterSolution.txt", THE_SOLUTION_STRING);
+
             sw.Stop();
-
-            Console.WriteLine("Elapsed time for generating clusters as route solution: {0}ms", sw.ElapsedMilliseconds);
-            Console.WriteLine();
-
-            // Temporarily
-            Console.ReadKey();
-            FreeConsole();
-            Environment.Exit(0);
-
-            //new MainView() { DataContext = new MainViewModel() }.Show();
+            Console.WriteLine("Elapsed time for executing strategy : {0}ms", sw.ElapsedMilliseconds);
         }
+
+        //protected override void OnStartup(StartupEventArgs e)
+        //{
+        //    base.OnStartup(e);
+        //    #if DEBUG
+        //    AllocConsole();
+        //    #endif
+        //    Console.WriteLine("Program booting up...");
+
+        //    FilesInitializer.InitializeFiles();
+        //    Console.WriteLine("Files have been processed");
+
+        //    Stopwatch sw = Stopwatch.StartNew();
+        //    Solver.generateSolution();
+        //    sw.Stop();
+
+        //    Console.WriteLine("Elapsed time for generating clusters: {0}ms", sw.ElapsedMilliseconds);
+        //    Console.WriteLine();
+
+        //    string THE_CLUSTER_SOLUTION = "";
+        //    sw = Stopwatch.StartNew();
+        //    //THE_CLUSTER_SOLUTION = KSolver.generateRouteSolution();
+        //    sw.Stop();
+
+        //    Console.WriteLine("Elapsed time for generating clusters as route solution: {0}ms", sw.ElapsedMilliseconds);
+        //    Console.WriteLine();
+
+        //    // Temporarily
+        //    Console.ReadKey();
+        //    FreeConsole();
+        //    Environment.Exit(0);
+
+        //    //new MainView() { DataContext = new MainViewModel() }.Show();
+        //}
 
         /*
         protected override void OnStartup(StartupEventArgs e)

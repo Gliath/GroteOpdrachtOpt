@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 
 using GOO.Utilities;
+using System.Text;
 
 namespace GOO.Model
 {
@@ -59,7 +60,8 @@ namespace GOO.Model
             {
                 foreach (Order order in route.Orders)
                 {
-                    ordersCounter.AddOccurrence(order.OrderNumber, route.Day);
+                    if(order.OrderNumber != 0)
+                        ordersCounter.AddOccurrence(order.OrderNumber, route.Day);
                 }
             }
         }
@@ -101,6 +103,26 @@ namespace GOO.Model
                     travelTime += route.TravelTime;
 
             return travelTime + penaltyTime;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Tuple<Days, int, List<Route>> tuple in truckPlanning)
+            {
+                List<Route> routes = tuple.Item3;
+                int sequenceID = 0;
+                for (int routeID = 0; routeID < routes.Count; routeID++)
+                {
+                    for (int orderID = 0; orderID < routes[routeID].Orders.Count; orderID++)
+                    {
+                        sb.AppendLine(String.Format("{0};{1};{2};{3}", tuple.Item2 + 1, tuple.Item1, ++sequenceID, routes[routeID].Orders[orderID].OrderNumber));
+                    }
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }

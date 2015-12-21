@@ -17,7 +17,6 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-
             Solution toReturn = toStartFrom;
 
             Tuple<Days, int, List<Route>> Planning = toStartFrom.getRandomPlanningForATruck();
@@ -42,7 +41,7 @@ namespace GOO.Model.Optimizers.Strategies
 
             //start doing the opt-2 algorithm on the route list
             int improvestep = 0;
-            while( improvestep < 20)
+            while( improvestep < 3)
             {
                 double best_traveltime = route.TravelTime;
                 for ( int i = 0; i < route.Orders.Count-1; i ++)
