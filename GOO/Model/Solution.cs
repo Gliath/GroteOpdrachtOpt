@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 
 using GOO.Utilities;
 
@@ -66,6 +67,12 @@ namespace GOO.Model
         public Tuple<Days, int, List<Route>> getPlanningForATruck(Days day, int truckID)
         {
             return this.truckPlanning.Find(t => t.Item1 == day && t.Item2 == truckID);
+        }
+
+        public Tuple<Days, int, List<Route>> getRandomPlanningForATruck()
+        {
+            int random = new Random().Next(truckPlanning.Count);
+            return this.truckPlanning[random];
         }
 
         public double GetSolutionScore() // TODO: Maybe start working with delta's instead of recalculating everytime
