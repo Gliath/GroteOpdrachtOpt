@@ -14,6 +14,7 @@ namespace GOO.Model
         public override List<Days> DaysRestrictions { get; set; }
         public override Days DaysPlannedFor { get; set; }
         public override OrdersCounter OrdersCounter { get; set; }
+        public override List<Route> Routes { get; set; }
 
         public Cluster(Point centerPoint)
             : this(centerPoint, new List<Order>(), Days.None)
@@ -59,6 +60,21 @@ namespace GOO.Model
         public void RemoveAllOrdersFromCluster()
         {
             OrdersInCluster.Clear();
+        }
+
+        public void AddRouteToCluster(Route toAdd)
+        {
+            Routes.Add(toAdd);
+        }
+
+        public void RemoveRouteFromCluster(Route toRemove)
+        {
+            Routes.Remove(toRemove);
+        }
+
+        public void RemoveAllRouteFromCluster()
+        {
+            Routes.Clear();
         }
 
         public override string ToString()

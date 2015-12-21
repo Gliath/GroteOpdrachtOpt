@@ -84,5 +84,19 @@ namespace GOO.Model
 
             set { return; }
         }
+
+        public override List<Route> Routes
+        {
+            get
+            {
+                List<Route> UnifiedRoutes = new List<Route>();
+                UnifiedRoutes.AddRange(Groom.Routes);
+                UnifiedRoutes.AddRange(Bride.Routes);
+
+                return UnifiedRoutes;
+            }
+
+            set { return; }
+        }
     }
 }

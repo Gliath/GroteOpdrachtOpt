@@ -75,6 +75,12 @@ namespace GOO.Model
             return this.truckPlanning[random];
         }
 
+        public Cluster getRandomCluster()
+        {
+            int random = new Random().Next(clusters.Count);
+            return this.clusters[random];
+        }
+
         public double GetSolutionScore() // TODO: Maybe start working with delta's instead of recalculating everytime
         {
             double travelTime = 0.0d;

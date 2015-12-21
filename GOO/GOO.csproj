@@ -64,6 +64,7 @@
     <Compile Include="Model\Cluster.cs" />
     <Compile Include="Model\Optimizers\AnnealingSchedule.cs" />
     <Compile Include="Model\MarriedCluster.cs" />
+    <Compile Include="Model\Optimizers\Strategies\GeneticRouteStrategy.cs" />
     <Compile Include="Model\RoutePlanner.cs" />
     <Compile Include="Utilities\DayRestrictionFactory.cs" />
     <Compile Include="Model\Clusterer.cs" />
