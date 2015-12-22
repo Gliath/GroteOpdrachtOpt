@@ -83,6 +83,11 @@ namespace GOO.Model
             return this.clusters[random];
         }
 
+        public Tuple<Days, int, List<Route>> getRoute(List<Route> route)
+        {
+            return this.truckPlanning.Find(t => t.Item3 == route);
+        }
+
         public double GetSolutionScore() // TODO: Maybe start working with delta's instead of recalculating everytime
         {
             double travelTime = 0.0d;
