@@ -72,10 +72,10 @@ namespace GOO.Model
                     order.OrderDayRestrictions.Add(restrictions);
         }
 
-        public bool CanAddOrder(int OrderNumber, Days day)
+        public bool CanAddOrder(int orderNumber, Days day)
         {
             foreach (OrderCounter order in CounterList)
-                if (order.OrderNumber == OrderNumber)
+                if (order.OrderNumber == orderNumber)
                 {
                     if (order.OrderDayOccurrences.HasFlag(day))
                         return false; // Already occurred on specified day
@@ -87,7 +87,12 @@ namespace GOO.Model
                     return false; // restrictions is either empty or does not have the specified day in its restriction
                 }
 
-            return false; // Either could not find the OrderCounter for the orderNumber given
+            // Order has yet to be added to the list of CounterList
+            foreach (Days restrictions in FilesInitializer._Orders[orderNumber].DayRestrictions)
+                if (restrictions.HasFlag(day))
+                    return true; // Order has never been added to this list, but according to the order.DayRestrictions it should be able to add to the specified day
+
+            return false; // Could not be found in the CounterList or the orders restrictions, it is not supposed to be added this day
         }
 
         public Boolean HasOccurence(Days day, int OrderNumber)
