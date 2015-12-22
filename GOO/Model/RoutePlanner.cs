@@ -43,17 +43,17 @@ namespace GOO.Model
 
                 for (int i = 0; i < randomizationSteps; i++)
                 {
-                    int swapIndex1 = random.Next(randomDayList.Count);
-                    int swapIndex2 = random.Next(randomDayList.Count);
+                    int swapIndex1 = random.Next(randomDayList.Count-1);
+                    int swapIndex2 = random.Next(randomDayList.Count-1);
 
                     Days toSwap = randomDayList[swapIndex1];
                     Days toSwap2 = randomDayList[swapIndex2];
 
                     randomDayList.Remove(toSwap);
-                    randomDayList[swapIndex1] = toSwap2;
+                    randomDayList.Insert(swapIndex1 ,toSwap2);
 
                     randomDayList.Remove(toSwap2);
-                    randomDayList[swapIndex2] = toSwap;
+                    randomDayList.Insert(swapIndex2, toSwap);
                 }
             }
             // Step 3. Attempt to plan the routes based on the day restrictions of their clusters 

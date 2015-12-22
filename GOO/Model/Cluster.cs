@@ -25,6 +25,9 @@ namespace GOO.Model
             this.CenterPoint = centerPoint;
             this.OrdersInCluster = ordersInCluster;
             this.DaysPlannedFor = daysPlannedFor;
+            this.OrdersCounter = new OrdersCounter();
+            this.Routes = new List<Route>();
+            this.DaysRestrictions = new List<Days>();
         }
 
         public bool CanBePlannedOn(Days day)
