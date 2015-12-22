@@ -8,7 +8,7 @@ using GOO.Utilities;
 
 namespace GOO.Model.Optimizers.Strategies
 {
-    public class RandomRouteOpt2AltStrategy : Strategy
+    public class RandomRouteOpt2HalfStrategy : Strategy
     {
         private Days day;
         private int truck;
@@ -69,7 +69,7 @@ namespace GOO.Model.Optimizers.Strategies
                 improvestep++;
             }
 
-            Console.WriteLine("OPT2Alt");
+            Console.WriteLine("OPT2.5");
             Console.WriteLine("Old Travel Time : {0}", old_route.TravelTime);
             Console.WriteLine("Best Travel Time : {0}", best_traveltime);
 

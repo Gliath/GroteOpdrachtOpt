@@ -76,6 +76,102 @@ namespace GOO
 //            for (int i = 1; i < 50; i++)
 //            {
 //                int index;
+//                do
+//                {
+//                    index = random.Next(1, allOrders.Count);
+//                }
+//                while (alreadyUsedINTS.Contains(index));
+
+//                alreadyUsedINTS.Add(index);
+//                order = allOrders[allOrders.Keys.ToArray()[index]];
+//                if (order.OrderNumber != 0)
+//                    testRoute.AddOrder(order);
+//                else
+//                    i--;
+//            }
+
+//            w00tSolution.AddNewItemToPlanning(Days.Monday, 1, new List<Route>() { testRoute });
+//            sw.Stop();
+//            Console.WriteLine("Elapsed time for generating test solution: {0}ms", sw.ElapsedMilliseconds);
+
+//            string THE_SOLUTION_STRING = w00tSolution.ToString();
+
+//            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
+
+
+//            RandomRouteOpt3Strategy strategyOpt3 = new RandomRouteOpt3Strategy();
+//            RandomRouteOpt3HalfStrategy strategyOpt3A = new RandomRouteOpt3HalfStrategy();
+//            RandomRouteOpt2Strategy strategyOpt2 = new RandomRouteOpt2Strategy();
+//            RandomRouteOpt2HalfStrategy strategyOpt2A = new RandomRouteOpt2HalfStrategy();
+
+//            sw.Restart();
+//            strategyOpt3.executeStrategy(w00tSolution);
+//            THE_SOLUTION_STRING = w00tSolution.ToString();
+//            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Opt3Solution.txt", THE_SOLUTION_STRING);
+//            strategyOpt3.undoStrategy(w00tSolution);
+//            sw.Stop();
+//            Console.WriteLine("Elapsed time for Opt3 solution: {0}ms", sw.ElapsedMilliseconds);
+
+
+//            sw.Restart();
+//            strategyOpt3A.executeStrategy(w00tSolution);
+//            THE_SOLUTION_STRING = w00tSolution.ToString();
+//            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Opt3ASolution.txt", THE_SOLUTION_STRING);
+//            strategyOpt3A.undoStrategy(w00tSolution);
+//            sw.Stop();
+//            Console.WriteLine("Elapsed time for Opt3.5 solution: {0}ms", sw.ElapsedMilliseconds);
+
+
+//            sw.Restart();
+//            strategyOpt2.executeStrategy(w00tSolution);
+//            THE_SOLUTION_STRING = w00tSolution.ToString();
+//            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Opt2Solution.txt", THE_SOLUTION_STRING);
+//            strategyOpt2.undoStrategy(w00tSolution);
+//            sw.Stop();
+//            Console.WriteLine("Elapsed time for Opt2 solution: {0}ms", sw.ElapsedMilliseconds);
+
+
+//            sw.Restart();
+//            strategyOpt2A.executeStrategy(w00tSolution);
+//            THE_SOLUTION_STRING = w00tSolution.ToString();
+//            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Opt2ASolution.txt", THE_SOLUTION_STRING);
+//            strategyOpt2A.undoStrategy(w00tSolution);
+//            sw.Stop();
+//            Console.WriteLine("Elapsed time for Opt2.5 solution: {0}ms", sw.ElapsedMilliseconds);
+
+
+//            sw.Restart();
+//            THE_SOLUTION_STRING = w00tSolution.ToString();
+//            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/EndSolution.txt", THE_SOLUTION_STRING);
+
+//            sw.Stop();
+//            Console.WriteLine("Elapsed time for executing strategy : {0}ms", sw.ElapsedMilliseconds);
+//        }
+
+
+//        protected override void OnStartup(StartupEventArgs e)
+//        {
+//            base.OnStartup(e);
+//#if DEBUG
+//            AllocConsole();
+//#endif
+//            Console.WriteLine("Program booting up...");
+
+//            FilesInitializer.InitializeFiles();
+//            Console.WriteLine("Files have been processed");
+
+//            Stopwatch sw = Stopwatch.StartNew();
+
+//            Route testRoute = new Route(Days.Monday);
+//            Random random = new Random();
+
+//            List<int> alreadyUsedINTS = new List<int>();
+//            Solution w00tSolution = new Solution(new List<Cluster>());
+//            Dictionary<int, Order> allOrders = FilesInitializer._Orders;
+//            Order order;
+//            for (int i = 1; i < 50; i++)
+//            {
+//                int index;
 //                do{
 //                    index = random.Next(1, allOrders.Count);
 //                }

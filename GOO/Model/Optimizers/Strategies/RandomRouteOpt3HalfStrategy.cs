@@ -8,7 +8,7 @@ using GOO.Utilities;
 
 namespace GOO.Model.Optimizers.Strategies
 {
-    public class RandomRouteOpt3AltStrategy : Strategy
+    public class RandomRouteOpt3HalfStrategy : Strategy
     {
         private Days day;
         private int truck;
@@ -181,7 +181,7 @@ namespace GOO.Model.Optimizers.Strategies
                 improvestep++;
             }
 
-            Console.WriteLine("OPT3Alt");
+            Console.WriteLine("OPT3.5");
             Console.WriteLine("Old Travel Time : {0}", old_route.TravelTime);
             Console.WriteLine("Best Travel Time : {0}", best_traveltime);
 
@@ -198,7 +198,6 @@ namespace GOO.Model.Optimizers.Strategies
         {
             route.RemoveOrder(B);
             route.AddOrderAt(B, A);
-            //route.SwapOrders(A, B);
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
