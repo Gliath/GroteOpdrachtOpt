@@ -42,13 +42,16 @@ namespace GOO.Model.Optimizers.Strategies
             new_route = new Route(day);
             foreach (Order order in old_route.Orders)
             {
-                routeToWorkWith1.AddOrder(order);
-                routeToWorkWith2.AddOrder(order);
-                routeToWorkWith3.AddOrder(order);
-                routeToWorkWith4.AddOrder(order);
-                routeToWorkWith5.AddOrder(order);
-                routeToWorkWith6.AddOrder(order);
-                new_route.AddOrder(order);
+                if (order.OrderNumber != 0)
+                {
+                    routeToWorkWith1.AddOrder(order);
+                    routeToWorkWith2.AddOrder(order);
+                    routeToWorkWith3.AddOrder(order);
+                    routeToWorkWith4.AddOrder(order);
+                    routeToWorkWith5.AddOrder(order);
+                    routeToWorkWith6.AddOrder(order);
+                    new_route.AddOrder(order);
+                }
             }
 
             //start doing the opt-3 algorithm on the route list
@@ -61,7 +64,7 @@ namespace GOO.Model.Optimizers.Strategies
             double new_traveltime6 = double.MaxValue;
 
             int improvestep = 0;
-            while (improvestep < 30)
+            while (improvestep < 5)
             {
                 for (int i = 0; i < routeToWorkWith1.Orders.Count - 3; i++)
                 {
@@ -81,16 +84,16 @@ namespace GOO.Model.Optimizers.Strategies
                             Order initialRouteJ1 = routeToWorkWith1.Orders[j];
                             Order initialRouteJ2 = routeToWorkWith2.Orders[j];
                             Order initialRouteJ3 = routeToWorkWith3.Orders[j];
-                            Order initialRouteJ4 = routeToWorkWith1.Orders[j];
-                            Order initialRouteJ5 = routeToWorkWith2.Orders[j];
-                            Order initialRouteJ6 = routeToWorkWith3.Orders[j];
+                            Order initialRouteJ4 = routeToWorkWith4.Orders[j];
+                            Order initialRouteJ5 = routeToWorkWith5.Orders[j];
+                            Order initialRouteJ6 = routeToWorkWith6.Orders[j];
 
                             Order initialRouteK1 = routeToWorkWith1.Orders[k];
                             Order initialRouteK2 = routeToWorkWith2.Orders[k];
                             Order initialRouteK3 = routeToWorkWith3.Orders[k];
-                            Order initialRouteK4 = routeToWorkWith1.Orders[k];
-                            Order initialRouteK5 = routeToWorkWith2.Orders[k];
-                            Order initialRouteK6 = routeToWorkWith3.Orders[k];
+                            Order initialRouteK4 = routeToWorkWith4.Orders[k];
+                            Order initialRouteK5 = routeToWorkWith5.Orders[k];
+                            Order initialRouteK6 = routeToWorkWith6.Orders[k];
 
                             swapOrders(initialRouteI1, initialRouteK1, routeToWorkWith1);
                             swapOrders(initialRouteI1, initialRouteJ1, routeToWorkWith1);
