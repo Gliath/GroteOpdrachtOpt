@@ -77,15 +77,17 @@ namespace GOO.Model.Optimizers
         {
             //weighted value of each strategy
             double opt2Chance = 10d;
-            double opt25Chance = 3d;
-            double opt3Chance = 2d;
-            double geneticChance = 1d;
-            double randomChance = 4d;
+            double opt25Chance = 1d;
+            double opt2AltChance = 10d;
+            double opt3Chance = 4d;
+            double opt3AltChance = 8d;
+            double geneticChance = 3d;
+            double randomChance = 5d;
 
             Random random = new Random();
             Strategy strategy = null;
 
-            double select = random.NextDouble() * (opt2Chance + opt25Chance + opt3Chance + geneticChance + randomChance);
+            double select = random.NextDouble() * (opt2Chance + opt25Chance + opt2AltChance  + opt3Chance + opt3AltChance + geneticChance + randomChance);
 
             //opt2
             if(select < opt2Chance)
@@ -93,14 +95,20 @@ namespace GOO.Model.Optimizers
             //opt2.5
             else if (select < opt2Chance + opt25Chance)
                 strategy = new Strategies.RandomRouteOpt2Strategy();
+            //opt 2 alt
+            else if (select < opt2Chance + opt25Chance + opt2AltChance)
+                strategy = new Strategies.RandomRouteOpt2AltStrategy();
             //opt3
-            else if (select < opt2Chance + opt25Chance + opt3Chance)
+            else if (select < opt2Chance + opt25Chance + opt2AltChance + opt3Chance)
                 strategy = new Strategies.RandomRouteOpt3Strategy();
+            //opt3 alt
+            else if (select < opt2Chance + opt25Chance + opt2AltChance + opt3Chance + opt3AltChance)
+                strategy = new Strategies.RandomRouteOpt3AltStrategy();
             //genetic
-            else if (select < opt2Chance + opt25Chance + opt3Chance + geneticChance)
+            else if (select < opt2Chance + opt25Chance + opt2AltChance + opt3Chance + opt3AltChance + geneticChance)
                 strategy = new Strategies.GeneticRouteStrategy();
             //total random
-            else if (select < opt2Chance + opt25Chance + opt3Chance + geneticChance + randomChance)
+            else if (select < opt2Chance + opt25Chance + opt2AltChance + opt3Chance + opt3AltChance + geneticChance + randomChance)
                 strategy = new Strategies.RandomRouteOpt2Strategy();
             else //do nothing wich should never happen actualy
                 return toStartFrom;
