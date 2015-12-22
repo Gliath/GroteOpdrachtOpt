@@ -71,24 +71,42 @@ namespace GOO
 
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
 
-            sw.Restart();
-            RandomRouteOpt3Strategy strategy = new RandomRouteOpt3Strategy();
             
-            strategy.executeStrategy(w00tSolution);
-
-            THE_SOLUTION_STRING = w00tSolution.ToString();
-            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/MiddleSolution.txt", THE_SOLUTION_STRING);
-
+            RandomRouteOpt3Strategy strategy = new RandomRouteOpt3Strategy();
             RandomRouteOpt2Strategy strategy2 = new RandomRouteOpt2Strategy();
+            RandomRouteOpt3AltStrategy strategy3 = new RandomRouteOpt3AltStrategy();
 
-            strategy2.executeStrategy(w00tSolution);
+            sw.Restart();
+            strategy3.executeStrategy(w00tSolution);
+
 
             THE_SOLUTION_STRING = w00tSolution.ToString();
-            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/AfterSolution.txt", THE_SOLUTION_STRING);
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Opt3AltSolution.txt", THE_SOLUTION_STRING);
+
+            strategy3.undoStrategy(w00tSolution);
+
+            THE_SOLUTION_STRING = w00tSolution.ToString();
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Opt3AltUndoSolution.txt", THE_SOLUTION_STRING);
+
+            sw.Stop();
+            Console.WriteLine("Elapsed time for Opt3Move solution: {0}ms", sw.ElapsedMilliseconds);
+            sw.Restart();
 
             strategy.executeStrategy(w00tSolution);
+
+            sw.Stop();
+            Console.WriteLine("Elapsed time for Opt3 solution: {0}ms", sw.ElapsedMilliseconds);
+            sw.Restart();
+
+            THE_SOLUTION_STRING = w00tSolution.ToString();
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Opt3Solution.txt", THE_SOLUTION_STRING);
+
             strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
+
+            sw.Stop();
+            Console.WriteLine("Elapsed time for Opt2 solution: {0}ms", sw.ElapsedMilliseconds);
+            sw.Restart();
+
 
             THE_SOLUTION_STRING = w00tSolution.ToString();
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/EndSolution.txt", THE_SOLUTION_STRING);
