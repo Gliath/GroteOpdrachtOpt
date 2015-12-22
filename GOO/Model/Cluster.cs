@@ -17,7 +17,7 @@ namespace GOO.Model
 
         public Cluster(Point centerPoint)
             : this(centerPoint, new List<Order>(), Days.None)
-        {}
+        { }
 
         public Cluster(Point centerPoint, List<Order> ordersInCluster, Days daysPlannedFor)
         {
@@ -31,11 +31,10 @@ namespace GOO.Model
         public bool CanBePlannedOn(Days day)
         {
             for (int i = 0; i < OrdersInCluster.Count; i++)
-            {
-                
-            }
+                if (!OrdersCounter.CanAddOrder(OrdersInCluster[i].OrderNumber, day))
+                    return false;
 
-            return false;
+            return true;
         }
 
         public bool ReCenterPoint()
@@ -76,16 +75,23 @@ namespace GOO.Model
         public void AddRouteToCluster(Route toAdd)
         {
             Routes.Add(toAdd);
+
+            foreach (Order order in toAdd.Orders)
+                OrdersCounter.AddOccurrence(order.OrderNumber, toAdd.Day);
         }
 
         public void RemoveRouteFromCluster(Route toRemove)
         {
             Routes.Remove(toRemove);
+
+            foreach (Order order in toRemove.Orders)
+                OrdersCounter.RemoveOccurrence(order.OrderNumber, toRemove.Day);
         }
 
         public void RemoveAllRoutesFromCluster()
         {
             Routes.Clear();
+            OrdersCounter.ClearAllOccurences();
         }
 
         public override string ToString()
