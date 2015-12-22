@@ -209,7 +209,7 @@ namespace GOO
            - On the second day of Christmas, Santa gave this advice to me:  Optimize the ToString method in Solution class, by recycling
            - On the third day of Christmas, Santa gave this advice to me:   Utilize the window by using a progressbar for Simulated Annealing
            - On the fourth day of Christmas, Santa gave this advice to me:  Make the following stategies: 
-           - On the fifth day of Christmas, Santa gave this advice to me:   
+           - On the fifth day of Christmas, Santa gave this advice to me:   Make the planning in RoutePlanner for day assignment smarter than random
            - On the sixth day of Christmas, Santa gave this advice to me:   
            - On the seventh day of Christmas, Santa gave this advice to me: 
            - On the eighth day of Christmas, Santa gave this advice to me:  

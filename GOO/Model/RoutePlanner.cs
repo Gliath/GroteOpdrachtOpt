@@ -9,10 +9,8 @@ namespace GOO.Model
     {
         private static Random random = new Random();
 
-        public static Dictionary<Days, Order> PlanRoute(List<Cluster> clusters)
+        public static List<Cluster> PlanStartClusters(List<Cluster> clusters)
         {
-            Dictionary<Days, Order> planRoutes = new Dictionary<Days, Order>();
-
             // Step 1. Generate Routes for each cluster dependent on the orderfrequency within
             foreach (Cluster cluster in clusters)
             {
@@ -22,9 +20,55 @@ namespace GOO.Model
 
             }
             // Step 2. Attempt to assign new days to clusters 
-            // Based on weight and traveltime contained per day in a cluster?
+            // Based on weight and traveltime contained per day in a cluster instead?
+            //double maxTravelTimeOnDay = 86400.0d; // TODO: Double-check values
+            //int weightOnDay = 0;
+            //double travelTimeOnDay = 0.0d;
 
+            List<Days> randomDayList = new List<Days>();
+            foreach (Days Day in Enum.GetValues(typeof(Days)))
+            {
+                if (Day != Days.None)
+                    randomDayList.Add(Day);
+            }
+
+            int randomizationSteps = 20;
+            foreach (Cluster cluster in clusters)
+            {
+                foreach (Days day in randomDayList)
+                {
+                    if (cluster.CanBePlannedOn(day))
+                        cluster.DaysPlannedFor |= day;
+                }
+
+                for (int i = 0; i < randomizationSteps; i++)
+                {
+                    int swapIndex1 = random.Next(randomDayList.Count);
+                    int swapIndex2 = random.Next(randomDayList.Count);
+
+                    Days toSwap = randomDayList[swapIndex1];
+                    Days toSwap2 = randomDayList[swapIndex2];
+
+                    randomDayList.Remove(toSwap);
+                    randomDayList[swapIndex1] = toSwap2;
+
+                    randomDayList.Remove(toSwap2);
+                    randomDayList[swapIndex2] = toSwap;
+                }
+            }
             // Step 3. Attempt to plan the routes based on the day restrictions of their clusters 
+            foreach (Cluster cluster in clusters)
+            {
+                cluster.RemoveAllRoutesFromCluster();
+                generateRoutes(cluster);
+            }
+            return clusters;
+        }
+
+        public static Dictionary<Days, Order> PlanRoute(List<Cluster> clusters)
+        {
+            Dictionary<Days, Order> planRoutes = new Dictionary<Days, Order>();
+
 
             return planRoutes;
         }

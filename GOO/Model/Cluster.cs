@@ -27,6 +27,16 @@ namespace GOO.Model
             this.DaysPlannedFor = daysPlannedFor;
         }
 
+        public bool CanBePlannedOn(Days day)
+        {
+            for (int i = 0; i < OrdersInCluster.Count; i++)
+            {
+                
+            }
+
+            return false;
+        }
+
         public bool ReCenterPoint()
         {
             double newX = 0;
@@ -72,7 +82,7 @@ namespace GOO.Model
             Routes.Remove(toRemove);
         }
 
-        public void RemoveAllRouteFromCluster()
+        public void RemoveAllRoutesFromCluster()
         {
             Routes.Clear();
         }
