@@ -44,13 +44,17 @@ namespace GOO.Model
 
         public void AddOrderAt(Order newOrder, Order orderToInsertAfter)
         {
-            int NextMatrixID = 287;
+            int IndexOfOrderToInsertAfter = Orders.FindIndex(o => o.OrderNumber == orderToInsertAfter.OrderNumber);
+
+            if (IndexOfOrderToInsertAfter == Orders.Count - 2)
+            {
+                AddOrder(newOrder);
+                return;
+            }
+
+            int NextMatrixID = Orders[IndexOfOrderToInsertAfter + 1].MatrixID;
             int NewMatrixID = newOrder.MatrixID;
             int PreviousMatrixID = orderToInsertAfter.MatrixID;
-            int IndexOfOrderToInsertAfter = Orders.FindIndex(o => o.OrderNumber == orderToInsertAfter.MatrixID);
-
-            if (IndexOfOrderToInsertAfter != Orders.Count - 2)
-                NextMatrixID = Orders[IndexOfOrderToInsertAfter + 1].MatrixID;
 
             TravelTime -= FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, NextMatrixID].TravelTime;
             TravelTime += FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, NewMatrixID].TravelTime;
