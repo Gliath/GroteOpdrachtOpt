@@ -80,5 +80,26 @@ namespace GOO.Model
             Weight -= order.VolumePerContainer * order.NumberOfContainers;
             Orders.Remove(order);
         }
+
+        public void SwapOrders(Order A, Order B)
+        {
+            int indexOfA = Orders.FindIndex(o => o.OrderNumber == A.OrderNumber);
+            int indexOfB = Orders.FindIndex(o => o.OrderNumber == B.OrderNumber);
+
+            if (indexOfA > indexOfB)
+            {
+                AddOrderAt(B, A);
+                RemoveOrder(A);
+                AddOrderAt(A, B);
+                RemoveOrder(B);
+            }
+            else
+            {
+                AddOrderAt(A, B);
+                RemoveOrder(B);
+                AddOrderAt(B, A);
+                RemoveOrder(A);
+            }
+        }
     }
 }
