@@ -72,6 +72,24 @@ namespace GOO.Model
                     order.OrderDayRestrictions.Add(restrictions);
         }
 
+        public bool CanAddOrder(int OrderNumber, Days day)
+        {
+            foreach (OrderCounter order in CounterList)
+                if (order.OrderNumber == OrderNumber)
+                {
+                    if (order.OrderDayOccurrences.HasFlag(day))
+                        return false; // Already occurred on specified day
+
+                    foreach (Days restrictions in order.OrderDayRestrictions)
+                        if (restrictions.HasFlag(day))
+                            return true; // Order has yet to occur on specified day and can be added accorrding to the restrictions
+
+                    return false; // restrictions is either empty or does not have the specified day in its restriction
+                }
+
+            return false; // Either could not find the OrderCounter for the orderNumber given
+        }
+
         public Boolean HasOccurence(Days day, int OrderNumber)
         {
             return CounterList.Find(o => o.OrderNumber == OrderNumber && o.OrderDayOccurrences.HasFlag(day)) != null;
