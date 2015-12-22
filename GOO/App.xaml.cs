@@ -33,7 +33,6 @@ namespace GOO
             AllocConsole();
 
             Console.WriteLine("Program booting up...");
-
             FilesInitializer.InitializeFiles();
             Console.WriteLine("Files have been processed");
 
@@ -45,14 +44,16 @@ namespace GOO
 
             string THE_SOLUTION_STRING = start.ToString();
 
-            Console.WriteLine("Start Solution : ");
+            Console.WriteLine("Start Solution:");
             Console.WriteLine(THE_SOLUTION_STRING);
+            Console.WriteLine("End Solution");
 
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
-            
-        }
 
-//        protected override void OnStartup(StartupEventArgs e)
+            // Run Optimizers
+        }
+        #region Previous test code
+        //        protected override void OnStartup(StartupEventArgs e)
 //        {
 //            base.OnStartup(e);
 //#if DEBUG
@@ -323,6 +324,7 @@ namespace GOO
             //new MainView() { DataContext = new MainViewModel() }.Show();
         }
         */
+#endregion
 
         /* Santa's TODO list
 
