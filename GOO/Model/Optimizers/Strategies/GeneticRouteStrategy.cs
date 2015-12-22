@@ -107,7 +107,7 @@ namespace GOO.Model.Optimizers.Strategies
             // OPERATION DARWIN'S ABOMINATION REPRODUCTION IS NOW OPERATIONAL!
 
             int numOfGenerationsToMake = 64;
-            Route bestBoyAbominationOffspring = originalRoute; // Is not initially an abomination but is bound soon to be one....
+            Route bestBoyAbominationOffspring = originalRoute; // Is not initially an abomination but is bound to be one soon....
             Route bestGirlAbominationOffspring = firstAbominationRoute;
             Boolean boyAbominationIsTheBest = bestBoyAbominationOffspring.TravelTime >= bestGirlAbominationOffspring.TravelTime;
             int numberOfGenesThatAreTransferred = originalRoute.Orders.Count / 2;
