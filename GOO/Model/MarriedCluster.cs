@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows;
 
 using GOO.Utilities;
 
@@ -9,13 +7,11 @@ namespace GOO.Model
 {
     public class MarriedCluster : AbstractCluster
     {
-        public Cluster Groom { get; private set; }
-        public Cluster Bride { get; private set; }
+        public Cluster[] Harem { get; private set; }
 
-        public MarriedCluster(Cluster Groom, Cluster Bride)
+        public MarriedCluster(Cluster[] Harem)
         {
-            this.Groom = Groom;
-            this.Bride = Bride;
+            this.Harem = Harem;
         }
 
         public override List<Order> OrdersInCluster
@@ -23,8 +19,9 @@ namespace GOO.Model
             get
             {
                 List<Order> UnifiedOrdersInCluster = new List<Order>();
-                UnifiedOrdersInCluster.AddRange(Groom.OrdersInCluster);
-                UnifiedOrdersInCluster.AddRange(Bride.OrdersInCluster);
+
+                foreach (Cluster Concubine in Harem)
+                    UnifiedOrdersInCluster.AddRange(Concubine.OrdersInCluster);
 
                 return UnifiedOrdersInCluster;
             }
@@ -32,22 +29,14 @@ namespace GOO.Model
             set { return; }
         }
 
-        private Days UnifiedDaysPlannedFor = Days.None;
         public override Days DaysPlannedFor
         {
             get
             {
-                if (UnifiedDaysPlannedFor == Days.None)
-                {
-                    UnifiedDaysPlannedFor = Groom.DaysPlannedFor;
-                    if (!UnifiedDaysPlannedFor.HasFlag(Bride.DaysPlannedFor))
-                        UnifiedDaysPlannedFor |= Bride.DaysPlannedFor;
-                }
-
-                return UnifiedDaysPlannedFor;
+                return Harem[0].DaysPlannedFor; // Every member of the Harem is planned for the same day
             }
 
-            set { UnifiedDaysPlannedFor = value; }
+            set { return; }
         }
 
         public override OrdersCounter OrdersCounter
@@ -56,11 +45,9 @@ namespace GOO.Model
             {
                 OrdersCounter UnifiedOrdersCounter = new OrdersCounter();
 
-                foreach (GOO.Model.OrdersCounter.OrderCounter orderCounter in Groom.OrdersCounter.CounterList)
-                    UnifiedOrdersCounter.AddOccurrence(orderCounter.OrderNumber, orderCounter.OrderDayOccurrences);
-
-                foreach (GOO.Model.OrdersCounter.OrderCounter orderCounter in Bride.OrdersCounter.CounterList)
-                    UnifiedOrdersCounter.AddOccurrence(orderCounter.OrderNumber, orderCounter.OrderDayOccurrences);
+                foreach (Cluster Concubine in Harem)
+                    foreach (GOO.Model.OrdersCounter.OrderCounter orderCounter in Concubine.OrdersCounter.CounterList)
+                        UnifiedOrdersCounter.AddOccurrence(orderCounter.OrderNumber, orderCounter.OrderDayOccurrences);
 
                 return UnifiedOrdersCounter;
             }
@@ -73,8 +60,9 @@ namespace GOO.Model
             get
             {
                 List<Route> UnifiedRoutes = new List<Route>();
-                UnifiedRoutes.AddRange(Groom.Routes);
-                UnifiedRoutes.AddRange(Bride.Routes);
+
+                foreach (Cluster Concubine in Harem)
+                    UnifiedRoutes.AddRange(Concubine.Routes);
 
                 return UnifiedRoutes;
             }
