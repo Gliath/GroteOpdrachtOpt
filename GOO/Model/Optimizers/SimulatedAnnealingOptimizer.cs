@@ -95,7 +95,7 @@ namespace GOO.Model.Optimizers
                 strategy = new Strategies.RandomRouteOpt2Strategy();
             //opt3
             else if (select < opt2Chance + opt25Chance + opt3Chance)
-                strategy = new Strategies.RandomRouteOpt2Strategy();
+                strategy = new Strategies.RandomRouteOpt3Strategy();
             //genetic
             else if (select < opt2Chance + opt25Chance + opt3Chance + geneticChance)
                 strategy = new Strategies.GeneticRouteStrategy();

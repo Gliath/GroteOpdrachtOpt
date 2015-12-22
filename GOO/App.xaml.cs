@@ -72,12 +72,44 @@ namespace GOO
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
 
             sw.Restart();
-            RandomRouteOpt2Strategy strategy = new RandomRouteOpt2Strategy();
+            RandomRouteOpt3Strategy strategy = new RandomRouteOpt3Strategy();
             
             strategy.executeStrategy(w00tSolution);
 
             THE_SOLUTION_STRING = w00tSolution.ToString();
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/MiddleSolution.txt", THE_SOLUTION_STRING);
+
+            RandomRouteOpt2Strategy strategy2 = new RandomRouteOpt2Strategy();
+
+            strategy2.executeStrategy(w00tSolution);
+
+            THE_SOLUTION_STRING = w00tSolution.ToString();
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/AfterSolution.txt", THE_SOLUTION_STRING);
+
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+            strategy2.executeStrategy(w00tSolution);
+            strategy.executeStrategy(w00tSolution);
+
+            THE_SOLUTION_STRING = w00tSolution.ToString();
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/EndSolution.txt", THE_SOLUTION_STRING);
 
             sw.Stop();
             Console.WriteLine("Elapsed time for executing strategy : {0}ms", sw.ElapsedMilliseconds);

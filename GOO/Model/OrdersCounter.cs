@@ -33,7 +33,7 @@ namespace GOO.Model
                     if ((order.OrderDayOccurrences & OccurredOn) == Days.None)
                     {
                         #if DEBUG
-                        Console.WriteLine("Order {0} has already occurred on {1}", OrderNumber, OccurredOn);
+                        //Console.WriteLine("Order {0} has already occurred on {1}", OrderNumber, OccurredOn);
                         #endif
                     }
 
@@ -50,7 +50,7 @@ namespace GOO.Model
                     if (!((order.OrderDayOccurrences & OccurredOn) == Days.None))
                     {
                         #if DEBUG
-                        Console.WriteLine("Order {0} has yet to occur on {1}", OrderNumber, OccurredOn);
+                        //Console.WriteLine("Order {0} has yet to occur on {1}", OrderNumber, OccurredOn);
                         #endif
                     }
 

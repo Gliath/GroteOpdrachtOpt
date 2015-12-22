@@ -41,7 +41,7 @@ namespace GOO.Model.Optimizers.Strategies
             double new_traveltime = double.MaxValue;
 
             int improvestep = 0;
-            while (improvestep < 30)
+            while (improvestep < 50)
             {
                 for (int i = 0; i < routeToWorkWith.Orders.Count - 2; i++)
                 {
