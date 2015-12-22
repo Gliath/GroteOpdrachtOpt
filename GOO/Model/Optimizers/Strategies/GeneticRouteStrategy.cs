@@ -11,7 +11,6 @@ namespace GOO.Model.Optimizers.Strategies
         private Route firstAbominationRoute;
         private Route bestAbominationOffspringRoute;
         private Tuple<Days, int, List<Route>> planningForSelectedRoute;
-        private Random random;
 
         public GeneticRouteStrategy()
             : base()
@@ -20,7 +19,6 @@ namespace GOO.Model.Optimizers.Strategies
             firstAbominationRoute = null;
             bestAbominationOffspringRoute = null;
             planningForSelectedRoute = null;
-            random = new Random();
         }
 
         public override Solution executeStrategy(Solution toStartFrom)

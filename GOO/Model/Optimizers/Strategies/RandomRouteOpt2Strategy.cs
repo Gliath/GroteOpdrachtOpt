@@ -17,6 +17,12 @@ namespace GOO.Model.Optimizers.Strategies
         private Route routeToWorkWith;
         private List<Route> RoutesFromSolution;
 
+        public RandomRouteOpt2Strategy()
+            : base()
+        {
+
+        }
+
         public override Solution executeStrategy(Solution toStartFrom)
         {
             Tuple<Days, int, List<Route>> Planning = toStartFrom.getRandomPlanningForATruck();
@@ -25,7 +31,7 @@ namespace GOO.Model.Optimizers.Strategies
             RoutesFromSolution = Planning.Item3;
 
             //save the begin route for rollback
-            old_route = RoutesFromSolution[new Random().Next(RoutesFromSolution.Count)];
+            old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
 
             //copy the begin route for the 2-opt and create the route for the 2-opt check
             routeToWorkWith = new Route(day);

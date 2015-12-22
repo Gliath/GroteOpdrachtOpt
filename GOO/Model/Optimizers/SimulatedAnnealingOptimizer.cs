@@ -8,29 +8,21 @@ namespace GOO.Model.Optimizers
 {
     public class SimulatedAnnealingOptimizer
     {
-        private static double theX = 2d;
-
-        private Strategy[] phase_1_strategies;
-        private Strategy[] phase_2_strategies;
-        private Strategy[] phase_3_strategies;
+        private static double theX;
 
         private AnnealingSchedule annealingSchedule;
-
         private Random random;
-
         private double oldSolutionScore;
+        private double newSolutionScore;
 
         public SimulatedAnnealingOptimizer()
         {
-            phase_1_strategies = StrategyFactory.GetAllStrategies();
-            phase_2_strategies = StrategyFactory.GetAllStrategies();
-            phase_3_strategies = StrategyFactory.GetAllStrategies();
+            theX = 2d;
 
             annealingSchedule = new AnnealingSchedule();
-
             random = new Random();
-
             oldSolutionScore = Double.MaxValue;
+            newSolutionScore = Double.MaxValue;
         }
 
         public Solution runOptimizer(Solution startSolution)
@@ -41,7 +33,10 @@ namespace GOO.Model.Optimizers
             {
                 // Phase 1 : Marry / Divorce Clusters
 
+
                 // Phase 2 : Create routes and use either Opt2, Opt2.5, Opt3, Genetic, Random to optimize
+                currentSolution = Phase2RouteGeneration(currentSolution);
+                currentSolution = Phase2Optimizers(currentSolution);
 
                 // Phase 3 : Schedule Clusters & Assign routes to truckers
 
@@ -68,28 +63,32 @@ namespace GOO.Model.Optimizers
             return currentSolution;
         }
 
-        private List<Cluster> Phase_1_dealWithClusters(Solution toStartFrom)
+        private List<Cluster> Phase1(Solution toStartFrom) // Deal with clusters & marriages
         {
             return new List<Cluster>();
         }
 
-        private Solution Phase_2_dealWithRoutes(Solution toStartFrom)
+        private Solution Phase2RouteGeneration(Solution toStartFrom) // Deal with clusters & marriages
+        {
+            return toStartFrom;
+        }
+
+        private Solution Phase2Optimizers(Solution toStartFrom) // Deal with Routes
         {
             //weighted value of each strategy
-            double opt2Chance = 10d;
-            double opt2HalfChance = 10d;
-            double opt3Chance = 4d;
-            double opt3HalfChance = 8d;
-            double geneticChance = 3d;
-            double randomChance = 5d;
+            double opt2Chance       = 10.0d;
+            double opt2HalfChance   = 10.0d;
+            double opt3Chance       = 4.0d;
+            double opt3HalfChance   = 8.0d;
+            double geneticChance    = 3.0d;
+            double randomChance     = 5.0d;
 
-            Random random = new Random();
             Strategy strategy = null;
 
             double select = random.NextDouble() * (opt2Chance + opt2HalfChance + opt3Chance + opt3HalfChance + geneticChance + randomChance);
 
             //opt2
-            if(select < opt2Chance)
+            if (select < opt2Chance)
                 strategy = new Strategies.RandomRouteOpt2Strategy();
             //opt 2 alt
             else if (select < opt2Chance + opt2HalfChance)
@@ -105,23 +104,33 @@ namespace GOO.Model.Optimizers
                 strategy = new Strategies.GeneticRouteStrategy();
             //total random
             else if (select < opt2Chance + opt2HalfChance + opt3Chance + opt3HalfChance + geneticChance + randomChance)
-                strategy = new Strategies.RandomRouteOpt2Strategy();
-            else //do nothing wich should never happen actualy
+                strategy = StrategyFactory.GetAllPhase2Strategies()[random.Next(StrategyFactory.GetAllPhase2Strategies().Length)];
+            else //do nothing wich should never happen actually
                 return toStartFrom;
 
-            strategy.executeStrategy(toStartFrom);
-            return toStartFrom;
+            return strategy.executeStrategy(toStartFrom);
         }
 
-        private Solution Phase_3_distributeRoutesToTruckers(Solution toStartFrom)
+        private Solution Phase3(Solution toStartFrom) // Destribute routes to truckers
         {
             return toStartFrom;
         }
 
-        private Solution Phase_4_AcceptOrReject(Solution toAcceptOrReject)
+        private bool Phase4(Solution toAcceptOrReject) // Accept Solution or not
         {
-            return toAcceptOrReject;
-        }
+            double deltaScore = Math.Abs(oldSolutionScore - newSolutionScore);
 
+            if (deltaScore > 0)
+                return true;
+            else
+            {
+                double chanceToBeAccepted = Math.Pow(theX, (deltaScore / annealingSchedule.AnnealingTemperature));
+
+                if (random.NextDouble() <= chanceToBeAccepted)
+                    return true;
+            }
+
+            return false;
+        }
     }
 }
