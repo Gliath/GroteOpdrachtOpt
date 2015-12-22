@@ -73,9 +73,9 @@ namespace GOO
 
             
             RandomRouteOpt3Strategy strategyOpt3 = new RandomRouteOpt3Strategy();        
-            RandomRouteOpt3AltStrategy strategyOpt3A = new RandomRouteOpt3AltStrategy();
+            RandomRouteOpt3HalfStrategy strategyOpt3A = new RandomRouteOpt3HalfStrategy();
             RandomRouteOpt2Strategy strategyOpt2 = new RandomRouteOpt2Strategy();
-            RandomRouteOpt2AltStrategy strategyOpt2A = new RandomRouteOpt2AltStrategy();
+            RandomRouteOpt2HalfStrategy strategyOpt2A = new RandomRouteOpt2HalfStrategy();
 
             sw.Restart();
             strategyOpt3.executeStrategy(w00tSolution);
@@ -92,7 +92,7 @@ namespace GOO
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Opt3ASolution.txt", THE_SOLUTION_STRING);
             strategyOpt3A.undoStrategy(w00tSolution);
             sw.Stop();
-            Console.WriteLine("Elapsed time for Opt3A solution: {0}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine("Elapsed time for Opt3.5 solution: {0}ms", sw.ElapsedMilliseconds);
 
 
             sw.Restart();
@@ -110,7 +110,7 @@ namespace GOO
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Opt2ASolution.txt", THE_SOLUTION_STRING);
             strategyOpt2A.undoStrategy(w00tSolution);
             sw.Stop();
-            Console.WriteLine("Elapsed time for Opt2A solution: {0}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine("Elapsed time for Opt2.5 solution: {0}ms", sw.ElapsedMilliseconds);
 
 
             sw.Restart();

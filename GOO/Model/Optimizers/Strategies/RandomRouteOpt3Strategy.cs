@@ -196,8 +196,6 @@ namespace GOO.Model.Optimizers.Strategies
 
         private void swapOrders(Order A, Order B, Route route)
         {
-            //route.RemoveOrder(B);
-            //route.AddOrderAt(B, A);
             route.SwapOrders(A, B);
         }
 
