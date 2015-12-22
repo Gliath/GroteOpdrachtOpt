@@ -89,24 +89,6 @@ namespace GOO
             strategy.executeStrategy(w00tSolution);
             strategy2.executeStrategy(w00tSolution);
             strategy.executeStrategy(w00tSolution);
-            strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
-            strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
-            strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
-            strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
-            strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
-            strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
-            strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
-            strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
-            strategy2.executeStrategy(w00tSolution);
-            strategy.executeStrategy(w00tSolution);
 
             THE_SOLUTION_STRING = w00tSolution.ToString();
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/EndSolution.txt", THE_SOLUTION_STRING);
