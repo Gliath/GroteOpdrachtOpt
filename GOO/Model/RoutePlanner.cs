@@ -81,28 +81,22 @@ namespace GOO.Model
                     }
                     AvailableOrders.Remove(bestOrder);
 
-                    // TODO : REDO THIS IF_STATEMENT
-                    if (!OrdersInRoute.Contains(AvailableClusterOrders[randomOrderToSelect]) && 
-                        !AvailableOrders.Contains(AvailableClusterOrders[randomOrderToSelect]) &&
-                        !ClusterCounter.IsOrderCompleted(AvailableClusterOrders[randomOrderToSelect].OrderNumber)) //check if order is already in the order list
+                    //check if the weight and travel time does not exceed their max values
+                    if (toFill.Weight + (previousAddedOrder.NumberOfContainers * previousAddedOrder.VolumePerContainer) <= maxWeight &&
+                        toFill.TravelTime +
+                        FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, previousAddedOrder.MatrixID].TravelTime +
+                        FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime -
+                        FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime +
+                        AvailableClusterOrders[randomOrderToSelect].EmptyingTimeInSeconds <= maxTravelTime)
                     {
-                        //check if the weight and travel time does not exceed their max values
-                        if (toFill.Weight + (previousAddedOrder.NumberOfContainers * previousAddedOrder.VolumePerContainer) <= maxWeight &&
-                            toFill.TravelTime +
-                            FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, previousAddedOrder.MatrixID].TravelTime +
-                            FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime -
-                            FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime +
-                            AvailableClusterOrders[randomOrderToSelect].EmptyingTimeInSeconds <= maxTravelTime)
-                        {
-                            //add the order to the orderlist and update the matrix check value for the next run
-                            //Console.WriteLine(OrderArray[randomInt].OrderNumber + "  Current travel time :" + TravelTime + " Added route time: " + FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime + "/" + OrderArray[randomInt].EmptyingTimeInSeconds);
-                            previousAddedOrder = bestOrder;
-                            toFill.AddOrder(bestOrder);
-                        }
-                        else
-                        {
-                            steps += 10;
-                        }
+                        //add the order to the orderlist and update the matrix check value for the next run
+                        //Console.WriteLine(OrderArray[randomInt].OrderNumber + "  Current travel time :" + TravelTime + " Added route time: " + FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime + "/" + OrderArray[randomInt].EmptyingTimeInSeconds);
+                        previousAddedOrder = bestOrder;
+                        toFill.AddOrder(bestOrder);
+                    }
+                    else
+                    {
+                        steps += 10;
                     }
                     steps++;
                 }
@@ -117,7 +111,7 @@ namespace GOO.Model
             List<Order> toReturn = new List<Order>();
             foreach (Order order in ordersToUse)
             {
-                if (!orderCounter.HasOccurence(day, order.OrderNumber) && !orderCounter.IsOrderCompleted(order.OrderNumber))
+                if (orderCounter.CanAddOrder(order.OrderNumber, day))
                 {
                     toReturn.Add(order);
                 }
