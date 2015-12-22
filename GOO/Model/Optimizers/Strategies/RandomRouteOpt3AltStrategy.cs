@@ -154,7 +154,7 @@ namespace GOO.Model.Optimizers.Strategies
                                     best_traveltime = new_traveltime6;
                                 }
 
-                                Console.WriteLine(best_traveltime);
+                                //Console.WriteLine(best_traveltime);
                                 routeToWorkWith1 = new Route(day);
                                 routeToWorkWith2 = new Route(day);
                                 routeToWorkWith3 = new Route(day);
