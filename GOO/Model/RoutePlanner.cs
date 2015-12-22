@@ -9,6 +9,66 @@ namespace GOO.Model
     {
         private static Random random = new Random();
 
+        public static Solution PlanRoutesFromClustersIntoSolution(Solution solution, List<Cluster> clusters)
+        {
+            Console.WriteLine("Planning routes into solution!");
+
+            Dictionary<Days, List<Route>> DayRoutes = new Dictionary<Days, List<Route>>();
+            foreach (Days Day in Enum.GetValues(typeof(Days)))
+            {
+                if (Day != Days.None)
+                    DayRoutes.Add(Day, new List<Route>());
+            }
+
+            foreach (Cluster cluster in clusters)
+            {
+                foreach (Route route in cluster.Routes)
+                {
+                    DayRoutes[route.Day].Add(route);
+                }
+            }
+
+            double maxTravelTimeOnDay = 43200.0d;
+            double travelTimeOnDay = 0.0d;
+
+            for (int i = 0; i < 2; i++)
+            {
+                foreach (Days Day in DayRoutes.Keys)
+                {
+                    List<Route> plannedRoutes = new List<Route>();
+                    List<Route> toWorkWith = DayRoutes[Day];
+                    bool canFitMore = true;
+                    while (travelTimeOnDay < maxTravelTimeOnDay && canFitMore)
+                    {
+                        Route bestRoute = null;
+                        foreach (Route route in toWorkWith)
+                        {
+                            if (bestRoute == null)
+                                bestRoute = route;
+                            else if (route.TravelTime < bestRoute.TravelTime)
+                                bestRoute = route;
+                        }
+                        if (bestRoute == null)
+                            canFitMore = false;
+                        else
+                        {
+                            plannedRoutes.Add(bestRoute);
+                            toWorkWith.Remove(bestRoute);
+                            travelTimeOnDay += bestRoute.TravelTime;
+                        }
+                    }
+                    if (plannedRoutes.Count > 0)
+                        solution.AddNewItemToPlanning(Day, i, plannedRoutes);
+
+                    travelTimeOnDay = 0.0d;
+                }
+            }
+
+            Console.WriteLine("Done with planning routes into solution!");
+
+            return solution;
+        }
+
         public static List<Cluster> PlanStartClusters(List<Cluster> clusters)
         {
             // Step 1. Generate Routes for each cluster dependent on the orderfrequency within
@@ -43,14 +103,14 @@ namespace GOO.Model
 
                 for (int i = 0; i < randomizationSteps; i++)
                 {
-                    int swapIndex1 = random.Next(randomDayList.Count-1);
-                    int swapIndex2 = random.Next(randomDayList.Count-1);
+                    int swapIndex1 = random.Next(randomDayList.Count - 1);
+                    int swapIndex2 = random.Next(randomDayList.Count - 1);
 
                     Days toSwap = randomDayList[swapIndex1];
                     Days toSwap2 = randomDayList[swapIndex2];
 
                     randomDayList.Remove(toSwap);
-                    randomDayList.Insert(swapIndex1 ,toSwap2);
+                    randomDayList.Insert(swapIndex1, toSwap2);
 
                     randomDayList.Remove(toSwap2);
                     randomDayList.Insert(swapIndex2, toSwap);
@@ -100,11 +160,11 @@ namespace GOO.Model
                 List<Order> OrdersInRoute = toFill.Orders;
                 List<Order> AvailableOrders = createAvailableOrdersForDay(Day, ClusterCounter, AvailableClusterOrders);
 
-                while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps && AvailableOrders.Count > 0)
+                while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps)
                 {
                     int randomAmountOfLoops = random.Next(5, 50);
                     int randomOrderToSelect = random.Next(0, AvailableOrders.Count - 1);
-                    
+
                     Order bestOrder = AvailableOrders[randomOrderToSelect];
                     Order randomOrder = AvailableOrders[randomOrderToSelect];
 
@@ -112,7 +172,7 @@ namespace GOO.Model
                     for (int i = 0; i < randomAmountOfLoops; i++)
                     {
                         randomOrder = AvailableOrders[random.Next(0, AvailableOrders.Count - 1)];
-                        
+
                         int travelLocation1 = FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, bestOrder.MatrixID].TravelTime;
                         int travelLocation2 = FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, randomOrder.MatrixID].TravelTime;
                         if (travelLocation2 < travelLocation1)
@@ -144,7 +204,8 @@ namespace GOO.Model
                     }
                     steps++;
                 }
-                toReturn.Add(toFill);
+                if (toFill.Orders.Count > 1)
+                    toReturn.Add(toFill);
                 toFill = new Route(Days.None);
             }
             return toReturn;

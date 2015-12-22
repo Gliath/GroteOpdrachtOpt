@@ -41,9 +41,7 @@ namespace GOO.Model
             foreach (Cluster cluster in clusters)
                 Console.WriteLine(cluster);
 
-            RoutePlanner.PlanStartClusters(clusters);
-
-            return new Solution(clusters);
+            return RoutePlanner.PlanRoutesFromClustersIntoSolution(new Solution(clusters), RoutePlanner.PlanStartClusters(clusters));
         }
 
         public static string TEST_generateRouteSolution()
