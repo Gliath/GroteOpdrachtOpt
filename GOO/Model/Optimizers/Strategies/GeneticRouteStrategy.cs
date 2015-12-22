@@ -70,7 +70,7 @@ namespace GOO.Model.Optimizers.Strategies
             for (int i = 0; i < sliceIndices.Count; i++)
             {
                 orderSlices[i] = new List<Order>();
-                int startIndex = i == 0 ? 0 : sliceIndices[i - 1];
+                int startIndex = i == 0 ? 0 : sliceIndices[i - 1]; // Slices on 0 twice, on 0 and 1 - 1
 
                 for (int j = startIndex; j < sliceIndices[i]; j++)
                     orderSlices[i].Add(originalRoute.Orders[j]);
@@ -85,7 +85,7 @@ namespace GOO.Model.Optimizers.Strategies
                 bool hasPutBackASlice = false;
                 do
                 {
-                    int sliceIndex = random.Next(1, orderSlices.Length);
+                    int sliceIndex = random.Next(1, orderSlices.Length); // And index 0?
                     if (!slicesIndexPutBack.Contains(sliceIndex))
                     {
                         for (int j = 0; j < orderSlices[sliceIndex].Count; j++)
@@ -111,7 +111,7 @@ namespace GOO.Model.Optimizers.Strategies
 
             toStartFrom.RemoveItemFromPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2);
             toStartFrom.AddNewItemToPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, planningForSelectedRoute.Item3);
-
+            // Where is the generation of the population and then the selection based on fitness?
             return toStartFrom;
         }
 

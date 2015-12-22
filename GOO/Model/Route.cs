@@ -47,10 +47,10 @@ namespace GOO.Model
             int NextMatrixID = 287;
             int NewMatrixID = newOrder.MatrixID;
             int PreviousMatrixID = orderToInsertAfter.MatrixID;
-            int IndexOfMatrixToInsertAfter = Orders.FindIndex(o => o.MatrixID == PreviousMatrixID);
+            int IndexOfOrderToInsertAfter = Orders.FindIndex(o => o.OrderNumber == orderToInsertAfter.MatrixID);
 
-            if (IndexOfMatrixToInsertAfter != Orders.Count - 2)
-                NextMatrixID = Orders[IndexOfMatrixToInsertAfter + 1].MatrixID;
+            if (IndexOfOrderToInsertAfter != Orders.Count - 2)
+                NextMatrixID = Orders[IndexOfOrderToInsertAfter + 1].MatrixID;
 
             TravelTime -= FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, NextMatrixID].TravelTime;
             TravelTime += FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, NewMatrixID].TravelTime;
@@ -58,13 +58,13 @@ namespace GOO.Model
 
             TravelTime += newOrder.EmptyingTimeInSeconds;
             Weight += newOrder.VolumePerContainer * newOrder.NumberOfContainers;
-            Orders.Insert(IndexOfMatrixToInsertAfter + 1, newOrder);
+            Orders.Insert(IndexOfOrderToInsertAfter + 1, newOrder);
         }
 
         public void RemoveOrder(Order order)
         {
             int OldMatrixID = order.MatrixID;
-            int indexOfOldOrder = Orders.FindIndex(o => o.MatrixID == OldMatrixID);
+            int indexOfOldOrder = Orders.FindIndex(o => o.OrderNumber == order.OrderNumber);
             int PreviousMatrixID = (indexOfOldOrder - 1) >= 0 ? Orders[indexOfOldOrder - 1].MatrixID : 287;
             int NextMatrixID = indexOfOldOrder < Orders.Count - 2 ? Orders[indexOfOldOrder + 1].MatrixID : 287;
 
