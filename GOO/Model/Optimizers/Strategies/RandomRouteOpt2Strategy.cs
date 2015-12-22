@@ -69,6 +69,7 @@ namespace GOO.Model.Optimizers.Strategies
                 improvestep++;
             }
 
+            Console.WriteLine("OPT2");
             Console.WriteLine("Old Travel Time : {0}", old_route.TravelTime);
             Console.WriteLine("Best Travel Time : {0}", best_traveltime);
 
@@ -83,8 +84,9 @@ namespace GOO.Model.Optimizers.Strategies
 
         private void swapOrders(Order A, Order B, Route route)
         {
-            route.RemoveOrder(B);
-            route.AddOrderAt(B, A);
+            //route.RemoveOrder(B);
+            //route.AddOrderAt(B, A);
+            route.SwapOrders(A, B);
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
