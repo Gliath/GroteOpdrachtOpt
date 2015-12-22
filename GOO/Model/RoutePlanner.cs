@@ -204,7 +204,8 @@ namespace GOO.Model
                     }
                     steps++;
                 }
-                toReturn.Add(toFill);
+                if(toFill.Orders.Count > 1)
+                    toReturn.Add(toFill);
                 toFill = new Route(Days.None);
             }
             return toReturn;
