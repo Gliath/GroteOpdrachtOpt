@@ -38,6 +38,7 @@ namespace GOO.Model
                     }
 
                     order.OrderDayOccurrences |= OccurredOn;
+                    UpdateDayRestrictions(order);
                     break;
                 }
         }
@@ -55,10 +56,43 @@ namespace GOO.Model
                     }
 
                     order.OrderDayOccurrences ^= (order.OrderDayOccurrences & OccurredOn);
+                    UpdateDayRestrictions(order);
                     break;
                 }
 
             CounterList.RemoveAll(o => o.OrderNumber == OrderNumber && o.OrderDayOccurrences.Equals(Days.None));
+        }
+
+        private void UpdateDayRestrictions(OrderCounter order)
+        {
+            order.OrderDayRestrictions.Clear();
+
+            foreach (Days restrictions in FilesInitializer._Orders[order.OrderNumber].DayRestrictions)
+                if (restrictions.HasFlag(order.OrderDayOccurrences))
+                    order.OrderDayRestrictions.Add(restrictions);
+        }
+
+        public bool CanAddOrder(int orderNumber, Days day)
+        {
+            foreach (OrderCounter order in CounterList)
+                if (order.OrderNumber == orderNumber)
+                {
+                    if (order.OrderDayOccurrences.HasFlag(day))
+                        return false; // Already occurred on specified day
+
+                    foreach (Days restrictions in order.OrderDayRestrictions)
+                        if (restrictions.HasFlag(day))
+                            return true; // Order has yet to occur on specified day and can be added accorrding to the restrictions
+
+                    return false; // restrictions is either empty or does not have the specified day in its restriction
+                }
+
+            // Order has yet to be added to the list of CounterList
+            foreach (Days restrictions in FilesInitializer._Orders[orderNumber].DayRestrictions)
+                if (restrictions.HasFlag(day))
+                    return true; // Order has never been added to this list, but according to the order.DayRestrictions it should be able to add to the specified day
+
+            return false; // Could not be found in the CounterList or the orders restrictions, it is not supposed to be added this day
         }
 
         public Boolean HasOccurence(Days day, int OrderNumber)
