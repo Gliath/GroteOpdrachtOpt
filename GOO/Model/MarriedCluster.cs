@@ -32,23 +32,6 @@ namespace GOO.Model
             set { return; }
         }
 
-        public override List<Days> DaysRestrictions
-        {
-            get
-            {
-                List<Days> UnifiedDaysRestrictions = new List<Days>();
-                UnifiedDaysRestrictions.AddRange(Groom.DaysRestrictions);
-
-                foreach (Days restriction in UnifiedDaysRestrictions)
-                    if (!UnifiedDaysRestrictions.Contains(restriction))
-                        UnifiedDaysRestrictions.Add(restriction);
-
-                return UnifiedDaysRestrictions;
-            }
-
-            set { return; }
-        }
-
         private Days UnifiedDaysPlannedFor = Days.None;
         public override Days DaysPlannedFor
         {

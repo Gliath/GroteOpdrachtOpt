@@ -11,7 +11,6 @@ namespace GOO.Model
     {
         public Point CenterPoint { get; private set; }
         public override List<Order> OrdersInCluster { get; set; }
-        public override List<Days> DaysRestrictions { get; set; }
         public override Days DaysPlannedFor { get; set; }
         public override OrdersCounter OrdersCounter { get; set; }
         public override List<Route> Routes { get; set; }
@@ -27,7 +26,6 @@ namespace GOO.Model
             this.DaysPlannedFor = daysPlannedFor;
             this.OrdersCounter = new OrdersCounter();
             this.Routes = new List<Route>();
-            this.DaysRestrictions = new List<Days>();
         }
 
         public bool CanBePlannedOn(Days day)

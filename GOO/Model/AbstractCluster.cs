@@ -10,7 +10,6 @@ namespace GOO.Model
     public abstract class AbstractCluster
     {
         public abstract List<Order> OrdersInCluster { get; set; }
-        public abstract List<Days> DaysRestrictions { get; set; }
         public abstract Days DaysPlannedFor { get; set; }
         public abstract OrdersCounter OrdersCounter { get; set; }
         public abstract List<Route> Routes { get; set; }

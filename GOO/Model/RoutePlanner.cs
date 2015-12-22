@@ -93,7 +93,7 @@ namespace GOO.Model
 
             foreach (Days Day in Enum.GetValues(typeof(Days)))
             {                
-                if (cluster.DaysRestrictions.Find(d => d.HasFlag(Day)) == Days.None)
+                if (Day == Days.None)
                     continue;
 
                 Route toFill = new Route(Day);
