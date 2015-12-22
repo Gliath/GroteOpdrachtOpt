@@ -92,7 +92,7 @@ namespace GOO.Model
             List<Order> AvailableClusterOrders = cluster.OrdersInCluster; // Order array to choose orders from with a random
 
             foreach (Days Day in Enum.GetValues(typeof(Days)))
-            {                
+            {
                 if (Day == Days.None)
                     continue;
 
@@ -100,8 +100,8 @@ namespace GOO.Model
                 List<Order> OrdersInRoute = toFill.Orders;
                 List<Order> AvailableOrders = createAvailableOrdersForDay(Day, ClusterCounter, AvailableClusterOrders);
 
-                while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps)
-                {                    
+                while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps && AvailableOrders.Count > 0)
+                {
                     int randomAmountOfLoops = random.Next(5, 50);
                     int randomOrderToSelect = random.Next(0, AvailableOrders.Count - 1);
                     

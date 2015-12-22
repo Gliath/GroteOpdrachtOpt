@@ -30,9 +30,8 @@ namespace GOO
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-#if DEBUG
             AllocConsole();
-#endif
+
             Console.WriteLine("Program booting up...");
 
             FilesInitializer.InitializeFiles();
