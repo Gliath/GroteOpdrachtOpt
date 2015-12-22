@@ -58,16 +58,29 @@ namespace GOO.Model.Optimizers.Strategies
                         for (int k = j + 1; k < routeToWorkWith1.Orders.Count - 1; k++)
                         {
                             //swap the 2 coords
-                            swapOrders(routeToWorkWith1.Orders[k], routeToWorkWith1.Orders[j], routeToWorkWith1);
-                            swapOrders(routeToWorkWith1.Orders[k], routeToWorkWith1.Orders[i], routeToWorkWith1);
+                            
+                            Order initialRouteI1 = routeToWorkWith1.Orders[i];
+                            Order initialRouteI2 = routeToWorkWith2.Orders[i];
+                            Order initialRouteI3 = routeToWorkWith3.Orders[i];
+                                                
+                            Order initialRouteJ1 = routeToWorkWith1.Orders[j];
+                            Order initialRouteJ2 = routeToWorkWith2.Orders[j];
+                            Order initialRouteJ3 = routeToWorkWith3.Orders[j];
+
+                            Order initialRouteK1 = routeToWorkWith1.Orders[k];
+                            Order initialRouteK2 = routeToWorkWith2.Orders[k];
+                            Order initialRouteK3 = routeToWorkWith3.Orders[k];
+
+                            swapOrders(initialRouteK1, initialRouteJ1, routeToWorkWith1);
+                            swapOrders(initialRouteK1, initialRouteI1, routeToWorkWith1);
                             new_traveltime1 = routeToWorkWith1.TravelTime;
 
-                            swapOrders(routeToWorkWith2.Orders[i], routeToWorkWith2.Orders[j], routeToWorkWith2);
-                            swapOrders(routeToWorkWith2.Orders[i], routeToWorkWith2.Orders[k], routeToWorkWith2);
+                            swapOrders(initialRouteI2, initialRouteJ2, routeToWorkWith2);
+                            swapOrders(initialRouteI2, initialRouteK2, routeToWorkWith2);
                             new_traveltime2 = routeToWorkWith2.TravelTime;
 
-                            swapOrders(routeToWorkWith3.Orders[k], routeToWorkWith3.Orders[i], routeToWorkWith3);
-                            swapOrders(routeToWorkWith3.Orders[k], routeToWorkWith3.Orders[j], routeToWorkWith3);
+                            swapOrders(initialRouteK3, initialRouteI3, routeToWorkWith3);
+                            swapOrders(initialRouteK3, initialRouteJ3, routeToWorkWith3);
                             new_traveltime3 = routeToWorkWith3.TravelTime;
 
                             if (new_traveltime1 < best_traveltime || new_traveltime2 < best_traveltime || new_traveltime3 < best_traveltime)
