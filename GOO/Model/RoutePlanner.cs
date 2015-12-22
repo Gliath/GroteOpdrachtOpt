@@ -160,7 +160,7 @@ namespace GOO.Model
                 List<Order> OrdersInRoute = toFill.Orders;
                 List<Order> AvailableOrders = createAvailableOrdersForDay(Day, ClusterCounter, AvailableClusterOrders);
 
-                while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps)
+                while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps && AvailableOrders.Count > 0)
                 {
                     int randomAmountOfLoops = random.Next(5, 50);
                     int randomOrderToSelect = random.Next(0, AvailableOrders.Count - 1);
