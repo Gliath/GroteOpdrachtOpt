@@ -38,6 +38,7 @@ namespace GOO.Model
                     }
 
                     order.OrderDayOccurrences |= OccurredOn;
+                    UpdateDayRestrictions(order);
                     break;
                 }
         }
@@ -55,10 +56,20 @@ namespace GOO.Model
                     }
 
                     order.OrderDayOccurrences ^= (order.OrderDayOccurrences & OccurredOn);
+                    UpdateDayRestrictions(order);
                     break;
                 }
 
             CounterList.RemoveAll(o => o.OrderNumber == OrderNumber && o.OrderDayOccurrences.Equals(Days.None));
+        }
+
+        private void UpdateDayRestrictions(OrderCounter order)
+        {
+            order.OrderDayRestrictions.Clear();
+
+            foreach (Days restrictions in FilesInitializer._Orders[order.OrderNumber].DayRestrictions)
+                if (restrictions.HasFlag(order.OrderDayOccurrences))
+                    order.OrderDayRestrictions.Add(restrictions);
         }
 
         public Boolean HasOccurence(Days day, int OrderNumber)
