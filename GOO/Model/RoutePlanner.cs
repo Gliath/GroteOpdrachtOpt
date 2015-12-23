@@ -54,6 +54,8 @@ namespace GOO.Model
                         solution.AddNewItemToPlanning(Day, i, plannedRoutes);
 
                     travelTimeOnDay = 0.0d;
+                    foreach (Route route in plannedRoutes)
+                        DayRoutes[Day].Remove(route);
                 }
             }
 

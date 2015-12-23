@@ -57,6 +57,7 @@ namespace GOO.Model
                         return false;
 
                     PerQuadrantDaysInformation[QuadrantIndex] = new Tuple<Days, Days, Days>(PerQuadrantDaysInformation[QuadrantIndex].Item1, Days.None, DayPlanned);
+                    Quadrants[QuadrantIndex].DaysPlannedFor = DayPlanned;
 
                     for (int EachQuadrantIndex = 0; EachQuadrantIndex < NumberOfQuadrants; EachQuadrantIndex++)
                     {
@@ -65,7 +66,7 @@ namespace GOO.Model
 
                         if (PerQuadrantDaysInformation[EachQuadrantIndex].Item2.HasFlag(DayPlanned))
                         {
-                            Days QuadrantRestriction = PerQuadrantDaysInformation[QuadrantIndex].Item2;
+                            Days QuadrantRestriction = PerQuadrantDaysInformation[EachQuadrantIndex].Item2;
 
                             QuadrantRestriction ^= DayPlanned;
                             PerQuadrantDaysInformation[EachQuadrantIndex] = new Tuple<Days, Days, Days>(PerQuadrantDaysInformation[EachQuadrantIndex].Item1, QuadrantRestriction, Days.None);
@@ -101,6 +102,7 @@ namespace GOO.Model
                     }
 
                     PerQuadrantDaysInformation[QuadrantIndex] = new Tuple<Days, Days, Days>(PerQuadrantDaysInformation[QuadrantIndex].Item1, DaysRestriction, Days.None);
+                    Quadrants[QuadrantIndex].DaysPlannedFor = Days.None;
 
                     for (int EachQuadrantIndex = 0; EachQuadrantIndex < NumberOfQuadrants; EachQuadrantIndex++)
                     {
@@ -109,7 +111,7 @@ namespace GOO.Model
 
                         if (PerQuadrantDaysInformation[EachQuadrantIndex].Item1.HasFlag(DayItWasPlannedFor))
                         {
-                            Days QuadrantRestriction = PerQuadrantDaysInformation[QuadrantIndex].Item2;
+                            Days QuadrantRestriction = PerQuadrantDaysInformation[EachQuadrantIndex].Item2;
                             QuadrantRestriction |= DayItWasPlannedFor;
                             PerQuadrantDaysInformation[EachQuadrantIndex] = new Tuple<Days, Days, Days>(PerQuadrantDaysInformation[EachQuadrantIndex].Item1, QuadrantRestriction, Days.None);
                         }

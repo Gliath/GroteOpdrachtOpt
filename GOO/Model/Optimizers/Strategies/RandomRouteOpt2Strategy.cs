@@ -104,6 +104,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public Route opt2(Route toOptimize)
         {
+            day = toOptimize.Day;
             Route routeToWorkWith = new Route(day);
             Route toReturn = new Route(day);
             foreach (Order order in toOptimize.Orders)
