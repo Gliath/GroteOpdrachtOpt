@@ -38,7 +38,7 @@ namespace GOO.Model
                         {
                             if (bestRoute == null)
                                 bestRoute = route;
-                            else if (route.TravelTime < bestRoute.TravelTime)
+                            else if (route.TravelTime < bestRoute.TravelTime && route.Orders.Count > 1)
                                 bestRoute = route;
                         }
                         if (bestRoute == null)
@@ -110,7 +110,10 @@ namespace GOO.Model
                     {
                         toAdd.AddOrder(order);
                     }
-                    quadrant.AddRouteToCluster(opt2.opt2(toAdd)); // TODO : Check for max traveltime
+                    if (toAdd.Orders.Count > 1)
+                        quadrant.AddRouteToCluster(opt2.opt2(toAdd)); // TODO : Check for max traveltime
+                    else
+                        Console.WriteLine("COULD NOT CREATE ROUTE. Quadrant : {0}", quadrant);
                 }
             }
             return clusters;
@@ -133,7 +136,9 @@ namespace GOO.Model
                 {
                     if (quadrant.DaysPlannedFor == day)
                     {
-                        toReturn.AddRange(quadrant.Routes); // TODO: See if this holds up with married clusters.
+                        foreach(Route route in quadrant.Routes)
+                            if(route.Orders.Count > 1)
+                                toReturn.Add(route); // TODO: See if this holds up with married clusters.
                     }
                 }
             }

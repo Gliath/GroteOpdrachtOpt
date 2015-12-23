@@ -62,7 +62,7 @@ namespace GOO.Model.Optimizers.Strategies
                             routeToWorkWith = new Route(day);
                             foreach (Order order in new_route.Orders)
                             {
-                                if(order.OrderNumber != 0)
+                                if (order.OrderNumber != 0)
                                     routeToWorkWith.AddOrder(order);
                             }
                         }
@@ -108,8 +108,11 @@ namespace GOO.Model.Optimizers.Strategies
             Route toReturn = new Route(day);
             foreach (Order order in toOptimize.Orders)
             {
-                routeToWorkWith.AddOrder(order);
-                toReturn.AddOrder(order);
+                if (order != Data.GetOrder0())
+                {
+                    routeToWorkWith.AddOrder(order);
+                    toReturn.AddOrder(order);
+                }
             }
 
             //start doing the opt-2 algorithm on the route list
