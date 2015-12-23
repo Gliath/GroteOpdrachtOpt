@@ -10,12 +10,14 @@ namespace GOO.Model
     public class Clusterer
     {
         private static int startingAmountOfClusters = 30;
+        private Random random;
 
         private Dictionary<int, Order> allOrders;
 
         public Clusterer(Dictionary<int, Order> allOrders, int startingAmountOfClusters)
         {
             this.allOrders = allOrders;
+            this.random = new Random();
             Clusterer.startingAmountOfClusters = startingAmountOfClusters;
         }
 
@@ -57,9 +59,9 @@ namespace GOO.Model
             return toReturn;
         }
 
-        public List<Cluster> splitClusters(List<Cluster> toSplit)
+        public List<ParentCluster> splitClusters(List<Cluster> toSplit)
         {
-            List<Cluster> toReturn = new List<Cluster>();
+            List<ParentCluster> toReturn = new List<ParentCluster>();
 
             bool fre2 = false;
             bool fre3 = false;
@@ -107,7 +109,24 @@ namespace GOO.Model
                     assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
 
                     // Fuse two of the returned clusters. TODO : Check if Opposite quadrants are a problem if fused
+                    int randomq1 = random.Next(toUse.Count);
+                    Cluster q1 = toUse[randomq1];
+                    
+                    int randomq2 = -1;
+                    do
+                    {
+                        randomq2 = random.Next(toUse.Count);
+                    } while (randomq2 < 0 && randomq1 == randomq2);
+                    
+                    Cluster q2 = toUse[randomq2];
 
+                    foreach (Order order in q2.OrdersInCluster)
+	                {
+                        if (!q1.OrdersInCluster.Contains(order))
+                            q1.OrdersInCluster.Add(order);
+	                }
+
+                    toUse.Remove(q2);
                 }
 
                 else if (fre2 || fre3 || fre4)
@@ -122,7 +141,7 @@ namespace GOO.Model
                     toUse.Add(new Cluster(new Point()));
                     assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
                 }
-
+                toReturn.Add(new ParentCluster(centroid, cluster.OrdersInCluster, Days.None, toUse.ToArray())); // TODO : Double-check day restrictions
             }
             return toReturn;
         }
