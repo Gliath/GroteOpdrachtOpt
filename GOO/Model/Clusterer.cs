@@ -58,6 +58,10 @@ namespace GOO.Model
 
             foreach (Cluster parentCluster in toSplit)
             {
+                fre2 = false;
+                fre3 = false;
+                fre4 = false;
+
                 Point centroid = parentCluster.CenterPoint;
                 List<Cluster> quadrants = new List<Cluster>();
 
