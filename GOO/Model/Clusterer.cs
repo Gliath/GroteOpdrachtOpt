@@ -181,25 +181,37 @@ namespace GOO.Model
             {
                 multiOrderAssignFre2Excusively(quadrants, AllFre2Orders);
 
-                // Random chance to add either one of the following DaysRestrictions (?)
-                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Tuesday;
-                Days DaysRestrictionSecondQuadrant = Days.Thursday | Days.Friday;
+                Days[] DaysRestrictions = new Days[] { 
+                    Days.Monday | Days.Tuesday, 
+                    Days.Thursday | Days.Friday };
+
+                for (int quadrantIndex = 0; quadrantIndex < quadrants.Count; quadrantIndex++)
+                    quadrants[quadrantIndex].initialRestrictions = DaysRestrictions[quadrantIndex];
             }
             else if (fre3 && !(fre2 || fre4))
             { // randomly assign the fre 3 orders to three clusters
                 multiOrderAssignFre4(quadrants, AllFre3Orders);
 
-                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
+                Days[] DaysRestrictions = new Days[] { 
+                    Days.Monday | Days.Wednesday | Days.Friday, 
+                    Days.Monday | Days.Wednesday | Days.Friday, 
+                    Days.Monday | Days.Wednesday | Days.Friday };
+
+                for (int quadrantIndex = 0; quadrantIndex < quadrants.Count; quadrantIndex++)
+                    quadrants[quadrantIndex].initialRestrictions = DaysRestrictions[quadrantIndex];
             }
             else if (fre4 && !(fre2 || fre3))
             { // assign one fre4 to every cluster
                 multiOrderAssignFre4(quadrants, AllFre4Orders);
 
-                // Random chance to add either one of the following DaysRestrictions (?)
-                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Tuesday | Days.Wednesday | Days.Thursday;
-                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Tuesday | Days.Wednesday | Days.Friday;
-                Days DaysRestrictionThirdQuadrant = Days.Monday | Days.Tuesday | Days.Thursday | Days.Friday;
-                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Wednesday | Days.Thursday | Days.Friday;
+                Days[] DaysRestrictions = new Days[] {
+                    Days.Monday | Days.Tuesday | Days.Wednesday | Days.Thursday,
+                    Days.Monday | Days.Tuesday | Days.Wednesday | Days.Friday,
+                    Days.Monday | Days.Tuesday | Days.Thursday | Days.Friday,
+                    Days.Tuesday | Days.Wednesday | Days.Thursday | Days.Friday };
+
+                for (int quadrantIndex = 0; quadrantIndex < quadrants.Count; quadrantIndex++)
+                    quadrants[quadrantIndex].initialRestrictions = DaysRestrictions[quadrantIndex];
             }
             else if (fre2 && fre3 && !fre4)
             {
@@ -208,11 +220,15 @@ namespace GOO.Model
                 // fre2 may only occur once together with a fre 3 order
                 multiOrderAssignFre3(quadrants, AllFre3Orders);
                 multiOrderAssignFre2BasedOnFre3(quadrants, AllFre2Orders);
+                
+                Days[] DaysRestrictions = new Days[] {
+                    Days.Monday | Days.Friday,
+                    Days.Monday | Days.Wednesday | Days.Friday,
+                    Days.Monday | Days.Wednesday | Days.Friday,
+                    Days.Tuesday | Days.Thursday };
 
-                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Friday;
-                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
-                Days DaysRestrictionThirdQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
-                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Thursday;
+                for (int quadrantIndex = 0; quadrantIndex < quadrants.Count; quadrantIndex++)
+                    quadrants[quadrantIndex].initialRestrictions = DaysRestrictions[quadrantIndex];
             }
 
             else if (fre2 && !fre3 && fre4)
@@ -221,11 +237,15 @@ namespace GOO.Model
                 // assign one fre4 to every cluster
                 multiOrderAssignFre2Excusively(quadrants, fre2Orders1, fre2Orders2);
                 multiOrderAssignFre4(quadrants, AllFre4Orders);
+                
+                Days[] DaysRestrictions = new Days[] {
+                    Days.Monday | Days.Thursday,
+                    Days.Monday | Days.Thursday,
+                    Days.Tuesday | Days.Friday,
+                    Days.Tuesday | Days.Friday };
 
-                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Thursday;
-                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Thursday;
-                Days DaysRestrictionThirdQuadrant = Days.Tuesday | Days.Friday;
-                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Friday;
+                for (int quadrantIndex = 0; quadrantIndex < quadrants.Count; quadrantIndex++)
+                    quadrants[quadrantIndex].initialRestrictions = DaysRestrictions[quadrantIndex];
             }
 
             else if (!fre2 && fre3 && fre4)
@@ -235,11 +255,15 @@ namespace GOO.Model
 
                 multiOrderAssignFre3(quadrants, AllFre3Orders);
                 multiOrderAssignFre4(quadrants, AllFre4Orders);
+                
+                Days[] DaysRestrictions = new Days[] {
+                    Days.Monday | Days.Wednesday | Days.Friday,
+                    Days.Monday | Days.Wednesday | Days.Friday,
+                    Days.Monday | Days.Wednesday | Days.Friday,
+                    Days.Tuesday | Days.Thursday };
 
-                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
-                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
-                Days DaysRestrictionThirdQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
-                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Thursday;
+                for (int quadrantIndex = 0; quadrantIndex < quadrants.Count; quadrantIndex++)
+                    quadrants[quadrantIndex].initialRestrictions = DaysRestrictions[quadrantIndex];
             }
 
             else if (fre2 && fre3 && fre4)
@@ -252,11 +276,15 @@ namespace GOO.Model
                 multiOrderAssignFre3(quadrants, AllFre3Orders);
                 multiOrderAssignFre4(quadrants, AllFre4Orders);
                 multiOrderAssignFre2BasedOnFre3(quadrants, AllFre2Orders);
+                
+                Days[] DaysRestrictions = new Days[] {
+                    Days.Monday | Days.Friday,
+                    Days.Monday | Days.Wednesday | Days.Friday,
+                    Days.Monday | Days.Wednesday | Days.Friday,
+                    Days.Tuesday | Days.Thursday };
 
-                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Friday; // Why not wednesday? -Luke
-                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
-                Days DaysRestrictionThirdQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
-                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Thursday;
+                for (int quadrantIndex = 0; quadrantIndex < quadrants.Count; quadrantIndex++)
+                    quadrants[quadrantIndex].initialRestrictions = DaysRestrictions[quadrantIndex];
             }
         }
 

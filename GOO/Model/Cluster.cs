@@ -10,7 +10,7 @@ namespace GOO.Model
     public class Cluster : AbstractCluster
     {
         public Point CenterPoint { get; private set; }
-        public List<Days> initialRestrictions { get; set; }
+        public Days initialRestrictions { get; set; }
 
         public override Days DaysPlannedFor { get; set; }
         public override List<Order> OrdersInCluster { get; set; }

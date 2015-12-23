@@ -29,6 +29,9 @@ namespace GOO.Model
             this.OrdersInCluster = OrdersInCluster;
             this.Quadrants = Quadrants;
             PerQuadrantDaysInformation = new Tuple<Days, Days, Days>[NumberOfQuadrants];
+
+            for (int QuadrantIndex = 0; QuadrantIndex < NumberOfQuadrants; QuadrantIndex++)
+			    PerQuadrantDaysInformation[QuadrantIndex] = new Tuple<Days,Days,Days>(Quadrants[QuadrantIndex].initialRestrictions, Quadrants[QuadrantIndex].initialRestrictions, Days.None);
         }
 
         public bool CanSetDaysPlanned(Cluster Quadrant, Days DayPlanned)
@@ -88,7 +91,6 @@ namespace GOO.Model
 
                     Days DayItWasPlannedFor = PerQuadrantDaysInformation[QuadrantIndex].Item3;
                     Days DaysRestriction = PerQuadrantDaysInformation[QuadrantIndex].Item1;
-                    // Restrict DaysRestriction
 
                     for (int EachQuadrantIndex = 0; EachQuadrantIndex < NumberOfQuadrants; EachQuadrantIndex++)
                     {
