@@ -31,9 +31,7 @@ namespace GOO.Model
             List<Cluster> toReturn = new List<Cluster>();
 
             foreach (Order order in startingPoints)
-            {
                 toReturn.Add(new Cluster(new Point(order.X, order.Y)));
-            }
 
             for (int i = 0; i < 3000; i++) // Try to reposition the center-point 3000 times for each cluster
             {
@@ -163,8 +161,14 @@ namespace GOO.Model
             List<Order> AllFre4Orders = new List<Order>();
             List<Order> fre2Orders1 = new List<Order>();
             List<Order> fre2Orders2 = new List<Order>();
+
             if (fre2)
                 AllFre2Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK2);
+            if (fre3)
+                AllFre3Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK3);
+            if (fre4)
+                AllFre4Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK4);
+
             foreach (Order order in AllFre2Orders)
             {
                 if (order.X >= centroid.X) // right
@@ -172,34 +176,43 @@ namespace GOO.Model
                 if (order.X <= centroid.X) // left
                     fre2Orders2.Add(order);
             }
-            if (fre3)
-                AllFre3Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK3);
-            if (fre4)
-                AllFre4Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK4);
 
             if (fre2 && !(fre3 || fre4))
             {
                 multiOrderAssignFre2Excusively(quadrants, AllFre2Orders);
-                //Add day restriction
-                //// 
-                //quadrant.initialRestrictions.Add(Days.Monday | Days.Tuesday);
-                //quadrant.initialRestrictions.Add(Days.Thursday | Days.Friday);
+
+                // Random chance to add either one of the following DaysRestrictions (?)
+                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Tuesday;
+                Days DaysRestrictionSecondQuadrant = Days.Thursday | Days.Friday;
             }
             else if (fre3 && !(fre2 || fre4))
             { // randomly assign the fre 3 orders to three clusters
-                multiOrderAssignFre4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK3));
+                multiOrderAssignFre4(quadrants, AllFre3Orders);
+
+                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
             }
             else if (fre4 && !(fre2 || fre3))
             { // assign one fre4 to every cluster
-                multiOrderAssignFre4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK4));
+                multiOrderAssignFre4(quadrants, AllFre4Orders);
+
+                // Random chance to add either one of the following DaysRestrictions (?)
+                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Tuesday | Days.Wednesday | Days.Thursday;
+                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Tuesday | Days.Wednesday | Days.Friday;
+                Days DaysRestrictionThirdQuadrant = Days.Monday | Days.Tuesday | Days.Thursday | Days.Friday;
+                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Wednesday | Days.Thursday | Days.Friday;
             }
             else if (fre2 && fre3 && !fre4)
             {
                 // assign fre 3 randomly to three clusters
                 // create a group of fre 2 orders and assign them exclusively
                 // fre2 may only occur once together with a fre 3 order
-                multiOrderAssignFre3(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK3));
-                multiOrderAssignFre2BasedOnFre3(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK2));
+                multiOrderAssignFre3(quadrants, AllFre3Orders);
+                multiOrderAssignFre2BasedOnFre3(quadrants, AllFre2Orders);
+
+                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Friday;
+                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
+                Days DaysRestrictionThirdQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
+                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Thursday;
             }
 
             else if (fre2 && !fre3 && fre4)
@@ -207,7 +220,12 @@ namespace GOO.Model
                 // create two groups of fre2 orders, and assign them exclusively
                 // assign one fre4 to every cluster
                 multiOrderAssignFre2Excusively(quadrants, fre2Orders1, fre2Orders2);
-                multiOrderAssignFre4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK4));
+                multiOrderAssignFre4(quadrants, AllFre4Orders);
+
+                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Thursday;
+                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Thursday;
+                Days DaysRestrictionThirdQuadrant = Days.Tuesday | Days.Friday;
+                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Friday;
             }
 
             else if (!fre2 && fre3 && fre4)
@@ -215,8 +233,13 @@ namespace GOO.Model
                 // randomly assign the fre 3 orders to three clusters
                 // assign one fre4 to every cluster
 
-                multiOrderAssignFre3(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK3));
-                multiOrderAssignFre4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK4));
+                multiOrderAssignFre3(quadrants, AllFre3Orders);
+                multiOrderAssignFre4(quadrants, AllFre4Orders);
+
+                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
+                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
+                Days DaysRestrictionThirdQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
+                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Thursday;
             }
 
             else if (fre2 && fre3 && fre4)
@@ -226,12 +249,15 @@ namespace GOO.Model
                 // create a group of fre 2 orders and assign them exclusively
                 // fre2 may only occur once together with a fre 3 order
 
-                multiOrderAssignFre3(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK3));
-                multiOrderAssignFre4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK4));
-                multiOrderAssignFre2BasedOnFre3(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK2));
+                multiOrderAssignFre3(quadrants, AllFre3Orders);
+                multiOrderAssignFre4(quadrants, AllFre4Orders);
+                multiOrderAssignFre2BasedOnFre3(quadrants, AllFre2Orders);
 
+                Days DaysRestrictionFirstQuadrant = Days.Monday | Days.Friday; // Why not wednesday? -Luke
+                Days DaysRestrictionSecondQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
+                Days DaysRestrictionThirdQuadrant = Days.Monday | Days.Wednesday | Days.Friday;
+                Days DaysRestrictionFourthQuadrant = Days.Tuesday | Days.Thursday;
             }
-
         }
 
         private void multiOrderAssignFre2BasedOnFre3(List<Cluster> quadrants, List<Order> allFre2Orders)
@@ -245,9 +271,7 @@ namespace GOO.Model
                     addedToFre3 = true;
                 }
                 else if (cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) == null)
-                {
                     cluster.OrdersInCluster.AddRange(allFre2Orders);
-                }
             }
         }
 
@@ -259,9 +283,7 @@ namespace GOO.Model
             // assign the rest to the remaining clusters
 
             foreach (Cluster quadrant in quadrants)
-            {
                 quadrant.OrdersInCluster.AddRange(fre2Orders);
-            }
         }
 
         private void multiOrderAssignFre2Excusively(List<Cluster> quadrants, List<Order> fre2Orders1, List<Order> fre2Orders2)
@@ -286,39 +308,27 @@ namespace GOO.Model
         private void multiOrderAssignFre4(List<Cluster> quadrants, List<Order> freOrders)
         {
             foreach (Cluster cluster in quadrants)
-            {
                 foreach (Order order in freOrders)
-                {
                     if (!cluster.OrdersInCluster.Contains(order))
                         cluster.OrdersInCluster.Add(order);
-                }
-            }
         }
 
         private void multiOrderAssignFre3(List<Cluster> quadrants, List<Order> freOrders)
         {
             Cluster noAssign = quadrants[random.Next(quadrants.Count)];
             foreach (Cluster cluster in quadrants)
-            {
                 if (cluster != noAssign)
-                {
                     foreach (Order order in freOrders)
-                    {
-
                         if (!cluster.OrdersInCluster.Contains(order))
                             cluster.OrdersInCluster.Add(order);
-                    }
-                }
-            }
         }
+
         private void assignOrdersToClustersEuclidean(List<Cluster> clusters, Dictionary<int, Order> toAssign)
         {
             // Grouping orders based on Euclidean distance method
             // Note : calculating the root is currently not neccessary due to look at relative points
             foreach (Cluster cluster in clusters)
-            {
                 cluster.RemoveAllOrdersFromCluster();
-            }
 
             foreach (Order order in allOrders.Values)
             {
