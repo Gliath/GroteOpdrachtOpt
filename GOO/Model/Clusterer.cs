@@ -141,7 +141,7 @@ namespace GOO.Model
                     toUse.Add(new Cluster(new Point()));
                     assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
                 }
-                toReturn.Add(new ParentCluster(centroid, cluster.OrdersInCluster, Days.None, toUse.ToArray())); // TODO : Double-check day restrictions
+                toReturn.Add(new ParentCluster(centroid, cluster.OrdersInCluster, toUse.ToArray())); // TODO : Double-check day restrictions
             }
             return toReturn;
         }

@@ -101,5 +101,50 @@ namespace GOO.Model.Optimizers.Strategies
 
             return toStartFrom;
         }
+
+        public Route opt2(Route toOptimize)
+        {
+            Route routeToWorkWith = new Route(day);
+            Route toReturn = new Route(day);
+            foreach (Order order in old_route.Orders)
+            {
+                routeToWorkWith.AddOrder(order);
+                toReturn.AddOrder(order);
+            }
+
+            //start doing the opt-2 algorithm on the route list
+            double best_traveltime = old_route.TravelTime;
+            double new_traveltime = double.MaxValue;
+
+            int improvestep = 0;
+            while (improvestep < 50)
+            {
+                for (int i = 0; i < routeToWorkWith.Orders.Count - 2; i++)
+                {
+                    for (int k = i + 1; k < routeToWorkWith.Orders.Count - 1; k++)
+                    {
+                        //swap the 2 coords
+                        swapOrders(routeToWorkWith.Orders[i], routeToWorkWith.Orders[k], routeToWorkWith);
+                        new_traveltime = routeToWorkWith.TravelTime;
+                        if (new_traveltime < best_traveltime)
+                        {
+                            improvestep = 0;
+                            toReturn = routeToWorkWith;
+                            best_traveltime = new_traveltime;
+
+                            routeToWorkWith = new Route(day);
+                            foreach (Order order in new_route.Orders)
+                            {
+                                if (order.OrderNumber != 0)
+                                    routeToWorkWith.AddOrder(order);
+                            }
+                        }
+                    }
+                }
+
+                improvestep++;
+            }
+            return toReturn;
+        }
     }
 }
