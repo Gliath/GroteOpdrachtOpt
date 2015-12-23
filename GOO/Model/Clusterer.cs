@@ -75,8 +75,13 @@ namespace GOO.Model
 
                 // Per cluster split based on different order frequencies, ignoring frequency 1
                 // For all of the following splits, logically link the new clusters.
-
-                if (fre3 && !(fre2 || fre4))
+                if (fre2 && !(fre3 || fre4))
+                {
+                    quadrants.Add(new Cluster(new Point()));
+                    quadrants.Add(new Cluster(new Point()));
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                }
+                else if (fre3 && !(fre2 || fre4))
                 {
                     // if only fre 3
                     // split in three clusters
@@ -137,7 +142,7 @@ namespace GOO.Model
                     if (order.X <= centroid.X) // left
                         quadrants[1].AddOrderToCluster(order);
                 }
-                else if (quadrants.Count >= 3)
+                else if (quadrants.Count == 4)
                 {
                     if (order.X >= centroid.X && order.Y >= centroid.Y) // right - up
                         quadrants[0].AddOrderToCluster(order);
@@ -158,23 +163,27 @@ namespace GOO.Model
             List<Order> AllFre4Orders = new List<Order>();
             List<Order> fre2Orders1 = new List<Order>();
             List<Order> fre2Orders2 = new List<Order>();
-            if(fre2)
+            if (fre2)
                 AllFre2Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK2);
-                foreach (Order order in AllFre2Orders)
-                {
-                    if (order.X >= centroid.X) // right
-                        fre2Orders1.Add(order);
-                    if (order.X <= centroid.X) // left
-                        fre2Orders2.Add(order);
-                }
-            if(fre3)
+            foreach (Order order in AllFre2Orders)
+            {
+                if (order.X >= centroid.X) // right
+                    fre2Orders1.Add(order);
+                if (order.X <= centroid.X) // left
+                    fre2Orders2.Add(order);
+            }
+            if (fre3)
                 AllFre3Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK3);
-            if(fre4)
+            if (fre4)
                 AllFre4Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK4);
 
             if (fre2 && !(fre3 || fre4))
-            { // create two groups of fre2 orders, and assign them exclusively
-                multiOrderAssignFre2Excusively(quadrants, fre2Orders1, fre2Orders2);
+            {
+                multiOrderAssignFre2Excusively(quadrants, AllFre2Orders);
+                //Add day restriction
+                //// 
+                //quadrant.initialRestrictions.Add(Days.Monday | Days.Tuesday);
+                //quadrant.initialRestrictions.Add(Days.Thursday | Days.Friday);
             }
             else if (fre3 && !(fre2 || fre4))
             { // randomly assign the fre 3 orders to three clusters
@@ -220,7 +229,7 @@ namespace GOO.Model
                 multiOrderAssignFre3(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK3));
                 multiOrderAssignFre4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK4));
                 multiOrderAssignFre2BasedOnFre3(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK2));
-                
+
             }
 
         }
@@ -230,13 +239,28 @@ namespace GOO.Model
             bool addedToFre3 = false;
             foreach (Cluster cluster in quadrants)
             {
-                if (!addedToFre3 && cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) != null) { 
+                if (!addedToFre3 && cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) != null)
+                {
                     cluster.OrdersInCluster.AddRange(allFre2Orders);
                     addedToFre3 = true;
                 }
-                else if (cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) == null) { 
+                else if (cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) == null)
+                {
                     cluster.OrdersInCluster.AddRange(allFre2Orders);
                 }
+            }
+        }
+
+        private void multiOrderAssignFre2Excusively(List<Cluster> quadrants, List<Order> fre2Orders)
+        {
+            // Assign one cluster for fre2orders1
+            // randomly choose another 
+
+            // assign the rest to the remaining clusters
+
+            foreach (Cluster quadrant in quadrants)
+            {
+                quadrant.OrdersInCluster.AddRange(fre2Orders);
             }
         }
 
@@ -253,15 +277,10 @@ namespace GOO.Model
             copy.Remove(firstCluster);
             Cluster secondCluster = copy[random.Next(copy.Count)];
             copy.Remove(secondCluster);
-            Cluster thirdCluster = copy[random.Next(copy.Count)];
-            copy.Remove(thirdCluster);
-            Cluster fourthCluster = copy[random.Next(copy.Count)];
-            copy.Remove(fourthCluster);
 
             firstCluster.OrdersInCluster.AddRange(fre2Orders1);
-            secondCluster.OrdersInCluster.AddRange(fre2Orders1);
-            thirdCluster.OrdersInCluster.AddRange(fre2Orders2);
-            fourthCluster.OrdersInCluster.AddRange(fre2Orders2);
+            secondCluster.OrdersInCluster.AddRange(fre2Orders2);
+
         }
 
         private void multiOrderAssignFre4(List<Cluster> quadrants, List<Order> freOrders)
@@ -270,12 +289,12 @@ namespace GOO.Model
             {
                 foreach (Order order in freOrders)
                 {
-                    if(!cluster.OrdersInCluster.Contains(order))
+                    if (!cluster.OrdersInCluster.Contains(order))
                         cluster.OrdersInCluster.Add(order);
                 }
             }
         }
-        
+
         private void multiOrderAssignFre3(List<Cluster> quadrants, List<Order> freOrders)
         {
             Cluster noAssign = quadrants[random.Next(quadrants.Count)];
@@ -343,7 +362,7 @@ namespace GOO.Model
             }
             return toReturn;
         }
-        
+
         private List<Order> findOrdersWithFrequency(List<Order> toLookIn, OrderFrequency toLookFor)
         {
             List<Order> toReturn = new List<Order>();

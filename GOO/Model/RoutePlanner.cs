@@ -64,6 +64,9 @@ namespace GOO.Model
 
         public static List<ParentCluster> PlanStartClusters(List<ParentCluster> clusters)
         {
+            #if DEBUG
+            Console.WriteLine("Executing PlanStartClusters!");
+            #endif
             // Step 1. Attempt to assign new days to clusters 
             // Based on weight and traveltime contained per day in a cluster instead?
             // Currently doing it randomly
@@ -79,19 +82,16 @@ namespace GOO.Model
 
             foreach (ParentCluster parent in clusters)
             {
-                for (int i = 0; i < parent.Quadrants.Length; i++)
+                for (int quadrantIndex = 0; quadrantIndex < parent.Quadrants.Length; quadrantIndex++)
                 {
                     bool assigned = false;
                     int numOfTries = 0;
                     do
                     {
                         Days dayToAttempt = days[random.Next(days.Count)];
-                        if (parent.CanSetDaysPlanned(parent.Quadrants[i], dayToAttempt))
-                        {
-                            parent.SetDaysPlannedForQuadrant(parent.Quadrants[i], dayToAttempt);
-                            assigned = true;
-                            
-                        }
+                        if (parent.CanSetDaysPlanned(parent.Quadrants[quadrantIndex], dayToAttempt))
+                            assigned = parent.SetDaysPlannedForQuadrant(parent.Quadrants[quadrantIndex], dayToAttempt);
+
                         numOfTries++;
                     } while (!assigned && numOfTries < 100);
                 }
@@ -129,6 +129,10 @@ namespace GOO.Model
 
         private static List<Route> createAvailableRoutesForDayFromQuadrants(Days day, List<ParentCluster> parents)
         {
+
+            #if DEBUG
+            Console.WriteLine("Executing createAvailableRoutesForDayFromQuadrants!");
+            #endif
             List<Route> toReturn = new List<Route>();
             foreach (ParentCluster parent in parents)
             {
@@ -136,8 +140,8 @@ namespace GOO.Model
                 {
                     if (quadrant.DaysPlannedFor == day)
                     {
-                        foreach(Route route in quadrant.Routes)
-                            if(route.Orders.Count > 1)
+                        foreach (Route route in quadrant.Routes)
+                            if (route.Orders.Count > 1)
                                 toReturn.Add(route); // TODO: See if this holds up with married clusters.
                     }
                 }
