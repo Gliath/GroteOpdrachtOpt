@@ -38,10 +38,10 @@ namespace GOO.Model
                         {
                             if (bestRoute == null)
                                 bestRoute = route;
-                            else if (route.TravelTime < bestRoute.TravelTime && route.Orders.Count > 1)
+                            else if (route.TravelTime < bestRoute.TravelTime && route.Orders.Count > 1 && route.TravelTime + travelTimeOnDay <= maxTravelTimeOnDay)
                                 bestRoute = route;
                         }
-                        if (bestRoute == null)
+                        if (bestRoute == null || bestRoute.TravelTime + travelTimeOnDay >= maxTravelTimeOnDay)
                             canFitMore = false;
                         else
                         {
