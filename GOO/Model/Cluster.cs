@@ -95,8 +95,11 @@ namespace GOO.Model
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
+            builder.AppendLine(String.Format("Single Cluster: "));
+            builder.AppendLine(String.Format("Days planned: {0}", DaysPlannedFor));
             builder.AppendLine(String.Format("Center Point: {0}", CenterPoint.ToString()));
             builder.AppendLine(String.Format("Number of Orders: {0}", OrdersInCluster.Count));
+            builder.AppendLine(String.Format("Number of Routes: {0}", Routes.Count));
             builder.AppendLine("");
             return builder.ToString();
         }

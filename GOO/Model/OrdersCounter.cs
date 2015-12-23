@@ -24,7 +24,7 @@ namespace GOO.Model
         {
             if(!CounterList.Exists(o => o.OrderNumber == OrderNumber))
             {
-                CounterList.Add(new OrderCounter(OrderNumber, new List<Days>(FilesInitializer._Orders[OrderNumber].DayRestrictions)));
+                CounterList.Add(new OrderCounter(OrderNumber, new List<Days>(Data.Orders[OrderNumber].DayRestrictions)));
             }
 
             foreach (OrderCounter order in CounterList)
@@ -67,7 +67,7 @@ namespace GOO.Model
         {
             order.OrderDayRestrictions.Clear();
 
-            foreach (Days restrictions in FilesInitializer._Orders[order.OrderNumber].DayRestrictions)
+            foreach (Days restrictions in Data.Orders[order.OrderNumber].DayRestrictions)
                 if (restrictions.HasFlag(order.OrderDayOccurrences))
                     order.OrderDayRestrictions.Add(restrictions);
         }
@@ -88,7 +88,7 @@ namespace GOO.Model
                 }
 
             // Order has yet to be added to the list of CounterList
-            foreach (Days restrictions in FilesInitializer._Orders[orderNumber].DayRestrictions)
+            foreach (Days restrictions in Data.Orders[orderNumber].DayRestrictions)
                 if (restrictions.HasFlag(day))
                     return true; // Order has never been added to this list, but according to the order.DayRestrictions it should be able to add to the specified day
 

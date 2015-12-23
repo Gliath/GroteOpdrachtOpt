@@ -79,9 +79,8 @@
     <Compile Include="Model\Solver.cs" />
     <Compile Include="Utilities\DayRestrictionFactory.cs" />
     <Compile Include="Utilities\DaysEnum.cs" />
-    <Compile Include="Utilities\DeepCopy.cs" />
     <Compile Include="Utilities\DistanceMatrixItem.cs" />
-    <Compile Include="Utilities\Distances.cs" />
+    <Compile Include="Utilities\Data.cs" />
     <Compile Include="Utilities\FilesInitializer.cs" />
     <Compile Include="Utilities\INPC.cs" />
     <Compile Include="Utilities\OrderFrequencyEnum.cs" />

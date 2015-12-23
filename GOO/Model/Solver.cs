@@ -18,7 +18,7 @@ namespace GOO.Model
             //for (int i = 10; i <= 100; i += 5)
             //{
             //    sw.Restart();
-            //    clusterer = new Clusterer(FilesInitializer._Orders, i);
+            //    clusterer = new Clusterer(Data.Orders, i);
             //    clusters = clusterer.createKClusters();
 
             //    int numOfEmptyClusters = 0;
@@ -35,7 +35,7 @@ namespace GOO.Model
 
             //}
             
-            clusterer = new Clusterer(FilesInitializer._Orders, k);
+            clusterer = new Clusterer(Data.Orders, k);
             clusters = clusterer.createKClusters();
 
             foreach (Cluster cluster in clusters)
@@ -44,45 +44,11 @@ namespace GOO.Model
             return RoutePlanner.PlanRoutesFromClustersIntoSolution(new Solution(clusters), RoutePlanner.PlanStartClusters(clusters));
         }
 
-        public static string TEST_generateRouteSolution()
+        public static Solution optimizeSolution()
         {
-            List<System.Text.StringBuilder> sbList = new List<System.Text.StringBuilder>();
-            System.Text.StringBuilder sb = null;
+            // To do fix this method, use generated solution to optimize it
 
-
-            int truckNr = 1;
-            int dayNr = 1;
-
-            foreach (Cluster cluster in clusters)
-            {
-                if (sb == null)
-                    sb = new System.Text.StringBuilder();
-
-                sb.Append(cluster.ToRouteString(truckNr++, dayNr));
-
-                if (truckNr > 2)
-                {
-                    truckNr = 1;
-                    dayNr++;
-                }
-                if (dayNr > 5)
-                {
-                    dayNr = 1;
-
-                    sbList.Add(sb);
-                    sb = null;
-                }
-            }
-
-            sb = new System.Text.StringBuilder();
-            for (int i = 0; i < sbList.Count; i++)
-            {
-                string solution = sbList[i].ToString();
-                System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/ClusterSolution" + (i + 1) + ".txt", solution);
-                sb.AppendLine(solution);
-            }
-
-            return sb.ToString();
+            return generateSolution(); 
         }
     }
 }

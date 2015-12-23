@@ -104,7 +104,7 @@ namespace GOO.Model
                     else
                         uncompleteOrders.Add(orderNumber); // Is going to be punished, add it to the list
 
-                    penaltyTime += FilesInitializer._Orders[orderNumber].PenaltyTime;
+                    penaltyTime += Data.Orders[orderNumber].PenaltyTime;
                     break;
                 }
             } // penaltyTime has been calculated

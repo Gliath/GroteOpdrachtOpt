@@ -73,11 +73,9 @@ namespace GOO.Model
         {
             // Step 1. Generate Routes for each cluster dependent on the orderfrequency within
             foreach (Cluster cluster in clusters)
-            {
-                if (!cluster.OrdersCounter.IsCompleted())
-                    foreach (Route route in generateRoutes(cluster))
-                        cluster.AddRouteToCluster(route);
-
+            { // if (!cluster.OrdersCounter.IsCompleted())
+                foreach (Route route in generateRoutes(cluster))
+                    cluster.AddRouteToCluster(route);
             }
             // Step 2. Attempt to assign new days to clusters 
             // Based on weight and traveltime contained per day in a cluster instead?
@@ -145,9 +143,9 @@ namespace GOO.Model
             double maxWeight = 100000.0d;
 
             int steps = 0;
-            Order depositPoint = FilesInitializer.GetOrder0();
+            Order depositPoint = Data.GetOrder0();
             Order previousAddedOrder = depositPoint;
-            OrdersCounter ClusterCounter = cluster.OrdersCounter;
+            OrdersCounter ClusterCounter = null; // cluster.OrdersCounter -> get it from solution
 
             List<Order> AvailableClusterOrders = cluster.OrdersInCluster; // Order array to choose orders from with a random
 
@@ -173,8 +171,8 @@ namespace GOO.Model
                     {
                         randomOrder = AvailableOrders[random.Next(0, AvailableOrders.Count - 1)];
 
-                        int travelLocation1 = FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, bestOrder.MatrixID].TravelTime;
-                        int travelLocation2 = FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, randomOrder.MatrixID].TravelTime;
+                        int travelLocation1 = Data.DistanceMatrix[previousAddedOrder.MatrixID, bestOrder.MatrixID].TravelTime;
+                        int travelLocation2 = Data.DistanceMatrix[previousAddedOrder.MatrixID, randomOrder.MatrixID].TravelTime;
                         if (travelLocation2 < travelLocation1)
                         {
                             if (!OrdersInRoute.Contains(randomOrder))
@@ -188,13 +186,13 @@ namespace GOO.Model
                     //check if the weight and travel time does not exceed their max values
                     if (toFill.Weight + (previousAddedOrder.NumberOfContainers * previousAddedOrder.VolumePerContainer) <= maxWeight &&
                         toFill.TravelTime +
-                        FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, previousAddedOrder.MatrixID].TravelTime +
-                        FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime -
-                        FilesInitializer._DistanceMatrix.Matrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime +
+                        Data.DistanceMatrix[previousAddedOrder.MatrixID, previousAddedOrder.MatrixID].TravelTime +
+                        Data.DistanceMatrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime -
+                        Data.DistanceMatrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime +
                         AvailableClusterOrders[randomOrderToSelect].EmptyingTimeInSeconds <= maxTravelTime)
                     {
                         //add the order to the orderlist and update the matrix check value for the next run
-                        //Console.WriteLine(OrderArray[randomInt].OrderNumber + "  Current travel time :" + TravelTime + " Added route time: " + FilesInitializer._DistanceMatrix.Matrix[matrixA, matrixB].TravelTime + "/" + OrderArray[randomInt].EmptyingTimeInSeconds);
+                        //Console.WriteLine(OrderArray[randomInt].OrderNumber + "  Current travel time :" + TravelTime + " Added route time: " + Data.Matrix[matrixA, matrixB].TravelTime + "/" + OrderArray[randomInt].EmptyingTimeInSeconds);
                         previousAddedOrder = bestOrder;
                         toFill.AddOrder(bestOrder);
                     }

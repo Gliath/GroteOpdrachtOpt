@@ -25,5 +25,5 @@ namespace GOO.Model.Optimizers.Strategies
 
             return toStartFrom;
         }
-}
+    }
 }

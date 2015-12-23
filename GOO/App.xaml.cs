@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -30,6 +29,10 @@ namespace GOO
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            // Only line needed in final solution the following line:
+            //new MainView() { DataContext = new MainViewModel() }.Show();
+
+            #if DEBUG
             AllocConsole();
 
             Console.WriteLine("Program booting up...");
@@ -49,8 +52,9 @@ namespace GOO
             Console.WriteLine("End Solution");
 
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
-
             // Run Optimizers
+
+            #endif
         }
         #region Previous test code
         //        protected override void OnStartup(StartupEventArgs e)
@@ -71,7 +75,7 @@ namespace GOO
 
 //            List<int> alreadyUsedINTS = new List<int>();
 //            Solution w00tSolution = new Solution(new List<Cluster>());
-//            Dictionary<int, Order> allOrders = FilesInitializer._Orders;
+//            Dictionary<int, Order> allOrders = Data.Orders;
 //            Order order;
 //            for (int i = 1; i < 50; i++)
 //            {
@@ -167,7 +171,7 @@ namespace GOO
 
 //            List<int> alreadyUsedINTS = new List<int>();
 //            Solution w00tSolution = new Solution(new List<Cluster>());
-//            Dictionary<int, Order> allOrders = FilesInitializer._Orders;
+//            Dictionary<int, Order> allOrders = Data.Orders;
 //            Order order;
 //            for (int i = 1; i < 50; i++)
 //            {

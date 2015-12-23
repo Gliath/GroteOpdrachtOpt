@@ -40,24 +40,12 @@ namespace GOO.Model.Optimizers
 
                 // Phase 3 : Schedule Clusters & Assign routes to truckers
 
+
                 // Phase 4 : Accept or reject new solution
-
-                /* OLD stuff
-                double currentSolutionScore = currentSolution.GetSolutionScore();
-
-                double deltaScore = currentSolutionScore - newSolutionScore;
-                double chanceToBeAccepted = Math.Pow(theX, (deltaScore / annealingSchedule.AnnealingTemperature));
-
-                if (deltaScore > 0)
-                {
-                    currentSolution = newSolution;
-                }
-
-                else if (random.NextDouble() <= chanceToBeAccepted)
-                {
-                    currentSolution = newSolution;
-                } // No new solution accepted.
-                */
+                if (Phase4(currentSolution)) // New Solution accepted
+                    startSolution = currentSolution;
+                else // New solution rejected
+                    currentSolution = startSolution; 
             }
 
             return currentSolution;
@@ -119,18 +107,9 @@ namespace GOO.Model.Optimizers
         private bool Phase4(Solution toAcceptOrReject) // Accept Solution or not
         {
             double deltaScore = Math.Abs(oldSolutionScore - newSolutionScore);
+            double chanceToBeAccepted = Math.Pow(theX, (deltaScore / annealingSchedule.AnnealingTemperature));
 
-            if (deltaScore > 0)
-                return true;
-            else
-            {
-                double chanceToBeAccepted = Math.Pow(theX, (deltaScore / annealingSchedule.AnnealingTemperature));
-
-                if (random.NextDouble() <= chanceToBeAccepted)
-                    return true;
-            }
-
-            return false;
+            return deltaScore > 0 || random.NextDouble() <= chanceToBeAccepted;
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using GOO.Utilities;
 
@@ -76,8 +73,8 @@ namespace GOO.Model.Optimizers.Strategies
             }
 
             Console.WriteLine("OPT2");
-            Console.WriteLine("Old Travel Time : {0}", old_route.TravelTime);
-            Console.WriteLine("Best Travel Time : {0}", best_traveltime);
+            Console.WriteLine("Old Travel Time:  {0}", old_route.TravelTime);
+            Console.WriteLine("Best Travel Time: {0}", best_traveltime);
 
             RoutesFromSolution.Remove(old_route);
             RoutesFromSolution.Add(new_route);

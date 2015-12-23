@@ -19,11 +19,11 @@ namespace GOO.Model
             Weight = 0;
             this.Day = Day;
 
-            Orders.Add(FilesInitializer.GetOrder0());
+            Orders.Add(Data.GetOrder0());
         }
 
         public bool CanAddOrder(Order order)
-        { // TODO: ?
+        { // TODO: ? -> Only check if order is already on this route, better check from solution
             return true;
         }
 
@@ -33,9 +33,9 @@ namespace GOO.Model
             int NewMatrixID = order.MatrixID;
             int PreviousMatrixID = Orders.Count == 1 ? LastMatrixID : Orders[Orders.Count - 2].MatrixID;
 
-            TravelTime -= FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, LastMatrixID].TravelTime;
-            TravelTime += FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, NewMatrixID].TravelTime;
-            TravelTime += FilesInitializer._DistanceMatrix.Matrix[NewMatrixID, LastMatrixID].TravelTime;
+            TravelTime -= Data.DistanceMatrix[PreviousMatrixID, LastMatrixID].TravelTime;
+            TravelTime += Data.DistanceMatrix[PreviousMatrixID, NewMatrixID].TravelTime;
+            TravelTime += Data.DistanceMatrix[NewMatrixID, LastMatrixID].TravelTime;
 
             TravelTime += order.EmptyingTimeInSeconds;
             Weight += order.VolumePerContainer * order.NumberOfContainers;
@@ -56,9 +56,9 @@ namespace GOO.Model
             int NewMatrixID = newOrder.MatrixID;
             int PreviousMatrixID = orderToInsertAfter.MatrixID;
 
-            TravelTime -= FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, NextMatrixID].TravelTime;
-            TravelTime += FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, NewMatrixID].TravelTime;
-            TravelTime += FilesInitializer._DistanceMatrix.Matrix[NewMatrixID, NextMatrixID].TravelTime;
+            TravelTime -= Data.DistanceMatrix[PreviousMatrixID, NextMatrixID].TravelTime;
+            TravelTime += Data.DistanceMatrix[PreviousMatrixID, NewMatrixID].TravelTime;
+            TravelTime += Data.DistanceMatrix[NewMatrixID, NextMatrixID].TravelTime;
 
             TravelTime += newOrder.EmptyingTimeInSeconds;
             Weight += newOrder.VolumePerContainer * newOrder.NumberOfContainers;
@@ -72,9 +72,9 @@ namespace GOO.Model
             int PreviousMatrixID = (indexOfOldOrder - 1) >= 0 ? Orders[indexOfOldOrder - 1].MatrixID : 287;
             int NextMatrixID = indexOfOldOrder < Orders.Count - 2 ? Orders[indexOfOldOrder + 1].MatrixID : 287;
 
-            TravelTime -= FilesInitializer._DistanceMatrix.Matrix[OldMatrixID, NextMatrixID].TravelTime;
-            TravelTime -= FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, OldMatrixID].TravelTime;
-            TravelTime += FilesInitializer._DistanceMatrix.Matrix[PreviousMatrixID, NextMatrixID].TravelTime;
+            TravelTime -= Data.DistanceMatrix[OldMatrixID, NextMatrixID].TravelTime;
+            TravelTime -= Data.DistanceMatrix[PreviousMatrixID, OldMatrixID].TravelTime;
+            TravelTime += Data.DistanceMatrix[PreviousMatrixID, NextMatrixID].TravelTime;
 
             TravelTime -= order.EmptyingTimeInSeconds;
             Weight -= order.VolumePerContainer * order.NumberOfContainers;
