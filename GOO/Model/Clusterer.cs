@@ -85,40 +85,14 @@ namespace GOO.Model
                 }
                 else if (fre3 && !(fre2 || fre4))
                 {
-                    // if only fre 3
-                    // split in three clusters
-                    // draw grid on centroid to split area in four
-                    // and randomly join two of the splitted areas together, as long as they are neighbouring
-
-                    quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
                     assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
-
-                    // Fuse two of the returned clusters. TODO : Check if Opposite quadrants are a problem if fused
-                    int randomq1 = random.Next(quadrants.Count);
-                    Cluster q1 = quadrants[randomq1];
-
-                    int randomq2 = -1;
-                    do
-                        randomq2 = random.Next(quadrants.Count);
-                    while (randomq1 == randomq2);
-
-                    Cluster q2 = quadrants[randomq2];
-                    foreach (Order order in q2.OrdersInCluster)
-                        if (!q1.OrdersInCluster.Contains(order))
-                            q1.OrdersInCluster.Add(order);
-
-                    quadrants.Remove(q2);
                 }
 
                 else if (fre2 || fre3 || fre4)
                 {
-                    // if any other combination
-                    // split in four clusters
-                    // draw grid on centroid to split area in four
-
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
@@ -141,21 +115,32 @@ namespace GOO.Model
                 {
                     if (order.X >= centroid.X) // right
                         quadrants[0].AddOrderToCluster(order);
-                    if (order.X <= centroid.X) // left
+                    if (order.X < centroid.X) // left
                         quadrants[1].AddOrderToCluster(order);
+                }
+                else if (quadrants.Count == 3)
+                {
+                    if (order.X >= centroid.X && order.Y >= centroid.Y) // right - up
+                        quadrants[0].AddOrderToCluster(order);
+
+                    if (order.X >= centroid.X && order.Y < centroid.Y) // right - down
+                        quadrants[1].AddOrderToCluster(order);
+
+                    if (order.X < centroid.X) // left
+                        quadrants[2].AddOrderToCluster(order);
                 }
                 else if (quadrants.Count == 4)
                 {
                     if (order.X >= centroid.X && order.Y >= centroid.Y) // right - up
                         quadrants[0].AddOrderToCluster(order);
 
-                    if (order.X >= centroid.X && order.Y <= centroid.Y) // right - down
+                    if (order.X >= centroid.X && order.Y < centroid.Y) // right - down
                         quadrants[1].AddOrderToCluster(order);
 
-                    if (order.X <= centroid.X && order.Y >= centroid.Y) // left - up
+                    if (order.X < centroid.X && order.Y >= centroid.Y) // left - up
                         quadrants[2].AddOrderToCluster(order);
 
-                    if (order.X <= centroid.X && order.Y <= centroid.Y) // left - down
+                    if (order.X < centroid.X && order.Y < centroid.Y) // left - down
                         quadrants[3].AddOrderToCluster(order);
                 }
             }
@@ -177,7 +162,7 @@ namespace GOO.Model
             {
                 if (order.X >= centroid.X) // right
                     fre2Orders1.Add(order);
-                if (order.X <= centroid.X) // left
+                if (order.X < centroid.X) // left
                     fre2Orders2.Add(order);
             }
 
