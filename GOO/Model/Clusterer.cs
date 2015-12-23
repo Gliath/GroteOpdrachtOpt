@@ -99,6 +99,11 @@ namespace GOO.Model
                     quadrants.Add(new Cluster(new Point()));
                     assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
                 }
+                else
+                {
+                    quadrants.Add(new Cluster(new Point()));
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                }
                 toReturn.Add(new ParentCluster(centroid, parentCluster.OrdersInCluster, quadrants.ToArray())); // TODO : Double-check day restrictions
             }
             return toReturn;
@@ -108,10 +113,9 @@ namespace GOO.Model
         {
             foreach (Order order in toAssign)
             {
-                if (order.Frequency != OrderFrequency.PWK1)
-                    continue;
-
-                if (quadrants.Count == 2)
+                if (quadrants.Count == 1)
+                   quadrants[0].AddOrderToCluster(order);
+                else if (quadrants.Count == 2)
                 {
                     if (order.X >= centroid.X) // right
                         quadrants[0].AddOrderToCluster(order);
@@ -165,7 +169,14 @@ namespace GOO.Model
                 if (order.X < centroid.X) // left
                     fre2Orders2.Add(order);
             }
+            if(!(fre2 || fre3 || fre4))
+            {
+                Days[] DaysRestrictions = new Days[] {
+                    Days.Monday | Days.Tuesday | Days.Wednesday | Days.Thursday | Days.Friday };
 
+                for (int quadrantIndex = 0; quadrantIndex < quadrants.Count; quadrantIndex++)
+                    quadrants[quadrantIndex].initialRestrictions = DaysRestrictions[quadrantIndex];
+            }
             if (fre2 && !(fre3 || fre4))
             {
                 multiOrderAssignFre2Excusively(quadrants, AllFre2Orders);
