@@ -39,22 +39,6 @@ namespace GOO.Model
             set { return; }
         }
 
-        public override OrdersCounter OrdersCounter
-        {
-            get
-            {
-                OrdersCounter UnifiedOrdersCounter = new OrdersCounter();
-
-                foreach (Cluster Concubine in Harem)
-                    foreach (GOO.Model.OrdersCounter.OrderCounter orderCounter in Concubine.OrdersCounter.CounterList)
-                        UnifiedOrdersCounter.AddOccurrence(orderCounter.OrderNumber, orderCounter.OrderDayOccurrences);
-
-                return UnifiedOrdersCounter;
-            }
-
-            set { return; }
-        }
-
         public override List<Route> Routes
         {
             get
