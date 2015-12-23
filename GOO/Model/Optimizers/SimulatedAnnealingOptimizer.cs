@@ -15,6 +15,7 @@ namespace GOO.Model.Optimizers
         private double oldSolutionScore;
         private double newSolutionScore;
 
+
         public SimulatedAnnealingOptimizer()
         {
             theX = 2d;
@@ -31,45 +32,51 @@ namespace GOO.Model.Optimizers
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
-                // Phase 1 : Marry / Divorce Clusters
-
+                // Phase 1 : Marry / Divorce Clusters & Schedule Clusters 
+                List<AbstractCluster> newClusters = Phase1(currentSolution);
 
                 // Phase 2 : Create routes and use either Opt2, Opt2.5, Opt3, Genetic, Random to optimize
-                currentSolution = Phase2RouteGeneration(currentSolution);
+                Phase2RouteGeneration(newClusters);
                 currentSolution = Phase2Optimizers(currentSolution);
 
-                // Phase 3 : Schedule Clusters & Assign routes to truckers
-
+                // Phase 3 : Assign routes to truckers
+                currentSolution = Phase3(currentSolution, newClusters); // TODO : MAKE SURE THE NEW ROUTES ARE ADDED IN THE RIGHT CLUSTER
 
                 // Phase 4 : Accept or reject new solution
                 if (Phase4(currentSolution)) // New Solution accepted
                     startSolution = currentSolution;
                 else // New solution rejected
-                    currentSolution = startSolution; 
+                    currentSolution = startSolution;
             }
+            /*
+             * Phase1
+             * Phase2RouteGeneration
+             */
 
             return currentSolution;
         }
 
-        private List<Cluster> Phase1(Solution toStartFrom) // Deal with clusters & marriages
+        private List<AbstractCluster> Phase1(Solution toStartFrom) // Deal with clusters & marriages
         {
-            return new List<Cluster>();
+            MarriageCounselorStrategy MarriageCounselor = new MarriageCounselorStrategy();
+
+            return MarriageCounselor.executeStrategy(toStartFrom);
         }
 
-        private Solution Phase2RouteGeneration(Solution toStartFrom) // Deal with clusters & marriages
+        private void Phase2RouteGeneration(List<AbstractCluster> clustersToPlan) // Deal with clusters & marriages
         {
-            return toStartFrom;
+            RoutePlanner.GenerateRoutesFromClusters(clustersToPlan);
         }
 
         private Solution Phase2Optimizers(Solution toStartFrom) // Deal with Routes
         {
             //weighted value of each strategy
-            double opt2Chance       = 10.0d;
-            double opt2HalfChance   = 10.0d;
-            double opt3Chance       = 4.0d;
-            double opt3HalfChance   = 8.0d;
-            double geneticChance    = 3.0d;
-            double randomChance     = 5.0d;
+            double opt2Chance = 10.0d;
+            double opt2HalfChance = 10.0d;
+            double opt3Chance = 4.0d;
+            double opt3HalfChance = 8.0d;
+            double geneticChance = 3.0d;
+            double randomChance = 5.0d;
 
             Strategy strategy = null;
 
@@ -89,7 +96,7 @@ namespace GOO.Model.Optimizers
                 strategy = new Strategies.RandomRouteOpt3HalfStrategy();
             //genetic
             else if (select < opt2Chance + opt2HalfChance + opt3Chance + opt3HalfChance + geneticChance)
-                strategy = new Strategies.GeneticRouteStrategy();
+                strategy = StrategyFactory.GetAllPhase2Strategies()[random.Next(StrategyFactory.GetAllPhase2Strategies().Length)];
             //total random
             else if (select < opt2Chance + opt2HalfChance + opt3Chance + opt3HalfChance + geneticChance + randomChance)
                 strategy = StrategyFactory.GetAllPhase2Strategies()[random.Next(StrategyFactory.GetAllPhase2Strategies().Length)];
@@ -99,9 +106,9 @@ namespace GOO.Model.Optimizers
             return strategy.executeStrategy(toStartFrom);
         }
 
-        private Solution Phase3(Solution toStartFrom) // Destribute routes to truckers
+        private Solution Phase3(Solution toStartFrom, List<AbstractCluster> clustersToPlan) // Distribute routes to truckers
         {
-            return toStartFrom;
+            return RoutePlanner.PlanRoutesFromClustersIntoSolution(toStartFrom, clustersToPlan);
         }
 
         private bool Phase4(Solution toAcceptOrReject) // Accept Solution or not

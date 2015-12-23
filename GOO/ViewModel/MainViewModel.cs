@@ -34,7 +34,7 @@ namespace GOO.ViewModel
 
             sw.Restart();
             // Solution.GenerateOptimizedSolution();
-            solution = Solver.optimizeSolution();
+            solution = Solver.optimizeSolution(solution);
             sw.Stop();
             long OptimizedSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
             string optimizedSolutionString = solution.ToString();

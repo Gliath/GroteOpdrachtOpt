@@ -18,13 +18,11 @@ namespace GOO
     /// </summary>
     public partial class App : Application
     {
-        #if DEBUG
         [DllImport("Kernel32")]
         public static extern void AllocConsole();
 
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
-        #endif
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -34,7 +32,6 @@ namespace GOO
             // new MainView() { DataContext = mainVM }.Show();
             // mainVM.InitialRun();
 
-            #if DEBUG
             AllocConsole();
 
             Console.WriteLine("Program booting up...");
@@ -54,9 +51,18 @@ namespace GOO
             Console.WriteLine("End Solution");
 
             System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
-            // Run Optimizers
 
-            #endif
+            sw.Restart();
+            start = Solver.optimizeSolution(start);
+            sw.Stop();
+            string THE_NEW_STRING = start.ToString();
+
+            Console.WriteLine("Start New Solution:");
+            Console.WriteLine(THE_NEW_STRING);
+            Console.WriteLine("End New Solution");
+            Console.WriteLine("Elapsed time for generating begin solution: {0}ms", sw.ElapsedMilliseconds);
+
+            // Run Optimizers
         }
         #region Previous test code
         //        protected override void OnStartup(StartupEventArgs e)

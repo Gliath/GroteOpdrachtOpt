@@ -3,27 +3,28 @@ using System.Collections.Generic;
 
 namespace GOO.Model.Optimizers.Strategies
 {
-    public class DivorceAttourneyStrategy : Strategy
+    public class DivorceAttourneyStrategy
     {
-        public DivorceAttourneyStrategy()
-            : base()
-        {
+        private List<AbstractCluster> OriginalClusters;
 
+        public DivorceAttourneyStrategy()
+        {
+            OriginalClusters = new List<AbstractCluster>();
         }
 
-        public override Solution executeStrategy(Solution toStartFrom)
+        public List<AbstractCluster> executeStrategy(List<AbstractCluster> clustersToDivorce)
         {
             // Randomly divorce clusters or divorce them because it can make filled clusters?
 
 
-            return toStartFrom;
+            return clustersToDivorce;
         }
 
-        public override Solution undoStrategy(Solution toStartFrom)
+        public List<AbstractCluster> undoStrategy(List<AbstractCluster> clustersToRemarry)
         {
 
 
-            return toStartFrom;
+            return clustersToRemarry;
         }
     }
 }

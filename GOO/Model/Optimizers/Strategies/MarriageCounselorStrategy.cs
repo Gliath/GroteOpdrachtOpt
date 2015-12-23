@@ -5,51 +5,57 @@ using GOO.Utilities;
 
 namespace GOO.Model.Optimizers.Strategies
 {
-    public class MarriageCounselorStrategy : Strategy
+    public class MarriageCounselorStrategy
     {
-        public MarriageCounselorStrategy()
-            : base()
-        {
+        private List<AbstractCluster> OriginalClusters;
 
+        public MarriageCounselorStrategy()
+        {
+            OriginalClusters = new List<AbstractCluster>();
         }
 
-        public override Solution executeStrategy(Solution toStartFrom)
+        public List<AbstractCluster> executeStrategy(Solution toStartFrom)
         {
             // Let op dat de clusters die je gaat trouwen die dezelfde dagrestrictions hebben
             // Kijk of de marriage de routes kan verbeteren (of een cluster een route heeft die niet vullend is (op tijd en weight) die gevuld kan worden door een andere clusters niet vullende route)
 
             // If this fails to encapsulate all clusters, Las Vegas marry clusters with each other (randomly marry them)
 
-            List<MarriedCluster> Couples = new List<MarriedCluster>();
+            List<AbstractCluster> Couples = new List<AbstractCluster>();
             List<ParentCluster> Clusters = toStartFrom.getAllClusters();
             List<Cluster> SingleClusters = new List<Cluster>();
+
+            OriginalClusters.Clear();
+            foreach (ParentCluster cluster in Clusters)
+                OriginalClusters.Add(cluster);
 
             foreach (ParentCluster parentCluster in Clusters)
                 SingleClusters.AddRange(parentCluster.Quadrants);
 
             for (int singleClusterIndex = 0; singleClusterIndex < SingleClusters.Count; singleClusterIndex++)
             {
+                bool isInAHaremAlready = false;
                 foreach (MarriedCluster Couple in Couples)
 	            {
                     if (!Couple.ContainsCluster(SingleClusters[singleClusterIndex]))
+                    {
                         Couple.Harem.Add(SingleClusters[singleClusterIndex]);
+                        isInAHaremAlready = true;
+                    }
 	            }
 
+                if (!isInAHaremAlready)
+                    Couples.Add(new MarriedCluster(new List<Cluster>() { SingleClusters[singleClusterIndex] }));
             }
 
-
-            // Then marry the dump way, Las Vegas style
-
-
-
-            return toStartFrom;
+            return Couples;
         }
 
-        public override Solution undoStrategy(Solution toStartFrom)
+        public List<AbstractCluster> undoStrategy(Solution toStartFrom)
         {
 
 
-            return toStartFrom;
+            return OriginalClusters;
         }
 
         /*

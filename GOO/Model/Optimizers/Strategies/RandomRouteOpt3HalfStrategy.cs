@@ -64,15 +64,15 @@ namespace GOO.Model.Optimizers.Strategies
                             //swap the 2 coords
                             Order[] initialRouteI = new Order[6];
                             for (int index = 0; index < initialRouteI.Length; index++)
-                                initialRouteI[index] = routesToWorkWith[i].Orders[i];
+                                initialRouteI[index] = routesToWorkWith[index].Orders[i];
 
                             Order[] initialRouteJ = new Order[6];
                             for (int index = 0; index < initialRouteJ.Length; index++)
-                                initialRouteJ[index] = routesToWorkWith[i].Orders[j];
+                                initialRouteJ[index] = routesToWorkWith[index].Orders[j];
 
                             Order[] initialRouteK = new Order[6];
                             for (int index = 0; index < initialRouteK.Length; index++)
-                                initialRouteK[index] = routesToWorkWith[i].Orders[k];
+                                initialRouteK[index] = routesToWorkWith[index].Orders[k];
 
                             for (int index = 0; index < routesToWorkWith.Length; index++)
                             {
@@ -97,7 +97,7 @@ namespace GOO.Model.Optimizers.Strategies
                             if (hasABetterTime)
                             {
                                 for (int index = 0; index < routesToWorkWith.Length; index++)
-                                    routesToWorkWith[i] = new Route(day);
+                                    routesToWorkWith[index] = new Route(day);
 
                                 foreach (Order order in old_route.Orders)
                                     if (order.OrderNumber != 0)
