@@ -118,7 +118,7 @@ namespace GOO.Model
             foreach (Cluster cluster in clusters)
             {
                 cluster.RemoveAllRoutesFromCluster();
-                generateRoutes(cluster);
+                cluster.Routes = generateRoutes(cluster);
             }
             return clusters;
         }
