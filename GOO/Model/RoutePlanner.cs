@@ -86,9 +86,9 @@ namespace GOO.Model
                     do
                     {
                         Days dayToAttempt = days[random.Next(days.Count)];
-                        if (parent.CanSetDaysPlanned(dayToAttempt))
+                        if (parent.CanSetDaysPlanned(parent.Quadrants[i], dayToAttempt))
                         {
-                            parent.SetDaysPlannedForQuadrant(dayToAttempt, i);
+                            parent.SetDaysPlannedForQuadrant(parent.Quadrants[i], dayToAttempt);
                             assigned = true;
                             
                         }

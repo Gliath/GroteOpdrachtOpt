@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 using GOO.Utilities;
@@ -14,8 +15,11 @@ namespace GOO.Model
         public Point CentroidPoint { get; private set; }
         public override List<Order> OrdersInCluster { get; set; }
         public override Days DaysPlannedFor { get; set; } // available days
-        public List<Days> DaysRestrictions { get; set; }
-        public List<Days> DaysAvailable { get; set; }
+
+        public Tuple<Days, Days, Days>[] PerQuadrantDaysInformation { get; set; }
+        // First Days: Initial Days available
+        // Second Days: Current Days available
+        // Third Days: Selected Day
 
         public override List<Route> Routes { get { return null; } set { return; } } // Not implemented in parent cluster
 
@@ -24,101 +28,94 @@ namespace GOO.Model
             this.CentroidPoint = CentroidPoint;
             this.OrdersInCluster = OrdersInCluster;
             this.Quadrants = Quadrants;
-
-            DaysRestrictions = new List<Days>();
-
-            foreach (Order order in OrdersInCluster)
-                foreach (Days restriction in Data.Orders[order.OrderNumber].DayRestrictions)
-                    if (!DaysRestrictions.Contains(restriction))
-                        DaysRestrictions.Add(restriction);
-
-            DaysAvailable = DaysRestrictions;
+            PerQuadrantDaysInformation = new Tuple<Days, Days, Days>[NumberOfQuadrants];
         }
 
-        public bool CanSetDaysPlanned(Days DayPlanned)
+        public bool CanSetDaysPlanned(Cluster Quadrant, Days DayPlanned)
         {
-            foreach (Days dayAvailable in DaysAvailable)
-                if (dayAvailable.HasFlag(DayPlanned))
-                    return true;
+            for (int QuadrantIndex = 0; QuadrantIndex < NumberOfQuadrants; QuadrantIndex++)
+                if (Quadrant == Quadrants[QuadrantIndex])
+                    return CanSetDaysPlanned(QuadrantIndex, DayPlanned);
 
             return false;
         }
 
-        public bool SetDaysPlannedForQuadrant(Days DayPlanned, int QuadrantNumber)
+        public bool CanSetDaysPlanned(int QuadrantIndex, Days DayPlanned)
         {
-            if (!CanSetDaysPlanned(DayPlanned) || Quadrants[QuadrantNumber].DaysPlannedFor != Days.None)
-                return false;
+            return PerQuadrantDaysInformation[QuadrantIndex].Item2.HasFlag(DayPlanned);
+        }
 
-            Quadrants[QuadrantNumber].DaysPlannedFor = DayPlanned;
+        public bool SetDaysPlannedForQuadrant(Cluster Quadrant, Days DayPlanned)
+        {
+            for (int QuadrantIndex = 0; QuadrantIndex < NumberOfQuadrants; QuadrantIndex++)
+                if (Quadrant == Quadrants[QuadrantIndex])
+                {
+                    if (!CanSetDaysPlanned(QuadrantIndex, DayPlanned) || PerQuadrantDaysInformation[QuadrantIndex].Item3 != Days.None)
+                        return false;
 
-            for (int i = 0; i < DaysAvailable.Count; i++)
-                if (!DaysAvailable[i].HasFlag(DayPlanned))
-                    DaysAvailable.Remove(DaysAvailable[i]);
-                else
-                    DaysAvailable[i] ^= DayPlanned; // Removes the day from availability
+                    PerQuadrantDaysInformation[QuadrantIndex] = new Tuple<Days, Days, Days>(PerQuadrantDaysInformation[QuadrantIndex].Item1, Days.None, DayPlanned);
 
-            if (DaysAvailable.Count == 1)
-            {
-                int numOfUnassignedClusters = 0;
-                foreach (Cluster quadrant in Quadrants)
-                    if (quadrant.DaysPlannedFor == Days.None)
-                        numOfUnassignedClusters++;
+                    for (int EachQuadrantIndex = 0; EachQuadrantIndex < NumberOfQuadrants; EachQuadrantIndex++)
+                    {
+                        if (EachQuadrantIndex == QuadrantIndex || PerQuadrantDaysInformation[EachQuadrantIndex].Item3 != Days.None)
+                            continue;
 
-                if (numOfUnassignedClusters == 1)
-                    foreach (Cluster quadrant in Quadrants)
-                        if (quadrant.DaysPlannedFor == Days.None)
-                            quadrant.DaysPlannedFor = DaysAvailable[0]; // Only one item left so assign it
-            }
+                        if (PerQuadrantDaysInformation[EachQuadrantIndex].Item2.HasFlag(DayPlanned))
+                        {
+                            Days QuadrantRestriction = PerQuadrantDaysInformation[QuadrantIndex].Item2;
+
+                            QuadrantRestriction ^= DayPlanned;
+                            PerQuadrantDaysInformation[EachQuadrantIndex] = new Tuple<Days, Days, Days>(PerQuadrantDaysInformation[EachQuadrantIndex].Item1, QuadrantRestriction, Days.None);
+
+                            if (QuadrantRestriction != Days.None && ((int)QuadrantRestriction & ((int)QuadrantRestriction - 1)) == 0)
+                                SetDaysPlannedForQuadrant(Quadrants[EachQuadrantIndex], QuadrantRestriction);
+                        }
+                    }
+
+                    break;
+                }
+
             return true;
         }
 
-        public bool ReassignDaysPlannedForQuadrant(Days DayPlanned, int QuadrantNumber)
+        public bool RemoveDaysPlannedForQuadrant(int QuadrantNumber)
         {
-            if (Quadrants[QuadrantNumber].DaysPlannedFor == Days.None)
-                return false;
+            for (int QuadrantIndex = 0; QuadrantIndex < NumberOfQuadrants; QuadrantIndex++)
+                if (QuadrantNumber == QuadrantIndex)
+                {
+                    if (PerQuadrantDaysInformation[QuadrantIndex].Item3 == Days.None)
+                        return false;
 
-            List<Days> previousDaysAvailable = DaysRestrictions;
-            for (int i = 0; i < Quadrants.Length; i++)
-            {
-                if (i == QuadrantNumber || Quadrants[i].DaysPlannedFor == Days.None)
-                    continue;
+                    Days DayItWasPlannedFor = PerQuadrantDaysInformation[QuadrantIndex].Item3;
+                    Days DaysRestriction = PerQuadrantDaysInformation[QuadrantIndex].Item1;
+                    // Restrict DaysRestriction
 
-                for (int index = 0; index < previousDaysAvailable.Count; index++)
-                    if (!previousDaysAvailable[index].HasFlag(DayPlanned))
-                        previousDaysAvailable.Remove(previousDaysAvailable[index]);
-                    else
-                        previousDaysAvailable[index] ^= DayPlanned; // Removes the day from availability
+                    for (int EachQuadrantIndex = 0; EachQuadrantIndex < NumberOfQuadrants; EachQuadrantIndex++)
+                    {
+                        if (EachQuadrantIndex == QuadrantIndex || PerQuadrantDaysInformation[EachQuadrantIndex].Item3 == Days.None)
+                            continue;
 
-                bool canPlanDay = false;
-                foreach (Days dayAvailable in previousDaysAvailable)
-                    if (dayAvailable.HasFlag(DayPlanned))
-                        canPlanDay = true;
+                        DaysRestriction ^= PerQuadrantDaysInformation[EachQuadrantIndex].Item3;
+                    }
 
-                if (!canPlanDay)
-                    return false;
-            }
+                    PerQuadrantDaysInformation[QuadrantIndex] = new Tuple<Days, Days, Days>(PerQuadrantDaysInformation[QuadrantIndex].Item1, DaysRestriction, Days.None);
 
-            DaysAvailable = previousDaysAvailable;
-            Quadrants[QuadrantNumber].DaysPlannedFor = DayPlanned;
+                    for (int EachQuadrantIndex = 0; EachQuadrantIndex < NumberOfQuadrants; EachQuadrantIndex++)
+                    {
+                        if (EachQuadrantIndex == QuadrantIndex || PerQuadrantDaysInformation[EachQuadrantIndex].Item3 != Days.None)
+                            continue;
 
-            for (int i = 0; i < DaysAvailable.Count; i++)
-                if (!DaysAvailable[i].HasFlag(DayPlanned))
-                    DaysAvailable.Remove(DaysAvailable[i]);
-                else
-                    DaysAvailable[i] ^= DayPlanned; // Removes the day from availability
+                        if (PerQuadrantDaysInformation[EachQuadrantIndex].Item1.HasFlag(DayItWasPlannedFor))
+                        {
+                            Days QuadrantRestriction = PerQuadrantDaysInformation[QuadrantIndex].Item2;
+                            QuadrantRestriction |= DayItWasPlannedFor;
+                            PerQuadrantDaysInformation[EachQuadrantIndex] = new Tuple<Days, Days, Days>(PerQuadrantDaysInformation[EachQuadrantIndex].Item1, QuadrantRestriction, Days.None);
+                        }
+                    }
 
-            if (DaysAvailable.Count == 1)
-            {
-                int numOfUnassignedClusters = 0;
-                foreach (Cluster quadrant in Quadrants)
-                    if (quadrant.DaysPlannedFor == Days.None)
-                        numOfUnassignedClusters++;
+                    break;
+                }
 
-                if (numOfUnassignedClusters == 1)
-                    foreach (Cluster quadrant in Quadrants)
-                        if (quadrant.DaysPlannedFor == Days.None)
-                            quadrant.DaysPlannedFor = DaysAvailable[0]; // Only one item left so assign it
-            }
             return true;
         }
 

@@ -83,6 +83,11 @@ namespace GOO.Model
             return this.clusters[random];
         }
 
+        public List<ParentCluster> getAllClusters()
+        {
+            return this.clusters;
+        }
+
         public Tuple<Days, int, List<Route>> getRoute(List<Route> route)
         {
             return this.truckPlanning.Find(t => t.Item3 == route);
