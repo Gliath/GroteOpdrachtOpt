@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using GOO.Utilities;
+using GOO.Model.Optimizers.Strategies;
 
 namespace GOO.Model
 {
@@ -17,16 +18,8 @@ namespace GOO.Model
             foreach (Days Day in Enum.GetValues(typeof(Days)))
             {
                 if (Day != Days.None)
-                    DayRoutes.Add(Day, new List<Route>());
+                    DayRoutes.Add(Day, createAvailableRoutesForDayFromQuadrants(Day, clusters));
             }
-
-            //foreach (Cluster cluster in clusters)
-            //{
-            //    foreach (Route route in cluster.Routes)
-            //    {
-            //        DayRoutes[route.Day].Add(route);
-            //    }
-            //}
 
             double maxTravelTimeOnDay = 43200.0d;
             double travelTimeOnDay = 0.0d;
@@ -76,7 +69,7 @@ namespace GOO.Model
             // Currently doing it randomly
 
             List<Days> days = new List<Days>();
-            
+
             foreach (Days Day in Enum.GetValues(typeof(Days)))
             {
                 if (Day == Days.None)
@@ -89,28 +82,35 @@ namespace GOO.Model
                 for (int i = 0; i < parent.Quadrants.Length; i++)
                 {
                     bool assigned = false;
-                    do{
+                    int numOfTries = 0;
+                    do
+                    {
                         Days dayToAttempt = days[random.Next(days.Count)];
                         if (parent.CanSetDaysPlanned(dayToAttempt))
                         {
                             parent.SetDaysPlannedForQuadrant(dayToAttempt, i);
                             assigned = true;
                         }
-                    }while(!assigned);
+                    } while (!assigned && numOfTries < 100);
                 }
             }
 
-            // Step 2. Generate Routes for each cluster within the parent cluster
-            
-            
-            
+            // Step 2. Generate Routes for each quadrant within the parent cluster
+            // Leveraging Opt-2 for creating a route in a quadrant
 
-            // Step 3. Attempt to plan the routes based on the day restrictions of their clusters 
-            //foreach (Cluster cluster in clusters)
-            //{
-            //    cluster.RemoveAllRoutesFromCluster();
-            //    cluster.Routes = generateRoutes(cluster);
-            //}
+            RandomRouteOpt2Strategy opt2 = new RandomRouteOpt2Strategy();
+            foreach (ParentCluster parent in clusters)
+            {
+                foreach (Cluster quadrant in parent.Quadrants)
+                {
+                    Route toAdd = new Route(quadrant.DaysPlannedFor);
+                    foreach (Order order in quadrant.OrdersInCluster) // TODO : Check for max-weight
+                    {
+                        toAdd.AddOrder(order);
+                    }
+                    quadrant.AddRouteToCluster(opt2.opt2(toAdd)); // TODO : Check for max traveltime
+                }
+            }
             return clusters;
         }
 
@@ -122,80 +122,18 @@ namespace GOO.Model
             return planRoutes;
         }
 
-        private static List<Route> generateRoutes(Cluster cluster) // WIP
+        private static List<Route> createAvailableRoutesForDayFromQuadrants(Days day, List<ParentCluster> parents)
         {
             List<Route> toReturn = new List<Route>();
-            // Create amount of routes based on frequency
-            // Greedy pattern
-
-            // Max Steps and matrix values for travel time checks
-            int maxSteps = 10;
-            double maxTravelTime = 43200.0d; // TODO: Double-check values 
-            double maxWeight = 100000.0d;
-
-            int steps = 0;
-            Order depositPoint = Data.GetOrder0();
-            Order previousAddedOrder = depositPoint;
-            OrdersCounter ClusterCounter = null; // cluster.OrdersCounter -> get it from solution
-
-            List<Order> AvailableClusterOrders = cluster.OrdersInCluster; // Order array to choose orders from with a random
-
-            foreach (Days Day in Enum.GetValues(typeof(Days)))
+            foreach (ParentCluster parent in parents)
             {
-                if (Day == Days.None)
-                    continue;
-
-                Route toFill = new Route(Day);
-                List<Order> OrdersInRoute = toFill.Orders;
-                List<Order> AvailableOrders = createAvailableOrdersForDay(Day, ClusterCounter, AvailableClusterOrders);
-
-                while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps && AvailableOrders.Count > 0)
+                foreach (Cluster quadrant in parent.Quadrants)
                 {
-                    int randomAmountOfLoops = random.Next(5, 50);
-                    int randomOrderToSelect = random.Next(0, AvailableOrders.Count - 1);
-
-                    Order bestOrder = AvailableOrders[randomOrderToSelect];
-                    Order randomOrder = AvailableOrders[randomOrderToSelect];
-
-                    //make 5 ~ 50 points and get the best one
-                    for (int i = 0; i < randomAmountOfLoops; i++)
+                    if (quadrant.DaysPlannedFor == day)
                     {
-                        randomOrder = AvailableOrders[random.Next(0, AvailableOrders.Count - 1)];
-
-                        int travelLocation1 = Data.DistanceMatrix[previousAddedOrder.MatrixID, bestOrder.MatrixID].TravelTime;
-                        int travelLocation2 = Data.DistanceMatrix[previousAddedOrder.MatrixID, randomOrder.MatrixID].TravelTime;
-                        if (travelLocation2 < travelLocation1)
-                        {
-                            if (!OrdersInRoute.Contains(randomOrder))
-                            {
-                                bestOrder = randomOrder;
-                            }
-                        }
+                        toReturn.AddRange(quadrant.Routes); // TODO: See if this holds up with married clusters.
                     }
-                    AvailableOrders.Remove(bestOrder);
-
-                    //check if the weight and travel time does not exceed their max values
-                    if (toFill.Weight + (previousAddedOrder.NumberOfContainers * previousAddedOrder.VolumePerContainer) <= maxWeight &&
-                        toFill.TravelTime +
-                        Data.DistanceMatrix[previousAddedOrder.MatrixID, previousAddedOrder.MatrixID].TravelTime +
-                        Data.DistanceMatrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime -
-                        Data.DistanceMatrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime +
-                        AvailableClusterOrders[randomOrderToSelect].EmptyingTimeInSeconds <= maxTravelTime)
-                    {
-                        //add the order to the orderlist and update the matrix check value for the next run
-                        //Console.WriteLine(OrderArray[randomInt].OrderNumber + "  Current travel time :" + TravelTime + " Added route time: " + Data.Matrix[matrixA, matrixB].TravelTime + "/" + OrderArray[randomInt].EmptyingTimeInSeconds);
-                        previousAddedOrder = bestOrder;
-                        toFill.AddOrder(bestOrder);
-                    }
-                    else
-                    {
-                        steps += 10;
-                    }
-                    steps++;
                 }
-                if (toFill.Orders.Count > 1)
-                    toReturn.Add(toFill);
-                toFill = new Route(Days.None);
             }
             return toReturn;
         }
@@ -215,10 +153,86 @@ namespace GOO.Model
     }
 }
 
+//private static List<Route> generateRoutes(Cluster cluster) // WIP
+//{
+//    List<Route> toReturn = new List<Route>();
+//    // Create amount of routes based on frequency
+//    // Greedy pattern
 
+//    // Max Steps and matrix values for travel time checks
+//    int maxSteps = 10;
+//    double maxTravelTime = 43200.0d; // TODO: Double-check values 
+//    double maxWeight = 100000.0d;
 
-        //public static List<Cluster> PlanStartClusters(List<ParentCluster> clusters)
-        //{
+//    int steps = 0;
+//    Order depositPoint = Data.GetOrder0();
+//    Order previousAddedOrder = depositPoint;
+//    OrdersCounter ClusterCounter = null; // cluster.OrdersCounter -> get it from solution
+
+//    List<Order> AvailableClusterOrders = cluster.OrdersInCluster; // Order array to choose orders from with a random
+
+//    foreach (Days Day in Enum.GetValues(typeof(Days)))
+//    {
+//        if (Day == Days.None)
+//            continue;
+
+//        Route toFill = new Route(Day);
+//        List<Order> OrdersInRoute = toFill.Orders;
+//        List<Order> AvailableOrders = createAvailableOrdersForDay(Day, ClusterCounter, AvailableClusterOrders);
+
+//        while (toFill.Weight < maxWeight && toFill.TravelTime < maxTravelTime && maxSteps > steps && AvailableOrders.Count > 0)
+//        {
+//            int randomAmountOfLoops = random.Next(5, 50);
+//            int randomOrderToSelect = random.Next(0, AvailableOrders.Count - 1);
+
+//            Order bestOrder = AvailableOrders[randomOrderToSelect];
+//            Order randomOrder = AvailableOrders[randomOrderToSelect];
+
+//            //make 5 ~ 50 points and get the best one
+//            for (int i = 0; i < randomAmountOfLoops; i++)
+//            {
+//                randomOrder = AvailableOrders[random.Next(0, AvailableOrders.Count - 1)];
+
+//                int travelLocation1 = Data.DistanceMatrix[previousAddedOrder.MatrixID, bestOrder.MatrixID].TravelTime;
+//                int travelLocation2 = Data.DistanceMatrix[previousAddedOrder.MatrixID, randomOrder.MatrixID].TravelTime;
+//                if (travelLocation2 < travelLocation1)
+//                {
+//                    if (!OrdersInRoute.Contains(randomOrder))
+//                    {
+//                        bestOrder = randomOrder;
+//                    }
+//                }
+//            }
+//            AvailableOrders.Remove(bestOrder);
+
+//            //check if the weight and travel time does not exceed their max values
+//            if (toFill.Weight + (previousAddedOrder.NumberOfContainers * previousAddedOrder.VolumePerContainer) <= maxWeight &&
+//                toFill.TravelTime +
+//                Data.DistanceMatrix[previousAddedOrder.MatrixID, previousAddedOrder.MatrixID].TravelTime +
+//                Data.DistanceMatrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime -
+//                Data.DistanceMatrix[previousAddedOrder.MatrixID, depositPoint.MatrixID].TravelTime +
+//                AvailableClusterOrders[randomOrderToSelect].EmptyingTimeInSeconds <= maxTravelTime)
+//            {
+//                //add the order to the orderlist and update the matrix check value for the next run
+//                //Console.WriteLine(OrderArray[randomInt].OrderNumber + "  Current travel time :" + TravelTime + " Added route time: " + Data.Matrix[matrixA, matrixB].TravelTime + "/" + OrderArray[randomInt].EmptyingTimeInSeconds);
+//                previousAddedOrder = bestOrder;
+//                toFill.AddOrder(bestOrder);
+//            }
+//            else
+//            {
+//                steps += 10;
+//            }
+//            steps++;
+//        }
+//        if (toFill.Orders.Count > 1)
+//            toReturn.Add(toFill);
+//        toFill = new Route(Days.None);
+//    }
+//    return toReturn;
+//}
+
+//public static List<Cluster> PlanStartClusters(List<ParentCluster> clusters)
+//{
 //// Step 1. Generate Routes for each cluster dependent on the orderfrequency within
 //foreach (Cluster cluster in clusters)
 //{ // if (!cluster.OrdersCounter.IsCompleted())
