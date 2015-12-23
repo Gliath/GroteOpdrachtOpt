@@ -72,6 +72,7 @@
     <Compile Include="Model\Clusterer.cs" />
     <Compile Include="Model\Order.cs" />
     <Compile Include="Model\OrdersCounter.cs" />
+    <Compile Include="Model\ParentCluster.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="Model\RoutePlanner.cs" />
     <Compile Include="Model\Solution.cs" />

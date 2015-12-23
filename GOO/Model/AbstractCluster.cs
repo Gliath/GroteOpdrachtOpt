@@ -11,7 +11,6 @@ namespace GOO.Model
     {
         public abstract List<Order> OrdersInCluster { get; set; }
         public abstract Days DaysPlannedFor { get; set; }
-        public abstract OrdersCounter OrdersCounter { get; set; }
         public abstract List<Route> Routes { get; set; }
 
         public string ToRouteString(int truckNr, int dayNr)

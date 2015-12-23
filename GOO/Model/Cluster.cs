@@ -12,7 +12,6 @@ namespace GOO.Model
         public Point CenterPoint { get; private set; }
         public override List<Order> OrdersInCluster { get; set; }
         public override Days DaysPlannedFor { get; set; }
-        public override OrdersCounter OrdersCounter { get; set; }
         public override List<Route> Routes { get; set; }
 
         public Cluster(Point centerPoint)
@@ -24,14 +23,13 @@ namespace GOO.Model
             this.CenterPoint = centerPoint;
             this.OrdersInCluster = ordersInCluster;
             this.DaysPlannedFor = daysPlannedFor;
-            this.OrdersCounter = new OrdersCounter();
             this.Routes = new List<Route>();
         }
 
         public bool CanBePlannedOn(Days day)
         {
             for (int i = 0; i < OrdersInCluster.Count; i++)
-                if (!OrdersCounter.CanAddOrder(OrdersInCluster[i].OrderNumber, day))
+                //if (!OrdersCounter.CanAddOrder(OrdersInCluster[i].OrderNumber, day)) /* Ask Solution */
                     return false;
 
             return true;
@@ -76,35 +74,29 @@ namespace GOO.Model
         {
             Routes.Add(toAdd);
 
-            foreach (Order order in toAdd.Orders)
-                OrdersCounter.AddOccurrence(order.OrderNumber, toAdd.Day);
+            //foreach (Order order in toAdd.Orders)
+            //    OrdersCounter.AddOccurrence(order.OrderNumber, toAdd.Day); /* A job for Solution or the class who adds the orders themselves */
         }
 
         public void RemoveRouteFromCluster(Route toRemove)
         {
             Routes.Remove(toRemove);
 
-            foreach (Order order in toRemove.Orders)
-                OrdersCounter.RemoveOccurrence(order.OrderNumber, toRemove.Day);
+            //foreach (Order order in toRemove.Orders)
+            //    OrdersCounter.RemoveOccurrence(order.OrderNumber, toRemove.Day); /* A job for Solution or the class who removes the orders themselves */
         }
 
         public void RemoveAllRoutesFromCluster()
         {
             Routes.Clear();
-            OrdersCounter.ClearAllOccurences();
+            //OrdersCounter.ClearAllOccurences(); /* A job for Solution or the class who clears the orders themselves */
         }
 
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            builder.AppendLine("CenterPoint = " + CenterPoint.ToString());
-            //builder.AppendLine("Orders = {");
-            //foreach (Order order in ordersInCluster)
-            //{
-            //    builder.AppendLine(order.ToString());
-            //}
-            //builder.AppendLine("}");
-            builder.AppendLine("Number of Orders: " + OrdersInCluster.Count);
+            builder.AppendLine(String.Format("Center Point: {0}", CenterPoint.ToString()));
+            builder.AppendLine(String.Format("Number of Orders: {0}", OrdersInCluster.Count));
             builder.AppendLine("");
             return builder.ToString();
         }
