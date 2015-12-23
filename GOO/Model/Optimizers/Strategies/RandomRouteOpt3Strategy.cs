@@ -7,6 +7,8 @@ namespace GOO.Model.Optimizers.Strategies
 {
     public class RandomRouteOpt3Strategy : Strategy
     {
+        private readonly int NumberOfRoutesCreated = 6;
+
         private Days day;
         private int truck;
         private Route old_route;
@@ -17,7 +19,7 @@ namespace GOO.Model.Optimizers.Strategies
         public RandomRouteOpt3Strategy()
             : base()
         {
-            routesToWorkWith = new Route[6];
+            routesToWorkWith = new Route[NumberOfRoutesCreated];
         }
 
         public override Solution executeStrategy(Solution toStartFrom)
@@ -48,7 +50,7 @@ namespace GOO.Model.Optimizers.Strategies
 
             //start doing the opt-3 algorithm on the route list
             double best_traveltime = old_route.TravelTime;
-            double[] new_traveltime = new double[6];
+            double[] new_traveltime = new double[NumberOfRoutesCreated];
             for (int i = 0; i < new_traveltime.Length; i++)
                 new_traveltime[i] = double.MaxValue;
 
@@ -62,15 +64,15 @@ namespace GOO.Model.Optimizers.Strategies
                         for (int k = j + 1; k < old_route.Orders.Count - 1; k++)
                         {
                             //swap the 2 coords
-                            Order[] initialRouteI = new Order[6];
+                            Order[] initialRouteI = new Order[NumberOfRoutesCreated];
                             for (int index = 0; index < initialRouteI.Length; index++)
                                 initialRouteI[index] = routesToWorkWith[i].Orders[i];
 
-                            Order[] initialRouteJ = new Order[6];
+                            Order[] initialRouteJ = new Order[NumberOfRoutesCreated];
                             for (int index = 0; index < initialRouteJ.Length; index++)
                                 initialRouteJ[index] = routesToWorkWith[i].Orders[j];
 
-                            Order[] initialRouteK = new Order[6];
+                            Order[] initialRouteK = new Order[NumberOfRoutesCreated];
                             for (int index = 0; index < initialRouteK.Length; index++)
                                 initialRouteK[index] = routesToWorkWith[i].Orders[k];
 

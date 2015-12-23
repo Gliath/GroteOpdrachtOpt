@@ -21,12 +21,12 @@ namespace GOO.Model
             Clusterer.startingAmountOfClusters = startingAmountOfClusters;
         }
 
-        public List<Cluster> createKClusters()
+        public List<Cluster> createClusters()
         {
-            return createKClusters(Clusterer.startingAmountOfClusters, this.createStartOrders(this.allOrders, Clusterer.startingAmountOfClusters), this.allOrders);
+            return createClusters(Clusterer.startingAmountOfClusters, this.createStartOrders(this.allOrders, Clusterer.startingAmountOfClusters), this.allOrders);
         }
 
-        public List<Cluster> createKClusters(int amountOfClusters, List<Order> startingPoints, Dictionary<int, Order> allOrders)
+        public List<Cluster> createClusters(int amountOfClusters, List<Order> startingPoints, Dictionary<int, Order> allOrders)
         {
             List<Cluster> toReturn = new List<Cluster>();
 

@@ -36,7 +36,7 @@ namespace GOO.Model
             //}
             
             clusterer = new Clusterer(Data.Orders, k);
-            clusters = clusterer.createKClusters();
+            clusters = clusterer.createClusters();
 
             foreach (Cluster cluster in clusters)
                 Console.WriteLine(cluster);
