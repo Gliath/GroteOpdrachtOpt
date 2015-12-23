@@ -23,7 +23,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            Cluster targetCluster = null;
+            AbstractCluster targetCluster = null;
             int firstRouteIndex = -1;
 
             int numOfMaximumTriesFindingACluster = 32;

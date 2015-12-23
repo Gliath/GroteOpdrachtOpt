@@ -148,7 +148,7 @@ namespace GOO.Model
 
         private void assignOrdersToClustersCentroid(List<Cluster> clusters, List<Order> toAssign, Point centroid)
         {
-            foreach (Order order in toAssign) // TODO : Check if y higher is actually moving up or down
+            foreach (Order order in toAssign)
             {
                 if (clusters.Count == 2)
                 {
@@ -170,6 +170,26 @@ namespace GOO.Model
 
                     if (order.X <= centroid.X && order.Y <= centroid.Y) // left - down
                         clusters[3].AddOrderToCluster(order);
+                }
+            }
+
+            foreach (Order order in toAssign)
+            {
+                if (order.FrequencyNumber > 1)
+                {
+                    for (int i = 0; i < order.FrequencyNumber-1; i++)
+                    {
+                        int j = 0;
+                        bool inserted = false;
+                        do
+                        {
+                            if (!clusters[j].OrdersInCluster.Contains(order)) { 
+                                clusters[j].OrdersInCluster.Add(order);
+                                inserted = true;
+                            }
+                            j++;
+                        } while (j < clusters.Count && !inserted);
+                    }
                 }
             }
         }

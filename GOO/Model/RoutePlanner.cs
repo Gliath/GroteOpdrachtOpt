@@ -9,7 +9,7 @@ namespace GOO.Model
     {
         private static Random random = new Random();
 
-        public static Solution PlanRoutesFromClustersIntoSolution(Solution solution, List<Cluster> clusters)
+        public static Solution PlanRoutesFromClustersIntoSolution(Solution solution, List<ParentCluster> clusters)
         {
             Console.WriteLine("Planning routes into solution!");
 
@@ -20,13 +20,13 @@ namespace GOO.Model
                     DayRoutes.Add(Day, new List<Route>());
             }
 
-            foreach (Cluster cluster in clusters)
-            {
-                foreach (Route route in cluster.Routes)
-                {
-                    DayRoutes[route.Day].Add(route);
-                }
-            }
+            //foreach (Cluster cluster in clusters)
+            //{
+            //    foreach (Route route in cluster.Routes)
+            //    {
+            //        DayRoutes[route.Day].Add(route);
+            //    }
+            //}
 
             double maxTravelTimeOnDay = 43200.0d;
             double travelTimeOnDay = 0.0d;
@@ -69,57 +69,23 @@ namespace GOO.Model
             return solution;
         }
 
-        public static List<Cluster> PlanStartClusters(List<Cluster> clusters)
+        public static List<ParentCluster> PlanStartClusters(List<ParentCluster> clusters)
         {
-            // Step 1. Generate Routes for each cluster dependent on the orderfrequency within
-            foreach (Cluster cluster in clusters)
-            { // if (!cluster.OrdersCounter.IsCompleted())
-                foreach (Route route in generateRoutes(cluster))
-                    cluster.AddRouteToCluster(route);
-            }
-            // Step 2. Attempt to assign new days to clusters 
+            // Step 1. Attempt to assign new days to clusters 
             // Based on weight and traveltime contained per day in a cluster instead?
-            //double maxTravelTimeOnDay = 86400.0d; // TODO: Double-check values
-            //int weightOnDay = 0;
-            //double travelTimeOnDay = 0.0d;
+            
 
-            List<Days> randomDayList = new List<Days>();
-            foreach (Days Day in Enum.GetValues(typeof(Days)))
-            {
-                if (Day != Days.None)
-                    randomDayList.Add(Day);
-            }
+            // Step 2. Generate Routes for each cluster within the parent cluster
+            
+            
+            
 
-            int randomizationSteps = 20;
-            foreach (Cluster cluster in clusters)
-            {
-                foreach (Days day in randomDayList)
-                {
-                    if (cluster.CanBePlannedOn(day))
-                        cluster.DaysPlannedFor |= day;
-                }
-
-                for (int i = 0; i < randomizationSteps; i++)
-                {
-                    int swapIndex1 = random.Next(randomDayList.Count - 1);
-                    int swapIndex2 = random.Next(randomDayList.Count - 1);
-
-                    Days toSwap = randomDayList[swapIndex1];
-                    Days toSwap2 = randomDayList[swapIndex2];
-
-                    randomDayList.Remove(toSwap);
-                    randomDayList.Insert(swapIndex1, toSwap2);
-
-                    randomDayList.Remove(toSwap2);
-                    randomDayList.Insert(swapIndex2, toSwap);
-                }
-            }
             // Step 3. Attempt to plan the routes based on the day restrictions of their clusters 
-            foreach (Cluster cluster in clusters)
-            {
-                cluster.RemoveAllRoutesFromCluster();
-                cluster.Routes = generateRoutes(cluster);
-            }
+            //foreach (Cluster cluster in clusters)
+            //{
+            //    cluster.RemoveAllRoutesFromCluster();
+            //    cluster.Routes = generateRoutes(cluster);
+            //}
             return clusters;
         }
 
@@ -223,3 +189,59 @@ namespace GOO.Model
         }
     }
 }
+
+
+
+        //public static List<Cluster> PlanStartClusters(List<ParentCluster> clusters)
+        //{
+//// Step 1. Generate Routes for each cluster dependent on the orderfrequency within
+//foreach (Cluster cluster in clusters)
+//{ // if (!cluster.OrdersCounter.IsCompleted())
+//    foreach (Route route in generateRoutes(cluster))
+//        cluster.AddRouteToCluster(route);
+//}
+//// Step 2. Attempt to assign new days to clusters 
+//// Based on weight and traveltime contained per day in a cluster instead?
+////double maxTravelTimeOnDay = 86400.0d; // TODO: Double-check values
+////int weightOnDay = 0;
+////double travelTimeOnDay = 0.0d;
+
+//List<Days> randomDayList = new List<Days>();
+//foreach (Days Day in Enum.GetValues(typeof(Days)))
+//{
+//    if (Day != Days.None)
+//        randomDayList.Add(Day);
+//}
+
+//int randomizationSteps = 20;
+//foreach (Cluster cluster in clusters)
+//{
+//    foreach (Days day in randomDayList)
+//    {
+//        if (cluster.CanBePlannedOn(day))
+//            cluster.DaysPlannedFor |= day;
+//    }
+
+//    for (int i = 0; i < randomizationSteps; i++)
+//    {
+//        int swapIndex1 = random.Next(randomDayList.Count - 1);
+//        int swapIndex2 = random.Next(randomDayList.Count - 1);
+
+//        Days toSwap = randomDayList[swapIndex1];
+//        Days toSwap2 = randomDayList[swapIndex2];
+
+//        randomDayList.Remove(toSwap);
+//        randomDayList.Insert(swapIndex1, toSwap2);
+
+//        randomDayList.Remove(toSwap2);
+//        randomDayList.Insert(swapIndex2, toSwap);
+//    }
+//}
+//// Step 3. Attempt to plan the routes based on the day restrictions of their clusters 
+//foreach (Cluster cluster in clusters)
+//{
+//    cluster.RemoveAllRoutesFromCluster();
+//    cluster.Routes = generateRoutes(cluster);
+//}
+//return clusters;
+//}

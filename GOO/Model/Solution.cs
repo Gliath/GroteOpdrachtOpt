@@ -11,10 +11,10 @@ namespace GOO.Model
     {
         private OrdersCounter ordersCounter;
 
-        private List<Cluster> clusters;
+        private List<ParentCluster> clusters;
         private List<Tuple<Days, int, List<Route>>> truckPlanning;
 
-        public Solution(List<Cluster> clusters)
+        public Solution(List<ParentCluster> clusters)
         {
             this.ordersCounter = new OrdersCounter();
             this.clusters = clusters;
@@ -77,7 +77,7 @@ namespace GOO.Model
             return this.truckPlanning[random];
         }
 
-        public Cluster getRandomCluster()
+        public AbstractCluster getRandomCluster()
         {
             int random = new Random().Next(clusters.Count);
             return this.clusters[random];
