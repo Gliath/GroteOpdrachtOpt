@@ -181,6 +181,9 @@ namespace GOO.Model
             {
                 multiOrderAssignFre2Excusively(quadrants, AllFre2Orders);
                 //Add day restriction
+                //// 
+                //quadrant.initialRestrictions.Add(Days.Monday | Days.Tuesday);
+                //quadrant.initialRestrictions.Add(Days.Thursday | Days.Friday);
             }
             else if (fre3 && !(fre2 || fre4))
             { // randomly assign the fre 3 orders to three clusters
@@ -258,8 +261,6 @@ namespace GOO.Model
             foreach (Cluster quadrant in quadrants)
             {
                 quadrant.OrdersInCluster.AddRange(fre2Orders);
-                quadrant.initialRestrictions.Add(Days.Monday | Days.Tuesday);
-                quadrant.initialRestrictions.Add(Days.Thursday | Days.Friday);
             }
         }
 
