@@ -11,7 +11,10 @@ namespace GOO.ViewModel
         {
             ProgressMaximum = 1;
             ProgressValue = 0;
+        }
 
+        public void InitialRun()
+        {
             FilesInitializer.InitializeFiles();
             SolveSolution();
 
