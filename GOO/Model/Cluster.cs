@@ -26,14 +26,14 @@ namespace GOO.Model
             this.Routes = new List<Route>();
         }
 
-        public bool CanBePlannedOn(Days day)
-        {
-            for (int i = 0; i < OrdersInCluster.Count; i++)
-                //if (!OrdersCounter.CanAddOrder(OrdersInCluster[i].OrderNumber, day)) /* Ask Solution */
-                    return false;
+        //public bool canbeplannedon(days day)
+        //{
+        //    for (int i = 0; i < ordersincluster.count; i++)
+        //        //if (!orderscounter.canaddorder(ordersincluster[i].ordernumber, day)) /* ask solution */
+        //            return false;
 
-            return true;
-        }
+        //    return true;
+        //}
 
         public bool ReCenterPoint()
         {

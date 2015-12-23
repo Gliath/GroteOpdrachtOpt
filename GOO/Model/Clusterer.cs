@@ -45,15 +45,6 @@ namespace GOO.Model
             {
                 List<Days> restrictions = new List<Days>();
                 List<OrderFrequency> frequenciesPresent = new List<OrderFrequency>();
-
-                //foreach (Order order in cluster.OrdersInCluster)
-                //    if (order.Frequency != OrderFrequency.PWK1 && !frequenciesPresent.Contains(order.Frequency))
-                //    {
-                //        restrictions.AddRange(DayRestrictionFactory.GetDayRestrictions(order.Frequency));
-                //        frequenciesPresent.Add(order.Frequency);
-                //    }
-
-                //cluster.DaysRestrictions = restrictions;
             }
 
             return toReturn;
@@ -88,11 +79,13 @@ namespace GOO.Model
                 if (fre2 && !(fre3 || fre4))
                 {
                     // if only fre2
-                    // split in two clusters
-                    // draw grid on centroid to split area in two
+                    // split in two groups of two clusters
+                    // draw grid on centroid to split area in four
                     toUse.Add(new Cluster(new Point()));
                     toUse.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
+                    toUse.Add(new Cluster(new Point()));
+                    toUse.Add(new Cluster(new Point()));
+                    assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid, fre2, fre3, fre4);
                 }
 
                 else if (fre3 && !(fre2 || fre4))
@@ -106,7 +99,7 @@ namespace GOO.Model
                     toUse.Add(new Cluster(new Point()));
                     toUse.Add(new Cluster(new Point()));
                     toUse.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
+                    assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid, fre2, fre3, fre4);
 
                     // Fuse two of the returned clusters. TODO : Check if Opposite quadrants are a problem if fused
                     int randomq1 = random.Next(toUse.Count);
@@ -135,93 +128,178 @@ namespace GOO.Model
                     toUse.Add(new Cluster(new Point()));
                     toUse.Add(new Cluster(new Point()));
                     toUse.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
+                    assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid, fre2, fre3, fre4);
                 }
                 toReturn.Add(new ParentCluster(centroid, cluster.OrdersInCluster, toUse.ToArray())); // TODO : Double-check day restrictions
             }
             return toReturn;
         }
 
-        private void assignOrdersToClustersCentroid(List<Cluster> clusters, List<Order> toAssign, Point centroid)
+        private void assignOrdersToClustersCentroid(List<Cluster> quadrants, List<Order> toAssign, Point centroid, bool fre2, bool fre3, bool fre4)
         {
             foreach (Order order in toAssign)
             {
-                if (clusters.Count == 2)
+                if (order.Frequency != OrderFrequency.PWK1)
+                    continue;
+
+                if (quadrants.Count == 2)
                 {
                     if (order.X >= centroid.X) // right
-                        clusters[0].AddOrderToCluster(order);
+                        quadrants[0].AddOrderToCluster(order);
                     if (order.X <= centroid.X) // left
-                        clusters[1].AddOrderToCluster(order);
+                        quadrants[1].AddOrderToCluster(order);
                 }
-                else if (clusters.Count >= 3)
+                else if (quadrants.Count >= 3)
                 {
                     if (order.X >= centroid.X && order.Y >= centroid.Y) // right - up
-                        clusters[0].AddOrderToCluster(order);
+                        quadrants[0].AddOrderToCluster(order);
 
                     if (order.X >= centroid.X && order.Y <= centroid.Y) // right - down
-                        clusters[1].AddOrderToCluster(order);
+                        quadrants[1].AddOrderToCluster(order);
 
                     if (order.X <= centroid.X && order.Y >= centroid.Y) // left - up
-                        clusters[2].AddOrderToCluster(order);
+                        quadrants[2].AddOrderToCluster(order);
 
                     if (order.X <= centroid.X && order.Y <= centroid.Y) // left - down
-                        clusters[3].AddOrderToCluster(order);
+                        quadrants[3].AddOrderToCluster(order);
                 }
             }
 
-            // Fuse two clusters. But first check if it's needed
-            bool shouldNotFuseClusters = false;
-            foreach (Cluster cluster in clusters)
-            {
-                foreach (Order order in cluster.OrdersInCluster)
+            List<Order> AllFre2Orders;
+            List<Order> AllFre3Orders;
+            List<Order> AllFre4Orders;
+            if(fre2)
+                AllFre2Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK2);
+            if(fre3)
+                AllFre3Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK3);
+            if(fre4)
+                AllFre4Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK4);
+
+            if (fre2 && !(fre3 || fre4))
+            { // create two groups of fre2 orders, and assign them exclusively
+                List<Order> allFre2Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK2);
+                List<Order> fre2Orders1 = new List<Order>();
+                List<Order> fre2Orders2 = new List<Order>();
+                for (int i = 0; i < allFre2Orders.Count; i++)
                 {
-                    if (order.Frequency != OrderFrequency.PWK3 && order.Frequency != OrderFrequency.PWK1)
-                    {
-                        shouldNotFuseClusters = true;
-                        break;
-                    }
+                    if (i < allFre2Orders.Count / 2)
+                        fre2Orders1.Add(allFre2Orders[i]);
+                    else
+                        fre2Orders2.Add(allFre2Orders[i]);
                 }
-
-                if (shouldNotFuseClusters)
-                    break;
+                multiOrderAssignFre2Excusively(quadrants, fre2Orders1, fre2Orders2);
             }
 
-            if (!shouldNotFuseClusters)
-            {
-                int firstQuadrantIndex = random.Next(clusters.Count);
-                Cluster firstQuadrant = clusters[firstQuadrantIndex];
-
-                int secondQuadrantIndex = -1;
-                do
-                    secondQuadrantIndex = random.Next(clusters.Count);
-                while (firstQuadrantIndex == secondQuadrantIndex);
-
-                Cluster secondQuadrant = clusters[secondQuadrantIndex];
-                foreach (Order order in secondQuadrant.OrdersInCluster)
-                    if (!firstQuadrant.OrdersInCluster.Contains(order))
-                        firstQuadrant.OrdersInCluster.Add(order);
-
-                clusters.Remove(secondQuadrant);
+            else if (fre3 && !(fre2 || fre4))
+            { // randomly assign the fre 3 orders to three clusters
+                multiOrderAssignFre3or4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK3));
             }
 
-            foreach (Order order in toAssign)
+            else if (fre4 && !(fre2 || fre3))
+            { // assign one fre4 to every cluster
+                multiOrderAssignFre3or4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK4));
+            }
+
+            else if (fre2 && fre3 && !fre4)
             {
-                if (order.FrequencyNumber > 1)
+                // assign fre 3 randomly to three clusters
+                // create a group of fre 2 orders and assign them exclusively
+                // fre2 may only occur once together with a fre 3 order
+                multiOrderAssignFre3or4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK3));
+                multiOrderAssignFre2BasedOnFre3(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK2));
+            }
+
+            else if (fre2 && !fre3 && fre4)
+            {
+                // create two groups of fre2 orders, and assign them exclusively
+                // assign one fre4 to every cluster
+                List<Order> allFre2Orders = findOrdersWithFrequency(toAssign, OrderFrequency.PWK2);
+                List<Order> fre2Orders1 = new List<Order>();
+                List<Order> fre2Orders2 = new List<Order>();
+                for (int i = 0; i < allFre2Orders.Count; i++)
                 {
-                    for (int i = 0; i < order.FrequencyNumber - 1; i++)
-                    {
-                        int j = 0;
-                        bool inserted = false;
-                        do
-                        {
-                            if (!clusters[j].OrdersInCluster.Contains(order))
-                            {
-                                clusters[j].OrdersInCluster.Add(order);
-                                inserted = true;
-                            }
-                            j++;
-                        } while (j < clusters.Count && !inserted);
-                    }
+                    if (i < allFre2Orders.Count / 2)
+                        fre2Orders1.Add(allFre2Orders[i]);
+                    else
+                        fre2Orders2.Add(allFre2Orders[i]);
+                }
+                multiOrderAssignFre2Excusively(quadrants, fre2Orders1, fre2Orders2);
+                multiOrderAssignFre3or4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK4));
+            }
+
+            else if (!fre2 && fre3 && fre4)
+            {
+                // randomly assign the fre 3 orders to three clusters
+                // assign one fre4 to every cluster
+
+                multiOrderAssignFre3or4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK3));
+                multiOrderAssignFre3or4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK4));
+            }
+
+            else if (fre2 && fre3 && fre4)
+            {
+                // assign one fre4 to every cluster
+                // randomly assign the fre 3 orders to three clusters
+                // create a group of fre 2 orders and assign them exclusively
+                // fre2 may only occur once together with a fre 3 order
+
+                multiOrderAssignFre3or4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK3));
+                multiOrderAssignFre3or4(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK4));
+                multiOrderAssignFre2BasedOnFre3(quadrants, findOrdersWithFrequency(toAssign, OrderFrequency.PWK2));
+                
+            }
+
+        }
+
+        private void multiOrderAssignFre2BasedOnFre3(List<Cluster> quadrants, List<Order> allFre2Orders)
+        {
+            List<Cluster> copy = new List<Cluster>();
+            copy.AddRange(quadrants);
+            bool addedToFre3 = false;
+            foreach (Cluster cluster in copy)
+            {
+                if (!addedToFre3 && cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) != null) { 
+                    cluster.OrdersInCluster.AddRange(allFre2Orders);
+                    addedToFre3 = true;
+                }
+                else if (cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) == null) { 
+                    cluster.OrdersInCluster.AddRange(allFre2Orders);
+                }
+            }
+        }
+
+        private void multiOrderAssignFre2Excusively(List<Cluster> quadrants, List<Order> fre2Orders1, List<Order> fre2Orders2)
+        {
+            // Assign one cluster for fre2orders1
+            // randomly choose another 
+
+            // assign the rest to the remaining clusters
+            List<Cluster> copy = new List<Cluster>();
+            copy.AddRange(quadrants);
+
+            Cluster firstCluster = copy[random.Next(copy.Count)];
+            copy.Remove(firstCluster);
+            Cluster secondCluster = copy[random.Next(copy.Count)];
+            copy.Remove(secondCluster);
+            Cluster thirdCluster = copy[random.Next(copy.Count)];
+            copy.Remove(thirdCluster);
+            Cluster fourthCluster = copy[random.Next(copy.Count)];
+            copy.Remove(fourthCluster);
+
+            firstCluster.OrdersInCluster.AddRange(fre2Orders1);
+            secondCluster.OrdersInCluster.AddRange(fre2Orders1);
+            thirdCluster.OrdersInCluster.AddRange(fre2Orders2);
+            fourthCluster.OrdersInCluster.AddRange(fre2Orders2);
+        }
+
+        private void multiOrderAssignFre3or4(List<Cluster> quadrants, List<Order> freOrders)
+        {
+            foreach (Cluster cluster in quadrants)
+            {
+                foreach (Order order in freOrders)
+                {
+                    if(!cluster.OrdersInCluster.Contains(order))
+                        cluster.OrdersInCluster.Add(order);
                 }
             }
         }
@@ -275,6 +353,17 @@ namespace GOO.Model
                     toReturn.Add(orders[i]);
                 }
             }
+            return toReturn;
+        }
+        
+        private List<Order> findOrdersWithFrequency(List<Order> toLookIn, OrderFrequency toLookFor)
+        {
+            List<Order> toReturn = new List<Order>();
+
+            foreach (Order order in toLookIn)
+                if (order.Frequency == toLookFor)
+                    toReturn.Add(order);
+
             return toReturn;
         }
 
