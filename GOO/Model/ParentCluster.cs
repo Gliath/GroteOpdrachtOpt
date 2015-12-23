@@ -44,10 +44,10 @@ namespace GOO.Model
             return false;
         }
 
-        public void SetDaysPlannedForQuadrant(Days DayPlanned, int QuadrantNumber)
+        public bool SetDaysPlannedForQuadrant(Days DayPlanned, int QuadrantNumber)
         {
-            if (!CanSetDaysPlanned(DayPlanned))
-                return;
+            if (!CanSetDaysPlanned(DayPlanned) || Quadrants[QuadrantNumber].DaysPlannedFor != Days.None)
+                return false;
 
             Quadrants[QuadrantNumber].DaysPlannedFor = DaysPlannedFor;
 
@@ -69,12 +69,13 @@ namespace GOO.Model
                         if (quadrant.DaysPlannedFor == Days.None)
                             quadrant.DaysPlannedFor = DaysAvailable[0]; // Only one item left so assign it
             }
+            return true;
         }
 
-        public void ReassignDaysPlannedForQuadrant(Days DayPlanned, int QuadrantNumber)
+        public bool ReassignDaysPlannedForQuadrant(Days DayPlanned, int QuadrantNumber)
         {
             if (Quadrants[QuadrantNumber].DaysPlannedFor == Days.None)
-                return;
+                return false;
 
             List<Days> previousDaysAvailable = DaysRestrictions;
             for (int i = 0; i < Quadrants.Length; i++)
@@ -94,7 +95,7 @@ namespace GOO.Model
                         canPlanDay = true;
 
                 if (!canPlanDay)
-                    return;
+                    return false;
             }
 
             DaysAvailable = previousDaysAvailable;
@@ -118,6 +119,7 @@ namespace GOO.Model
                         if (quadrant.DaysPlannedFor == Days.None)
                             quadrant.DaysPlannedFor = DaysAvailable[0]; // Only one item left so assign it
             }
+            return true;
         }
 
         public override string ToString()
