@@ -29,8 +29,10 @@ namespace GOO
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            // Only line needed in final solution the following line:
-            //new MainView() { DataContext = new MainViewModel() }.Show();
+            // Only following lines are needed in final solution:
+            // MainViewModel mainVM = new MainViewModel();
+            // new MainView() { DataContext = mainVM }.Show();
+            // mainVM.InitialRun();
 
             #if DEBUG
             AllocConsole();
