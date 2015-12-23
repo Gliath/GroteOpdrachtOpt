@@ -128,12 +128,32 @@ namespace GOO.Model
                 {
                     for (int orderID = 0; orderID < routes[routeID].Orders.Count; orderID++)
                     {
-                        sb.AppendLine(String.Format("{0};{1};{2};{3}", tuple.Item2 + 1, (int)tuple.Item1, ++sequenceID, routes[routeID].Orders[orderID].OrderNumber));
+                        sb.AppendLine(String.Format("{0};{1};{2};{3}", tuple.Item2 + 1, (int)DayInt(tuple.Item1), ++sequenceID, routes[routeID].Orders[orderID].OrderNumber));
                     }
                 }
             }
 
             return sb.ToString();
+        }
+
+        private int DayInt(Days day)
+        {
+
+            switch (day)
+            {
+                case Days.Monday:
+                    return 1;
+                case Days.Tuesday:
+                    return 2;
+                case Days.Wednesday:
+                    return 3;
+                case Days.Thursday:
+                    return 4;
+                case Days.Friday:
+                    return 5;
+                default:
+                    return -1;
+            }
         }
     }
 }

@@ -90,7 +90,9 @@ namespace GOO.Model
                         {
                             parent.SetDaysPlannedForQuadrant(dayToAttempt, i);
                             assigned = true;
+                            
                         }
+                        numOfTries++;
                     } while (!assigned && numOfTries < 100);
                 }
             }

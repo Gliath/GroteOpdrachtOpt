@@ -49,7 +49,7 @@ namespace GOO.Model
             if (!CanSetDaysPlanned(DayPlanned) || Quadrants[QuadrantNumber].DaysPlannedFor != Days.None)
                 return false;
 
-            Quadrants[QuadrantNumber].DaysPlannedFor = DaysPlannedFor;
+            Quadrants[QuadrantNumber].DaysPlannedFor = DayPlanned;
 
             for (int i = 0; i < DaysAvailable.Count; i++)
                 if (!DaysAvailable[i].HasFlag(DayPlanned))

@@ -106,14 +106,14 @@ namespace GOO.Model.Optimizers.Strategies
         {
             Route routeToWorkWith = new Route(day);
             Route toReturn = new Route(day);
-            foreach (Order order in old_route.Orders)
+            foreach (Order order in toOptimize.Orders)
             {
                 routeToWorkWith.AddOrder(order);
                 toReturn.AddOrder(order);
             }
 
             //start doing the opt-2 algorithm on the route list
-            double best_traveltime = old_route.TravelTime;
+            double best_traveltime = toOptimize.TravelTime;
             double new_traveltime = double.MaxValue;
 
             int improvestep = 0;
@@ -133,7 +133,7 @@ namespace GOO.Model.Optimizers.Strategies
                             best_traveltime = new_traveltime;
 
                             routeToWorkWith = new Route(day);
-                            foreach (Order order in new_route.Orders)
+                            foreach (Order order in toReturn.Orders)
                             {
                                 if (order.OrderNumber != 0)
                                     routeToWorkWith.AddOrder(order);
