@@ -28,9 +28,10 @@ namespace GOO.Model
             DaysRestrictions = new List<Days>();
 
             foreach (Order order in OrdersInCluster)
-                foreach (Days restriction in Data.Orders[order.OrderNumber].DayRestrictions)
-                    if (!DaysRestrictions.Contains(restriction))
-                        DaysRestrictions.Add(restriction);
+                if (order.Frequency != OrderFrequency.PWK1)
+                    foreach (Days restriction in Data.Orders[order.OrderNumber].DayRestrictions)
+                        if (!DaysRestrictions.Contains(restriction))
+                            DaysRestrictions.Add(restriction);
 
             DaysAvailable = DaysRestrictions;
         }

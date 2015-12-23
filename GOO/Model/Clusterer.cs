@@ -75,8 +75,12 @@ namespace GOO.Model
 
                 // Per cluster split based on different order frequencies, ignoring frequency 1
                 // For all of the following splits, logically link the new clusters.
-
-                if (fre3 && !(fre2 || fre4))
+                if (fre2 && !(fre3 || fre4))
+                {
+                    quadrants.Add(new Cluster(new Point()));
+                    quadrants.Add(new Cluster(new Point()));
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                } else if (fre3 && !(fre2 || fre4))
                 {
                     // if only fre 3
                     // split in three clusters
@@ -137,7 +141,7 @@ namespace GOO.Model
                     if (order.X <= centroid.X) // left
                         quadrants[1].AddOrderToCluster(order);
                 }
-                else if (quadrants.Count >= 3)
+                else if (quadrants.Count == 4)
                 {
                     if (order.X >= centroid.X && order.Y >= centroid.Y) // right - up
                         quadrants[0].AddOrderToCluster(order);
@@ -175,6 +179,7 @@ namespace GOO.Model
             if (fre2 && !(fre3 || fre4))
             { // create two groups of fre2 orders, and assign them exclusively
                 multiOrderAssignFre2Excusively(quadrants, fre2Orders1, fre2Orders2);
+                //Add day restriction
             }
             else if (fre3 && !(fre2 || fre4))
             { // randomly assign the fre 3 orders to three clusters
@@ -253,15 +258,9 @@ namespace GOO.Model
             copy.Remove(firstCluster);
             Cluster secondCluster = copy[random.Next(copy.Count)];
             copy.Remove(secondCluster);
-            Cluster thirdCluster = copy[random.Next(copy.Count)];
-            copy.Remove(thirdCluster);
-            Cluster fourthCluster = copy[random.Next(copy.Count)];
-            copy.Remove(fourthCluster);
 
             firstCluster.OrdersInCluster.AddRange(fre2Orders1);
-            secondCluster.OrdersInCluster.AddRange(fre2Orders1);
-            thirdCluster.OrdersInCluster.AddRange(fre2Orders2);
-            fourthCluster.OrdersInCluster.AddRange(fre2Orders2);
+            secondCluster.OrdersInCluster.AddRange(fre2Orders2);
         }
 
         private void multiOrderAssignFre4(List<Cluster> quadrants, List<Order> freOrders)

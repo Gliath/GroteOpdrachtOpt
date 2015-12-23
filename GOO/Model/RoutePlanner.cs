@@ -64,6 +64,9 @@ namespace GOO.Model
 
         public static List<ParentCluster> PlanStartClusters(List<ParentCluster> clusters)
         {
+            #if DEBUG
+                Console.WriteLine("Executing PlanStartClusters!");
+            #endif
             // Step 1. Attempt to assign new days to clusters 
             // Based on weight and traveltime contained per day in a cluster instead?
             // Currently doing it randomly
@@ -79,7 +82,7 @@ namespace GOO.Model
 
             foreach (ParentCluster parent in clusters)
             {
-                for (int i = 0; i < parent.Quadrants.Length; i++)
+                for (int quadrantIndex = 0; quadrantIndex < parent.Quadrants.Length; quadrantIndex++)
                 {
                     bool assigned = false;
                     int numOfTries = 0;
@@ -88,9 +91,7 @@ namespace GOO.Model
                         Days dayToAttempt = days[random.Next(days.Count)];
                         if (parent.CanSetDaysPlanned(dayToAttempt))
                         {
-                            parent.SetDaysPlannedForQuadrant(dayToAttempt, i);
-                            assigned = true;
-                            
+                            assigned = parent.SetDaysPlannedForQuadrant(dayToAttempt, quadrantIndex);
                         }
                         numOfTries++;
                     } while (!assigned && numOfTries < 100);
@@ -129,6 +130,10 @@ namespace GOO.Model
 
         private static List<Route> createAvailableRoutesForDayFromQuadrants(Days day, List<ParentCluster> parents)
         {
+
+#if DEBUG
+            Console.WriteLine("Executing createAvailableRoutesForDayFromQuadrants!");
+#endif
             List<Route> toReturn = new List<Route>();
             foreach (ParentCluster parent in parents)
             {

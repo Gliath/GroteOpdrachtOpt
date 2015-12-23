@@ -34,14 +34,27 @@ namespace GOO.Model
             //    Console.WriteLine("It took {0}ms to generate this solution.", sw.ElapsedMilliseconds);
 
             //}
-            
+#if DEBUG
+            Console.WriteLine("Start generating clusters!");
+#endif
             clusterer = new Clusterer(Data.Orders, k);
             clusters = clusterer.createClusters();
+#if DEBUG
+            Console.WriteLine("Done generating clusters!");
+#endif
 
-            foreach (Cluster cluster in clusters)
-                Console.WriteLine(cluster);
+            //foreach (cluster cluster in clusters)
+            //    console.writeline(cluster);
+#if DEBUG
+            Console.WriteLine("Starting to split clusters!");
+#endif
 
             List<ParentCluster> splitClusters = clusterer.splitClusters(clusters);
+
+#if DEBUG
+            Console.WriteLine("Done splitting clusters!");
+#endif
+
 
             return RoutePlanner.PlanRoutesFromClustersIntoSolution(new Solution(splitClusters), RoutePlanner.PlanStartClusters(splitClusters));
         }
