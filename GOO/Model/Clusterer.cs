@@ -95,7 +95,7 @@ namespace GOO.Model
                     assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
                 }
 
-                else if (fre3 && !(fre3 || fre4))
+                else if (fre3 && !(fre2 || fre4))
                 {
                     // if only fre 3
                     // split in three clusters
