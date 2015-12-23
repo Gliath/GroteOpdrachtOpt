@@ -73,7 +73,32 @@ namespace GOO.Model
         {
             // Step 1. Attempt to assign new days to clusters 
             // Based on weight and traveltime contained per day in a cluster instead?
+            // Currently doing it randomly
+
+            List<Days> days = new List<Days>();
             
+            foreach (Days Day in Enum.GetValues(typeof(Days)))
+            {
+                if (Day == Days.None)
+                    continue;
+                days.Add(Day);
+            }
+
+            foreach (ParentCluster parent in clusters)
+            {
+                for (int i = 0; i < parent.Quadrants.Length; i++)
+                {
+                    bool assigned = false;
+                    do{
+                        Days dayToAttempt = days[random.Next(days.Count)];
+                        if (parent.CanSetDaysPlanned(dayToAttempt))
+                        {
+                            parent.SetDaysPlannedForQuadrant(dayToAttempt, i);
+                            assigned = true;
+                        }
+                    }while(!assigned);
+                }
+            }
 
             // Step 2. Generate Routes for each cluster within the parent cluster
             
