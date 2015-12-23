@@ -35,7 +35,7 @@ namespace GOO.Model
 
             for (int i = 0; i < 3000; i++) // Try to reposition the center-point 3000 times for each cluster
             {
-                assignOrdersToClusters(toReturn, allOrders);
+                assignOrdersToClustersEuclidean(toReturn, allOrders);
                 toReturn.RemoveAll(c => c.OrdersInCluster.Count == 0);
             }
 
@@ -57,7 +57,105 @@ namespace GOO.Model
             return toReturn;
         }
 
-        private void assignOrdersToClusters(List<Cluster> clusters, Dictionary<int, Order> toAssign)
+        public List<Cluster> splitClusters(List<Cluster> toSplit)
+        {
+            List<Cluster> toReturn = new List<Cluster>();
+
+            bool fre2 = false;
+            bool fre3 = false;
+            bool fre4 = false;
+
+            foreach (Cluster cluster in toSplit)
+            {
+                Point centroid = cluster.CenterPoint;
+                List<Cluster> toUse = new List<Cluster>();
+
+                foreach (Order order in cluster.OrdersInCluster)
+                {
+                    if (order.Frequency == OrderFrequency.PWK2)
+                        fre2 = true;
+                    else if (order.Frequency == OrderFrequency.PWK3)
+                        fre3 = true;
+                    else if (order.Frequency == OrderFrequency.PWK4)
+                        fre4 = true;
+                }
+
+                // Per cluster split based on different order frequencies, ignoring frequency 1
+                // For all of the following splits, logically link the new clusters.
+
+                if (fre2 && !(fre3 || fre4))
+                {
+                    // if only fre2
+                    // split in two clusters
+                    // draw grid on centroid to split area in two
+                    toUse.Add(new Cluster(new Point()));
+                    toUse.Add(new Cluster(new Point()));
+                    assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
+                }
+
+                else if (fre3 && !(fre3 || fre4))
+                {
+                    // if only fre 3
+                    // split in three clusters
+                    // draw grid on centroid to split area in four
+                    // and randomly join two of the splitted areas together, as long as they are neighbouring
+
+                    toUse.Add(new Cluster(new Point()));
+                    toUse.Add(new Cluster(new Point()));
+                    toUse.Add(new Cluster(new Point()));
+                    toUse.Add(new Cluster(new Point()));
+                    assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
+
+                    // Fuse two of the returned clusters. TODO : Check if Opposite quadrants are a problem if fused
+
+                }
+
+                else if (fre2 || fre3 || fre4)
+                {
+                    // if any other combination
+                    // split in four clusters
+                    // draw grid on centroid to split area in four
+
+                    toUse.Add(new Cluster(new Point()));
+                    toUse.Add(new Cluster(new Point()));
+                    toUse.Add(new Cluster(new Point()));
+                    toUse.Add(new Cluster(new Point()));
+                    assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
+                }
+
+            }
+            return toReturn;
+        }
+
+        private void assignOrdersToClustersCentroid(List<Cluster> clusters, List<Order> toAssign, Point centroid)
+        {
+            foreach (Order order in toAssign) // TODO : Check if y higher is actually moving up or down
+            {
+                if (clusters.Count == 2)
+                {
+                    if (order.X >= centroid.X) // right
+                        clusters[0].AddOrderToCluster(order);
+                    if (order.X <= centroid.X) // left
+                        clusters[1].AddOrderToCluster(order);
+                }
+                else if (clusters.Count >= 3)
+                {
+                    if (order.X >= centroid.X && order.Y >= centroid.Y) // right - up
+                        clusters[0].AddOrderToCluster(order);
+
+                    if (order.X >= centroid.X && order.Y <= centroid.Y) // right - down
+                        clusters[1].AddOrderToCluster(order);
+
+                    if (order.X <= centroid.X && order.Y >= centroid.Y) // left - up
+                        clusters[2].AddOrderToCluster(order);
+
+                    if (order.X <= centroid.X && order.Y <= centroid.Y) // left - down
+                        clusters[3].AddOrderToCluster(order);
+                }
+            }
+        }
+
+        private void assignOrdersToClustersEuclidean(List<Cluster> clusters, Dictionary<int, Order> toAssign)
         {
             // Grouping orders based on Euclidean distance method
             // Note : calculating the root is currently not neccessary due to look at relative points
