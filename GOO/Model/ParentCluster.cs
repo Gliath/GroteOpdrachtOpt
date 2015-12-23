@@ -99,7 +99,7 @@ namespace GOO.Model
             }
 
             DaysAvailable = previousDaysAvailable;
-            Quadrants[QuadrantNumber].DaysPlannedFor = DaysPlannedFor;
+            Quadrants[QuadrantNumber].DaysPlannedFor = DaysPlanned;
 
             for (int i = 0; i < DaysAvailable.Count; i++)
                 if (!DaysAvailable[i].HasFlag(DayPlanned))
