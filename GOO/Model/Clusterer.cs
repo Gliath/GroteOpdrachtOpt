@@ -111,20 +111,16 @@ namespace GOO.Model
                     // Fuse two of the returned clusters. TODO : Check if Opposite quadrants are a problem if fused
                     int randomq1 = random.Next(toUse.Count);
                     Cluster q1 = toUse[randomq1];
-                    
+
                     int randomq2 = -1;
                     do
-                    {
                         randomq2 = random.Next(toUse.Count);
-                    } while (randomq2 < 0 && randomq1 == randomq2);
-                    
-                    Cluster q2 = toUse[randomq2];
+                    while (randomq1 == randomq2);
 
+                    Cluster q2 = toUse[randomq2];
                     foreach (Order order in q2.OrdersInCluster)
-	                {
                         if (!q1.OrdersInCluster.Contains(order))
                             q1.OrdersInCluster.Add(order);
-	                }
 
                     toUse.Remove(q2);
                 }
@@ -173,17 +169,53 @@ namespace GOO.Model
                 }
             }
 
+            // Fuse two clusters. But first check if it's needed
+            bool shouldNotFuseClusters = false;
+            foreach (Cluster cluster in clusters)
+            {
+                foreach (Order order in cluster.OrdersInCluster)
+                {
+                    if (order.Frequency != OrderFrequency.PWK3 && order.Frequency != OrderFrequency.PWK1)
+                    {
+                        shouldNotFuseClusters = true;
+                        break;
+                    }
+                }
+
+                if (shouldNotFuseClusters)
+                    break;
+            }
+
+            if (!shouldNotFuseClusters)
+            {
+                int firstQuadrantIndex = random.Next(clusters.Count);
+                Cluster firstQuadrant = clusters[firstQuadrantIndex];
+
+                int secondQuadrantIndex = -1;
+                do
+                    secondQuadrantIndex = random.Next(clusters.Count);
+                while (firstQuadrantIndex == secondQuadrantIndex);
+
+                Cluster secondQuadrant = clusters[secondQuadrantIndex];
+                foreach (Order order in secondQuadrant.OrdersInCluster)
+                    if (!firstQuadrant.OrdersInCluster.Contains(order))
+                        firstQuadrant.OrdersInCluster.Add(order);
+
+                clusters.Remove(secondQuadrant);
+            }
+
             foreach (Order order in toAssign)
             {
                 if (order.FrequencyNumber > 1)
                 {
-                    for (int i = 0; i < order.FrequencyNumber-1; i++)
+                    for (int i = 0; i < order.FrequencyNumber - 1; i++)
                     {
                         int j = 0;
                         bool inserted = false;
                         do
                         {
-                            if (!clusters[j].OrdersInCluster.Contains(order)) { 
+                            if (!clusters[j].OrdersInCluster.Contains(order))
+                            {
                                 clusters[j].OrdersInCluster.Add(order);
                                 inserted = true;
                             }
