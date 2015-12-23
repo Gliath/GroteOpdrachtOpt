@@ -107,6 +107,22 @@ namespace GOO.Model
                     toUse.Add(new Cluster(new Point()));
                     toUse.Add(new Cluster(new Point()));
                     assignOrdersToClustersCentroid(toUse, cluster.OrdersInCluster, centroid);
+
+                    // Fuse two of the returned clusters. TODO : Check if Opposite quadrants are a problem if fused
+                    int randomq1 = random.Next(toUse.Count);
+                    Cluster q1 = toUse[randomq1];
+
+                    int randomq2 = -1;
+                    do
+                        randomq2 = random.Next(toUse.Count);
+                    while (randomq1 == randomq2);
+
+                    Cluster q2 = toUse[randomq2];
+                    foreach (Order order in q2.OrdersInCluster)
+                        if (!q1.OrdersInCluster.Contains(order))
+                            q1.OrdersInCluster.Add(order);
+
+                    toUse.Remove(q2);
                 }
 
                 else if (fre2 || fre3 || fre4)
