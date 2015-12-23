@@ -14,7 +14,8 @@ namespace GOO.Model
         public Point CentroidPoint { get; private set; }
         public override List<Order> OrdersInCluster { get; set; }
         public override Days DaysPlannedFor { get; set; } // available days
-        public List<Days> DaysAvailable { get; set; } // available days
+        public List<Days> DaysRestrictions { get; set; }
+        public List<Days> DaysAvailable { get; set; }
 
         public override List<Route> Routes { get { return null; } set { return; } } // Not implemented in parent cluster
 
@@ -24,13 +25,14 @@ namespace GOO.Model
             this.OrdersInCluster = OrdersInCluster;
             this.Quadrants = Quadrants;
 
-
-            DaysAvailable = new List<Days>();
+            DaysRestrictions = new List<Days>();
 
             foreach (Order order in OrdersInCluster)
                 foreach (Days restriction in Data.Orders[order.OrderNumber].DayRestrictions)
-                    if (!DaysAvailable.Contains(restriction))
-                        DaysAvailable.Add(restriction);
+                    if (!DaysRestrictions.Contains(restriction))
+                        DaysRestrictions.Add(restriction);
+
+            DaysAvailable = DaysRestrictions;
         }
 
         public bool CanSetDaysPlanned(Days DayPlanned)
@@ -47,6 +49,55 @@ namespace GOO.Model
             if (!CanSetDaysPlanned(DayPlanned))
                 return;
 
+            Quadrants[QuadrantNumber].DaysPlannedFor = DaysPlannedFor;
+
+            for (int i = 0; i < DaysAvailable.Count; i++)
+                if (!DaysAvailable[i].HasFlag(DayPlanned))
+                    DaysAvailable.Remove(DaysAvailable[i]);
+                else
+                    DaysAvailable[i] ^= DayPlanned; // Removes the day from availability
+
+            if (DaysAvailable.Count == 1)
+            {
+                int numOfUnassignedClusters = 0;
+                foreach (Cluster quadrant in Quadrants)
+                    if (quadrant.DaysPlannedFor == Days.None)
+                        numOfUnassignedClusters++;
+
+                if (numOfUnassignedClusters == 1)
+                    foreach (Cluster quadrant in Quadrants)
+                        if (quadrant.DaysPlannedFor == Days.None)
+                            quadrant.DaysPlannedFor = DaysAvailable[0]; // Only one item left so assign it
+            }
+        }
+
+        public void ReassignDaysPlannedForQuadrant(Days DayPlanned, int QuadrantNumber)
+        {
+            if (Quadrants[QuadrantNumber].DaysPlannedFor == Days.None)
+                return;
+
+            List<Days> previousDaysAvailable = DaysRestrictions;
+            for (int i = 0; i < Quadrants.Length; i++)
+            {
+                if (i == QuadrantNumber || Quadrants[i].DaysPlannedFor == Days.None)
+                    continue;
+
+                for (int index = 0; index < previousDaysAvailable.Count; index++)
+                    if (!previousDaysAvailable[index].HasFlag(DayPlanned))
+                        previousDaysAvailable.Remove(previousDaysAvailable[index]);
+                    else
+                        previousDaysAvailable[index] ^= DayPlanned; // Removes the day from availability
+
+                bool canPlanDay = false;
+                foreach (Days dayAvailable in previousDaysAvailable)
+                    if (dayAvailable.HasFlag(DayPlanned))
+                        canPlanDay = true;
+
+                if (!canPlanDay)
+                    return;
+            }
+
+            DaysAvailable = previousDaysAvailable;
             Quadrants[QuadrantNumber].DaysPlannedFor = DaysPlannedFor;
 
             for (int i = 0; i < DaysAvailable.Count; i++)
