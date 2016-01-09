@@ -46,7 +46,7 @@ namespace GOO.Model
         {
             int IndexOfOrderToInsertAfter = Orders.FindIndex(o => o.OrderNumber == orderToInsertAfter.OrderNumber);
 
-            if (IndexOfOrderToInsertAfter == Orders.Count - 2)
+            if (IndexOfOrderToInsertAfter > Orders.Count - 2)
             {
                 AddOrder(newOrder);
                 return;
