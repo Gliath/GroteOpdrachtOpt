@@ -72,9 +72,9 @@ namespace GOO.Model.Optimizers.Strategies
                 improvestep++;
             }
 
-            Console.WriteLine("OPT2");
-            Console.WriteLine("Old Travel Time:  {0}", old_route.TravelTime);
-            Console.WriteLine("Best Travel Time: {0}", best_traveltime);
+            //Console.WriteLine("OPT2");
+            //Console.WriteLine("Old Travel Time:  {0}", old_route.TravelTime);
+            //Console.WriteLine("Best Travel Time: {0}", best_traveltime);
 
             RoutesFromSolution.Remove(old_route);
             RoutesFromSolution.Add(new_route);

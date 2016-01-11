@@ -12,7 +12,7 @@ namespace GOO.Model
 
         public static Solution PlanRoutesFromClustersIntoSolution(Solution solution, List<AbstractCluster> clusters)
         {
-            Console.WriteLine("Planning routes into solution!");
+            //Console.WriteLine("Planning routes into solution!");
 
             bool listAreParentClusters = false;
             List<ParentCluster> parentClusters = new List<ParentCluster>();
@@ -77,16 +77,13 @@ namespace GOO.Model
                 }
             }
 
-            Console.WriteLine("Done with planning routes into solution!");
+            //Console.WriteLine("Done with planning routes into solution!");
 
             return solution;
         }
 
         public static List<ParentCluster> PlanStartClusters(List<ParentCluster> clusters)
         {
-            #if DEBUG
-            Console.WriteLine("Executing PlanStartClusters!");
-            #endif
             // Step 1. Attempt to assign new days to clusters 
             // Based on weight and traveltime contained per day in a cluster instead?
             // Currently doing it randomly
@@ -178,17 +175,14 @@ namespace GOO.Model
                             Concubine.RemoveRouteFromCluster(HaremRoute);
                     }
 
-                    if (!hasAddedAnRoute)
-                        Console.WriteLine("A route has been removed from the clusters");
+                    //if (!hasAddedAnRoute)
+                    //    Console.WriteLine("A route has been removed from the clusters");
                 }
             }
         }
 
         private static List<Route> createAvailableRoutesForDayFromQuadrants(Days day, List<ParentCluster> parents)
         {
-            #if DEBUG
-            Console.WriteLine("Executing createAvailableRoutesForDayFromQuadrants!");
-            #endif
             List<Route> toReturn = new List<Route>();
             foreach (ParentCluster parent in parents)
                 foreach (Cluster quadrant in parent.Quadrants)
@@ -202,9 +196,6 @@ namespace GOO.Model
 
         private static List<Route> createAvailableRoutesForDayFromHarem(Days day, List<MarriedCluster> haremClusters)
         {
-            #if DEBUG
-            Console.WriteLine("Executing createAvailableRoutesForDayFromQuadrants!");
-            #endif
             List<Route> toReturn = new List<Route>();
             foreach (MarriedCluster haremCluster in haremClusters)
                 foreach (Cluster concubine in haremCluster.Harem)

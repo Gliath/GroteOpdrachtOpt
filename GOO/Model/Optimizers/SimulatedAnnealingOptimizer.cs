@@ -44,14 +44,13 @@ namespace GOO.Model.Optimizers
 
                 // Phase 4 : Accept or reject new solution
                 if (Phase4(currentSolution)) // New Solution accepted
+                {
+                    Console.WriteLine("Found a better solution. \nOld score: {0:N} \nNew score: {1:N}", startSolution.GetSolutionScore(), currentSolution.GetSolutionScore());
                     startSolution = currentSolution;
+                }
                 else // New solution rejected
                     currentSolution = startSolution;
             }
-            /*
-             * Phase1
-             * Phase2RouteGeneration
-             */
 
             return currentSolution;
         }

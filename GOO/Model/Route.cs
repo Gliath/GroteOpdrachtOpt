@@ -46,7 +46,10 @@ namespace GOO.Model
         {
             int IndexOfOrderToInsertAfter = Orders.FindIndex(o => o.OrderNumber == orderToInsertAfter.OrderNumber);
 
-            if (IndexOfOrderToInsertAfter > Orders.Count - 2)
+            if (IndexOfOrderToInsertAfter == -1) // Could not find the order or insert the new order after the 0 order
+                return;
+
+            if (IndexOfOrderToInsertAfter >= Orders.Count - 2)
             {
                 AddOrder(newOrder);
                 return;
@@ -85,6 +88,9 @@ namespace GOO.Model
         {
             int indexOfA = Orders.FindIndex(o => o.OrderNumber == A.OrderNumber);
             int indexOfB = Orders.FindIndex(o => o.OrderNumber == B.OrderNumber);
+
+            if (indexOfA == -1 || indexOfB == -1)
+                return;
 
             if (indexOfA > indexOfB)
             {
