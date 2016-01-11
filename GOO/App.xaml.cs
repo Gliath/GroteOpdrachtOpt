@@ -27,13 +27,9 @@ namespace GOO
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            // Only following lines are needed in final solution:
-            // MainViewModel mainVM = new MainViewModel();
-            // new MainView() { DataContext = mainVM }.Show();
-            // mainVM.InitialRun();
-
             AllocConsole();
 
+            #if DEBUG
             Console.WriteLine("Program booting up...");
             FilesInitializer.InitializeFiles();
             Console.WriteLine("Files have been processed");
@@ -41,7 +37,7 @@ namespace GOO
             Stopwatch sw = Stopwatch.StartNew();
             Solution start = Solver.generateSolution();
             sw.Stop();
-            
+            /*
             Console.WriteLine("Elapsed time for generating begin solution: {0}ms", sw.ElapsedMilliseconds);
 
             string THE_SOLUTION_STRING = start.ToString();
@@ -61,6 +57,14 @@ namespace GOO
             Console.WriteLine(THE_NEW_STRING);
             Console.WriteLine("End New Solution");
             Console.WriteLine("Elapsed time for generating begin solution: {0}ms", sw.ElapsedMilliseconds);
+            */ 
+            #endif
+
+            #if !DEBUG
+            MainViewModel mainVM = new MainViewModel();
+            new MainView() { DataContext = mainVM }.Show();
+            System.Threading.Tasks.Task.Factory.StartNew(() => mainVM.InitialRun());
+            #endif
 
             // Run Optimizers
         }

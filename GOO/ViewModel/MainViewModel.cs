@@ -24,30 +24,44 @@ namespace GOO.ViewModel
         private void SolveSolution()
         {
             Solution solution = null;
-
-            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+            System.Diagnostics.Stopwatch sw = null;
+            long BasicSolutionGenerationTimeInMiliSeconds = 0;
+            long OptimizedSolutionGenerationTimeInMiliSeconds = 0;
+            double BasicSolutionScore = 0.0;
+            double OptimizedSolutionScore = 0.0;
+            string basicSolutionString = "";
+            string optimizedSolutionString = "";
+            
+            sw = System.Diagnostics.Stopwatch.StartNew();
             // Solution.GenerateBasicSolution();
             solution = Solver.generateSolution();
             sw.Stop();
-            long BasicSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
-            string basicSolutionString = solution.ToString();
+            BasicSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
+            BasicSolutionScore = solution.GetSolutionScore();
+            basicSolutionString = solution.ToString();
+            Console.ReadKey();
 
+            // Determine Maxprogress (get SAO variables)
+            // update Progress along the way
             sw.Restart();
             // Solution.GenerateOptimizedSolution();
             solution = Solver.optimizeSolution(solution);
             sw.Stop();
-            long OptimizedSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
-            string optimizedSolutionString = solution.ToString();
-
+            OptimizedSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
+            OptimizedSolutionScore = solution.GetSolutionScore();
+            optimizedSolutionString = solution.ToString();
+            
             System.Windows.MessageBox.Show(
-                String.Format("The basic solution generated in: {0}ms\nThe optimized solution generated in: {1}ms\n",
-                    BasicSolutionGenerationTimeInMiliSeconds, OptimizedSolutionGenerationTimeInMiliSeconds),
+                String.Format("The basic solution generated in: {0}ms with a score of: {1}\nThe optimized solution generated in: {2}ms with a score of: {3}",
+                    BasicSolutionGenerationTimeInMiliSeconds, BasicSolutionScore, OptimizedSolutionGenerationTimeInMiliSeconds, OptimizedSolutionScore),
                 "Solution Generation", System.Windows.MessageBoxButton.OK);
 
-            SaveSolution(basicSolutionString, optimizedSolutionString);
+            System.Windows.MessageBoxResult SaveSolutions = System.Windows.MessageBox.Show(
+                "Do you want to save your solutions?", "Save your solutions?", System.Windows.MessageBoxButton.YesNo);
+            if(SaveSolutions == System.Windows.MessageBoxResult.Yes)
+                SaveSolution(basicSolutionString, optimizedSolutionString);
 
-            System.Windows.MessageBoxResult confirmResult = System.Windows.MessageBox.Show("Do you want to exit the application?", "Exit confirmation", System.Windows.MessageBoxButton.YesNo);
-
+            System.Windows.MessageBoxResult confirmResult = System.Windows.MessageBox.Show("Do you want to exit the application or run the application again?", "Exit confirmation", System.Windows.MessageBoxButton.YesNo);
             if (confirmResult == System.Windows.MessageBoxResult.No)
                 SolveSolution();
         }
@@ -68,7 +82,7 @@ namespace GOO.ViewModel
 
                 Microsoft.Win32.SaveFileDialog sfdOptimizedSolution = new Microsoft.Win32.SaveFileDialog();
                 sfdOptimizedSolution.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                sfdOptimizedSolution.FileName = "StartSolution";
+                sfdOptimizedSolution.FileName = "OptimizedSolution";
                 sfdOptimizedSolution.DefaultExt = ".txt";
                 sfdOptimizedSolution.Filter = "Text documents (.txt)|*.txt";
 
