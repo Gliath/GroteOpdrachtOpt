@@ -43,6 +43,11 @@ namespace GOO.Model
             }
         }
 
+        public List<Tuple<Days, int, List<Route>>> getEntirePlanning()
+        {
+            return this.truckPlanning;
+        }
+
         private void updateOrdersCounterAfterRemoval(List<Route> removedRoutes)
         {
             foreach (Route route in removedRoutes)
