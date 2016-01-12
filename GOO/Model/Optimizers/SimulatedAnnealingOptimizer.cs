@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using GOO.Model;
 using GOO.Model.Optimizers.Strategies;
+using GOO.Utilities;
 
 namespace GOO.Model.Optimizers
 {
@@ -28,7 +29,18 @@ namespace GOO.Model.Optimizers
 
         public Solution runOptimizer(Solution startSolution)
         {
-            Solution currentSolution = startSolution;
+            Solution currentSolution = new Solution(startSolution.getAllClusters());
+            
+            foreach (Tuple<Days, int, List<Route>> t in startSolution.getEntirePlanning())
+            {
+                List<Route> copyRoute = new List<Route>();
+                foreach (Route r in t.Item3)
+                {
+                    copyRoute.Add(r);
+                }
+                currentSolution.AddNewItemToPlanning(t.Item1, t.Item2, copyRoute);
+            }
+
             oldSolutionScore = startSolution.GetSolutionScore();
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
@@ -47,13 +59,28 @@ namespace GOO.Model.Optimizers
                 // Phase 4 : Accept or reject new solution
                 if (Phase4(currentSolution)) // New Solution accepted
                 {
+                    Console.WriteLine("Found a better solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
                     startSolution = currentSolution;
                     oldSolutionScore = newSolutionScore;
 
-                    Console.WriteLine("Found a better solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
+                    currentSolution = new Solution(startSolution.getAllClusters());
+
+                    foreach (Tuple<Days, int, List<Route>> t in startSolution.getEntirePlanning())
+                    {
+                        List<Route> copyRoute = new List<Route>();
+                        foreach (Route r in t.Item3)
+                        {
+                            copyRoute.Add(r);
+                        }
+                        currentSolution.AddNewItemToPlanning(t.Item1, t.Item2, copyRoute);
+                    }
                 }
-                else // New solution rejected
+                else
+                {// New solution rejected
+                    Console.WriteLine("Did not find a better solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
                     currentSolution = startSolution;
+                }
+
             }
 
             Console.WriteLine("SimulatedAnnealingOptimizer : Done optimizing solution!");
@@ -118,7 +145,7 @@ namespace GOO.Model.Optimizers
 
         private bool Phase4(Solution toAcceptOrReject) // Accept Solution or not
         {
-            double deltaScore = Math.Abs(oldSolutionScore - newSolutionScore);
+            double deltaScore = oldSolutionScore - newSolutionScore;
             double chanceToBeAccepted = Math.Pow(theX, (deltaScore / annealingSchedule.AnnealingTemperature));
 
             return deltaScore > 0 || random.NextDouble() <= chanceToBeAccepted;
