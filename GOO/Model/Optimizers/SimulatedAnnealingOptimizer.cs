@@ -55,29 +55,28 @@ namespace GOO.Model.Optimizers
                 // Phase 3 : Assign routes to truckers
                 currentSolution = Phase3(currentSolution, newClusters); // TODO : MAKE SURE THE NEW ROUTES ARE ADDED IN THE RIGHT CLUSTER
                 newSolutionScore = currentSolution.GetSolutionScore();
+                Console.WriteLine("Found a new solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
 
                 // Phase 4 : Accept or reject new solution
                 if (Phase4(currentSolution)) // New Solution accepted
                 {
-                    Console.WriteLine("Found a better solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
                     startSolution = currentSolution;
                     oldSolutionScore = newSolutionScore;
-
                     currentSolution = new Solution(startSolution.getAllClusters());
+                    Console.WriteLine("The solution is better");
 
                     foreach (Tuple<Days, int, List<Route>> t in startSolution.getEntirePlanning())
                     {
                         List<Route> copyRoute = new List<Route>();
                         foreach (Route r in t.Item3)
-                        {
                             copyRoute.Add(r);
-                        }
+
                         currentSolution.AddNewItemToPlanning(t.Item1, t.Item2, copyRoute);
                     }
                 }
                 else
                 {// New solution rejected
-                    Console.WriteLine("Did not find a better solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
+                    Console.WriteLine("The solution is not better");
                     currentSolution = startSolution;
                 }
 
