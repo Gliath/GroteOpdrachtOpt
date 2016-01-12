@@ -29,6 +29,7 @@ namespace GOO.Model.Optimizers
         public Solution runOptimizer(Solution startSolution)
         {
             Solution currentSolution = startSolution;
+            oldSolutionScore = startSolution.GetSolutionScore();
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
@@ -41,16 +42,21 @@ namespace GOO.Model.Optimizers
 
                 // Phase 3 : Assign routes to truckers
                 currentSolution = Phase3(currentSolution, newClusters); // TODO : MAKE SURE THE NEW ROUTES ARE ADDED IN THE RIGHT CLUSTER
+                newSolutionScore = currentSolution.GetSolutionScore();
 
                 // Phase 4 : Accept or reject new solution
                 if (Phase4(currentSolution)) // New Solution accepted
                 {
-                    Console.WriteLine("Found a better solution. \nOld score: {0:N} \nNew score: {1:N}", startSolution.GetSolutionScore(), currentSolution.GetSolutionScore());
                     startSolution = currentSolution;
+                    oldSolutionScore = newSolutionScore;
+
+                    Console.WriteLine("Found a better solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
                 }
                 else // New solution rejected
                     currentSolution = startSolution;
             }
+
+            Console.WriteLine("SimulatedAnnealingOptimizer : Done optimizing solution!");
 
             return currentSolution;
         }

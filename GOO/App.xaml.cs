@@ -37,6 +37,11 @@ namespace GOO
             Stopwatch sw = Stopwatch.StartNew();
             Solution start = Solver.generateSolution();
             sw.Stop();
+
+            sw.Restart();
+            start = Solver.optimizeSolution(start);
+            sw.Stop();
+
             /*
             Console.WriteLine("Elapsed time for generating begin solution: {0}ms", sw.ElapsedMilliseconds);
 
