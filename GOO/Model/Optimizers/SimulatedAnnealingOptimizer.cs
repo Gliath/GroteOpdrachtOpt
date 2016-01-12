@@ -35,9 +35,8 @@ namespace GOO.Model.Optimizers
             {
                 List<Route> copyRoute = new List<Route>();
                 foreach (Route r in t.Item3)
-                {
                     copyRoute.Add(r);
-                }
+
                 currentSolution.AddNewItemToPlanning(t.Item1, t.Item2, copyRoute);
             }
 
@@ -74,8 +73,8 @@ namespace GOO.Model.Optimizers
                         currentSolution.AddNewItemToPlanning(t.Item1, t.Item2, copyRoute);
                     }
                 }
-                else
-                {// New solution rejected
+                else // New solution rejected
+                {
                     Console.WriteLine("The solution is not better");
                     currentSolution = startSolution;
                 }
@@ -139,6 +138,7 @@ namespace GOO.Model.Optimizers
 
         private Solution Phase3(Solution toStartFrom, List<AbstractCluster> clustersToPlan) // Distribute routes to truckers
         {
+            toStartFrom.clearTruckPlanning();
             return RoutePlanner.PlanRoutesFromClustersIntoSolution(toStartFrom, clustersToPlan);
         }
 

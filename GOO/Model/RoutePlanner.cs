@@ -33,7 +33,7 @@ namespace GOO.Model
             foreach (Days Day in Enum.GetValues(typeof(Days)))
             {
                 if (Day != Days.None)
-                    if(listAreParentClusters)
+                    if (listAreParentClusters)
                         DayRoutes.Add(Day, createAvailableRoutesForDayFromQuadrants(Day, parentClusters));
                     else
                         DayRoutes.Add(Day, createAvailableRoutesForDayFromHarem(Day, marriedClusters));
@@ -148,7 +148,7 @@ namespace GOO.Model
 
             foreach (MarriedCluster Couple in Couples)
             {
-                foreach(Route HaremRoute in Couple.Routes)
+                foreach (Route HaremRoute in Couple.Routes)
                 {
                     bool hasAddedAnRoute = false;
 

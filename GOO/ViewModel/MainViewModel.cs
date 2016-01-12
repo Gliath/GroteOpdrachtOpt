@@ -23,6 +23,7 @@ namespace GOO.ViewModel
 
         private void SolveSolution()
         {
+            // Initialization
             Solution solution = null;
             System.Diagnostics.Stopwatch sw = null;
             long BasicSolutionGenerationTimeInMiliSeconds = 0;
@@ -32,6 +33,7 @@ namespace GOO.ViewModel
             string basicSolutionString = "";
             string optimizedSolutionString = "";
             
+            // Start generating basic solution
             sw = System.Diagnostics.Stopwatch.StartNew();
             // Solution.GenerateBasicSolution();
             solution = Solver.generateSolution();
@@ -40,9 +42,11 @@ namespace GOO.ViewModel
             BasicSolutionScore = solution.GetSolutionScore();
             basicSolutionString = solution.ToString();
             Console.ReadKey();
+            // Basic solution generated.
 
             // Determine Maxprogress (get SAO variables)
             // update Progress along the way
+            // Optimized basic solution
             sw.Restart();
             // Solution.GenerateOptimizedSolution();
             solution = Solver.optimizeSolution(solution);
@@ -50,6 +54,7 @@ namespace GOO.ViewModel
             OptimizedSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
             OptimizedSolutionScore = solution.GetSolutionScore();
             optimizedSolutionString = solution.ToString();
+            // Solution optimized
             
             System.Windows.MessageBox.Show(
                 String.Format("The basic solution generated in: {0}ms with a score of: {1}\nThe optimized solution generated in: {2}ms with a score of: {3}",

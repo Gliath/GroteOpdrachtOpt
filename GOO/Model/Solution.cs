@@ -71,6 +71,12 @@ namespace GOO.Model
             }
         }
 
+        public void clearTruckPlanning()
+        {
+            truckPlanning.Clear();
+            ordersCounter.ClearAllOccurences();
+        }
+
         public Tuple<Days, int, List<Route>> getPlanningForATruck(Days day, int truckID)
         {
             return this.truckPlanning.Find(t => t.Item1 == day && t.Item2 == truckID);
@@ -148,7 +154,6 @@ namespace GOO.Model
 
         private int DayInt(Days day)
         {
-
             switch (day)
             {
                 case Days.Monday:

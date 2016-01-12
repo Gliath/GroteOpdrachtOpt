@@ -53,8 +53,6 @@ namespace GOO.Model.Optimizers.Strategies
 
         public List<AbstractCluster> undoStrategy(Solution toStartFrom)
         {
-
-
             return OriginalClusters;
         }
 
