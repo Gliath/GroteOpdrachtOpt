@@ -32,7 +32,7 @@ namespace GOO.ViewModel
             double OptimizedSolutionScore = 0.0;
             string basicSolutionString = "";
             string optimizedSolutionString = "";
-            
+
             // Start generating basic solution
             sw = System.Diagnostics.Stopwatch.StartNew();
             // Solution.GenerateBasicSolution();
@@ -64,7 +64,7 @@ namespace GOO.ViewModel
 
             System.Windows.MessageBoxResult SaveSolutions = System.Windows.MessageBox.Show(
                 "Do you want to save your solutions?", "Save your solutions?", System.Windows.MessageBoxButton.YesNo);
-            if(SaveSolutions == System.Windows.MessageBoxResult.Yes)
+            if (SaveSolutions == System.Windows.MessageBoxResult.Yes)
                 SaveSolution(basicSolutionString, optimizedSolutionString);
 
             System.Windows.MessageBoxResult confirmResult = System.Windows.MessageBox.Show("Do you want to exit the application or run the application again?", "Exit confirmation", System.Windows.MessageBoxButton.YesNo);
@@ -85,19 +85,19 @@ namespace GOO.ViewModel
             {
                 string filename = sfdStartSolution.FileName;
                 System.IO.File.WriteAllText(filename, basicSolutionString);
+            }
 
-                Microsoft.Win32.SaveFileDialog sfdOptimizedSolution = new Microsoft.Win32.SaveFileDialog();
-                sfdOptimizedSolution.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                sfdOptimizedSolution.FileName = "OptimizedSolution";
-                sfdOptimizedSolution.DefaultExt = ".txt";
-                sfdOptimizedSolution.Filter = "Text documents (.txt)|*.txt";
+            Microsoft.Win32.SaveFileDialog sfdOptimizedSolution = new Microsoft.Win32.SaveFileDialog();
+            sfdOptimizedSolution.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            sfdOptimizedSolution.FileName = "OptimizedSolution";
+            sfdOptimizedSolution.DefaultExt = ".txt";
+            sfdOptimizedSolution.Filter = "Text documents (.txt)|*.txt";
 
-                result = sfdOptimizedSolution.ShowDialog();
-                if (result == true)
-                {
-                    filename = sfdOptimizedSolution.FileName;
-                    System.IO.File.WriteAllText(filename, optimizedSolutionString);
-                }
+            result = sfdOptimizedSolution.ShowDialog();
+            if (result == true)
+            {
+                string filename = sfdOptimizedSolution.FileName;
+                System.IO.File.WriteAllText(filename, optimizedSolutionString);
             }
         }
 
