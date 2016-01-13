@@ -38,7 +38,7 @@ namespace GOO
             Solution start = Solver.generateSolution();
             sw.Stop();
 
-            Console.WriteLine("Elapsed time for generating begin solution: {0}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine("Elapsed time for generating begin solution: {0:N}ms", sw.ElapsedMilliseconds);
 
             string THE_SOLUTION_STRING = start.ToString();
 
@@ -56,7 +56,9 @@ namespace GOO
             Console.WriteLine("Start New Solution:");
             Console.WriteLine(THE_NEW_STRING);
             Console.WriteLine("End New Solution");
-            Console.WriteLine("Elapsed time for generating begin solution: {0}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine("Elapsed time for generating optimized solution: {0:N}ms", sw.ElapsedMilliseconds);
+
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/OptimizedSolution.txt", THE_NEW_STRING);
             #endif
 
             #if !DEBUG

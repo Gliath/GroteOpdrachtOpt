@@ -78,7 +78,6 @@ namespace GOO.Model.Optimizers
                     Console.WriteLine("The solution is not better");
                     currentSolution = startSolution;
                 }
-
             }
 
             Console.WriteLine("SimulatedAnnealingOptimizer : Done optimizing solution!");

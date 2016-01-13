@@ -18,7 +18,7 @@ namespace GOO.ViewModel
             FilesInitializer.InitializeFiles();
             SolveSolution();
 
-            System.Environment.Exit(0);
+            Environment.Exit(0);
         }
 
         private void SolveSolution()
@@ -41,7 +41,6 @@ namespace GOO.ViewModel
             BasicSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
             BasicSolutionScore = solution.GetSolutionScore();
             basicSolutionString = solution.ToString();
-            Console.ReadKey();
             // Basic solution generated.
 
             // Determine Maxprogress (get SAO variables)
@@ -55,9 +54,11 @@ namespace GOO.ViewModel
             OptimizedSolutionScore = solution.GetSolutionScore();
             optimizedSolutionString = solution.ToString();
             // Solution optimized
-            
+
+            Console.WriteLine("Elapsed time for generating begin solution: {0:N}ms", BasicSolutionGenerationTimeInMiliSeconds);
+            Console.WriteLine("Elapsed time for generating optimized solution: {0:N}ms", OptimizedSolutionGenerationTimeInMiliSeconds);
             System.Windows.MessageBox.Show(
-                String.Format("The basic solution generated in: {0}ms with a score of: {1}\nThe optimized solution generated in: {2}ms with a score of: {3}",
+                String.Format("The basic solution generated in: {0:N}ms with a score of: {1:N}\nThe optimized solution generated in: {2:N}ms with a score of: {3:N}",
                     BasicSolutionGenerationTimeInMiliSeconds, BasicSolutionScore, OptimizedSolutionGenerationTimeInMiliSeconds, OptimizedSolutionScore),
                 "Solution Generation", System.Windows.MessageBoxButton.OK);
 
