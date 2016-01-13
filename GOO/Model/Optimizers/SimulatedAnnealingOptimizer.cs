@@ -9,18 +9,13 @@ namespace GOO.Model.Optimizers
 {
     public class SimulatedAnnealingOptimizer
     {
-        private static double theX;
-
         private AnnealingSchedule annealingSchedule;
         private Random random;
         private double oldSolutionScore;
         private double newSolutionScore;
 
-
         public SimulatedAnnealingOptimizer()
         {
-            theX = 2d;
-
             annealingSchedule = new AnnealingSchedule();
             random = new Random();
             oldSolutionScore = Double.MaxValue;
@@ -54,7 +49,7 @@ namespace GOO.Model.Optimizers
                 // Phase 3 : Assign routes to truckers
                 currentSolution = Phase3(currentSolution, newClusters); // TODO : MAKE SURE THE NEW ROUTES ARE ADDED IN THE RIGHT CLUSTER
                 newSolutionScore = currentSolution.GetSolutionScore();
-                Console.WriteLine("Found a new solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
+                //Console.WriteLine("Found a new solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
 
                 // Phase 4 : Accept or reject new solution
                 if (Phase4(currentSolution)) // New Solution accepted
@@ -62,7 +57,7 @@ namespace GOO.Model.Optimizers
                     startSolution = currentSolution;
                     oldSolutionScore = newSolutionScore;
                     currentSolution = new Solution(startSolution.getAllClusters());
-                    Console.WriteLine("The solution is better");
+                    //Console.WriteLine("The solution is better");
 
                     foreach (Tuple<Days, int, List<Route>> t in startSolution.getEntirePlanning())
                     {
@@ -75,12 +70,12 @@ namespace GOO.Model.Optimizers
                 }
                 else // New solution rejected
                 {
-                    Console.WriteLine("The solution is not better");
+                    //Console.WriteLine("The solution is not better");
                     currentSolution = startSolution;
                 }
             }
 
-            Console.WriteLine("SimulatedAnnealingOptimizer : Done optimizing solution!");
+            //Console.WriteLine("SimulatedAnnealingOptimizer : Done optimizing solution!");
 
             return currentSolution;
         }
@@ -144,7 +139,7 @@ namespace GOO.Model.Optimizers
         private bool Phase4(Solution toAcceptOrReject) // Accept Solution or not
         {
             double deltaScore = oldSolutionScore - newSolutionScore;
-            double chanceToBeAccepted = Math.Pow(theX, (deltaScore / annealingSchedule.AnnealingTemperature));
+            double chanceToBeAccepted = Math.Exp(deltaScore / annealingSchedule.AnnealingTemperature);
 
             return deltaScore > 0 || random.NextDouble() <= chanceToBeAccepted;
         }
