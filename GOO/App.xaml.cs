@@ -57,6 +57,9 @@ namespace GOO
             Console.WriteLine(THE_NEW_STRING);
             Console.WriteLine("End New Solution");
             Console.WriteLine("Elapsed time for generating begin solution: {0}ms", sw.ElapsedMilliseconds);
+
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/OptimizedSolution.txt", THE_SOLUTION_STRING);
+
             #endif
 
             #if !DEBUG
