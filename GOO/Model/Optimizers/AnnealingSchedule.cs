@@ -4,35 +4,33 @@ namespace GOO.Model.Optimizers
 {
     public class AnnealingSchedule
     {
-        public readonly double standardStartingTemperature = 50000.0d;
-        public readonly double standardAnnealingTemperatureStep = 0.003d; // 0.0000001d
-        public readonly int standardMaxIterationsBeforeAnnealing = 1; // 100
+        private readonly double standardStartingTemperature = 50000.0d;
+        private readonly double standardAnnealingTemperatureStep = 0.003d;
+        private readonly int standardMaxIterationsBeforeAnnealing = 1;
 
-        private readonly double AnnealingTemperatureStep;
-        private readonly int MaxIterationsBeforeAnnealing;
-
-        private int iterations;
+        public double AnnealingTemperature { get; private set; }
+        public double AnnealingTemperatureStep { get; private set; }
+        public int MaxIterationsBeforeAnnealing { get; private set; }
 
         public AnnealingSchedule()
         {
+            this.AnnealingTemperature = standardStartingTemperature;
             this.AnnealingTemperatureStep = standardAnnealingTemperatureStep;
             this.MaxIterationsBeforeAnnealing = standardMaxIterationsBeforeAnnealing;
 
-            AnnealingTemperature = standardStartingTemperature;
             this.iterations = 0;
         }
 
         public AnnealingSchedule(double initialAnnealingTemperature, double AnnealingTemperatureStep, int MaxIterationsBeforeAnnealing)
         {
+            this.AnnealingTemperature = initialAnnealingTemperature;
             this.AnnealingTemperatureStep = AnnealingTemperatureStep;
             this.MaxIterationsBeforeAnnealing = MaxIterationsBeforeAnnealing;
 
-            AnnealingTemperature = initialAnnealingTemperature;
             this.iterations = 0;
         }
 
-        public double AnnealingTemperature { get; set; }
-
+        private int iterations;
         public int AnnealingIterations
         {
             get { return iterations; }
@@ -48,10 +46,18 @@ namespace GOO.Model.Optimizers
                     iterations = value;
             }
         }
+
+        public double getMaximumNumberOfIterations()
+        {
+            return AnnealingTemperature * AnnealingTemperatureStep * MaxIterationsBeforeAnnealing;
+        }
     }
 }
 
-/* Clusters model:
+/* New Cluster model:
+ * standardStartingTemperature = 50000.0d + standardAnnealingTemperatureStep = 0.003d + standardMaxIterationsBeforeAnnealing = 1 ~= UNKNOWNms processingtime
+ * 
+ * Old Clusters model:
  * standardStartingTemperature = 1000.0d + standardAnnealingTemperatureStep = 0.1d + standardMaxIterationsBeforeAnnealing = 2 ~= UNKNOWNms processingtime
  * 
  * Obeselite model:

@@ -22,7 +22,7 @@ namespace GOO.Model.Optimizers
             newSolutionScore = Double.MaxValue;
         }
 
-        public Solution runOptimizer(Solution startSolution)
+        public Solution runOptimizer(Solution startSolution, GOO.ViewModel.MainViewModel reportProgress)
         {
             Solution currentSolution = new Solution(startSolution.getAllClusters());
             
@@ -73,6 +73,9 @@ namespace GOO.Model.Optimizers
                     //Console.WriteLine("The solution is not better");
                     currentSolution = startSolution;
                 }
+
+                if (reportProgress != null)
+                    reportProgress.ProgressValue++;
             }
 
             //Console.WriteLine("SimulatedAnnealingOptimizer : Done optimizing solution!");
@@ -142,6 +145,11 @@ namespace GOO.Model.Optimizers
             double chanceToBeAccepted = Math.Exp(deltaScore / annealingSchedule.AnnealingTemperature);
 
             return deltaScore > 0 || random.NextDouble() <= chanceToBeAccepted;
+        }
+
+        public AnnealingSchedule getAnnealingSchedule()
+        {
+            return annealingSchedule;
         }
     }
 }

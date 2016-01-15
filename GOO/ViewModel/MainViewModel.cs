@@ -23,7 +23,7 @@ namespace GOO.ViewModel
 
         private void SolveSolution()
         {
-            // Initialization
+            // Initialization of variables
             Solution solution = null;
             System.Diagnostics.Stopwatch sw = null;
             long BasicSolutionGenerationTimeInMiliSeconds = 0;
@@ -35,7 +35,6 @@ namespace GOO.ViewModel
 
             // Start generating basic solution
             sw = System.Diagnostics.Stopwatch.StartNew();
-            // Solution.GenerateBasicSolution();
             solution = Solver.generateSolution();
             sw.Stop();
             BasicSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
@@ -43,11 +42,11 @@ namespace GOO.ViewModel
             basicSolutionString = solution.ToString();
             // Basic solution generated.
 
-            // Determine Maxprogress (get SAO variables)
+            ProgressMaximum = Solver.getMaximumNumberOfSAIterations();
             // update Progress along the way
-            // Optimized basic solution
+
+            // Optimizing basic solution
             sw.Restart();
-            // Solution.GenerateOptimizedSolution();
             solution = Solver.optimizeSolution(solution);
             sw.Stop();
             OptimizedSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
