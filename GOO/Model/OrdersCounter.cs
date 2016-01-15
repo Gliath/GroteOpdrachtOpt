@@ -7,11 +7,25 @@ namespace GOO.Model
 {
     public class OrdersCounter
     {
+
+        private static OrdersCounter instance;
+
+        private OrdersCounter() {
+            CounterList = new List<OrderCounter>();
+        }
+
         public List<OrderCounter> CounterList { get; set; }
 
-        public OrdersCounter()
+        public static OrdersCounter Instance
         {
-            CounterList = new List<OrderCounter>();
+            get 
+            {
+                if (instance == null)
+                {
+                    instance = new OrdersCounter();
+                }
+                return instance;
+            }
         }
 
         public void ClearAllOccurences()
