@@ -22,9 +22,67 @@ namespace GOO.Model
             Orders.Add(Data.GetOrder0());
         }
 
-        public bool CanAddOrder(Order order)
-        { // TODO: ? -> Only check if order is already on this route, better check from solution
+        private bool CanAddOrderCheck(Order order, double timeLimit)
+        {
+            if (order.OrderNumber == 0)
+                return false;
+
+            if (Orders.Contains(order))
+                return false;
+
+            if (Weight + (order.VolumePerContainer * order.NumberOfContainers) > 100000)
+                return false;
+
+            // Check if order is already planned full & (if applicable) check if order can be added with its daysrestriction
+
             return true;
+        }
+
+        public bool CanAddOrder(Order order, double timeLimit = 43200.0d)
+        {
+            if (CanAddOrderCheck(order, timeLimit))
+            {
+                double tempTT = TravelTime;
+                int PreviousMatrixID = Orders.Count == 1 ? 287 : Orders[Orders.Count - 2].MatrixID;
+
+                tempTT -= Data.DistanceMatrix[PreviousMatrixID, 287].TravelTime;
+                tempTT += Data.DistanceMatrix[PreviousMatrixID, order.MatrixID].TravelTime;
+                tempTT += Data.DistanceMatrix[order.MatrixID, 287].TravelTime;
+                if (tempTT > timeLimit)
+                    return false;
+
+                return true;
+            }   
+            else
+                return false;
+        }
+
+        public bool CanAddOrderAfter(Order order, Order orderToInsertAfter, double timeLimit = 43200.0d)
+        {
+            if (CanAddOrderCheck(order, timeLimit))
+            {
+                for (int i = 0; i < Orders.Count; i++)
+                    if (Orders[i] == orderToInsertAfter)
+                    {
+                        // Check if Orders[i] is not the Order0
+
+                        double tempTT = TravelTime;
+                        int PreviousMatrixID = Orders.Count == 1 ? 287 : Orders[Orders.Count - 2].MatrixID; // NEED TO BE CHANGED
+
+                        // CHANGE THIS AS WELL
+                        tempTT -= Data.DistanceMatrix[PreviousMatrixID, 287].TravelTime;
+                        tempTT += Data.DistanceMatrix[PreviousMatrixID, order.MatrixID].TravelTime;
+                        tempTT += Data.DistanceMatrix[order.MatrixID, 287].TravelTime;
+                        if (tempTT > timeLimit)
+                            return false;
+
+                        return true;
+                    }
+
+                return false;
+            }
+            else
+                return false;
         }
 
         public void AddOrder(Order order)
@@ -46,7 +104,7 @@ namespace GOO.Model
         {
             int IndexOfOrderToInsertAfter = Orders.FindIndex(o => o.OrderNumber == orderToInsertAfter.OrderNumber);
 
-            if (IndexOfOrderToInsertAfter == -1) // Could not find the order or insert the new order after the 0 order
+            if (IndexOfOrderToInsertAfter == -1)
                 return;
 
             if (IndexOfOrderToInsertAfter >= Orders.Count - 2)
