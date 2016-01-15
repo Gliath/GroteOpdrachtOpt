@@ -44,6 +44,9 @@ namespace GOO.Model.Optimizers.Strategies
                 Order aftherOrder = new_route.Orders[ordertoAddAfther];
                 Order order = new_route.Orders[ordertoAddAfther]; //TODO: Get a right order numbahhhh
                 int neworder = order.OrderNumber;
+                //first try to get order in the current afther order cluster
+                // then try to get from the cluster group
+                // if not pick totaly random 
 
                 if (ordersCounter.CanAddOrder(neworder, new_route.Day) == true)
                 {
