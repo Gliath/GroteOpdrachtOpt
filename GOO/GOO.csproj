@@ -60,6 +60,7 @@
     <Compile Include="Model\Optimizers\Strategies\GeneticRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\MarriageCounselorStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt2HalfStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RandomOrderRemoveStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt3HalfStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt3Strategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt2Strategy.cs" />

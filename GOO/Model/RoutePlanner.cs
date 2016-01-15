@@ -128,7 +128,7 @@ namespace GOO.Model
                         toAdd.AddOrder(order);
 
                     if (toAdd.Orders.Count > 1)
-                        quadrant.AddRouteToCluster(opt2.opt2(toAdd)); // TODO : Check for max traveltime
+                        quadrant.AddRouteToCluster(toAdd); // TODO : Check for max traveltime
                     else
                         Console.WriteLine("COULD NOT CREATE ROUTE. Quadrant : {0}", quadrant);
                 }
