@@ -39,20 +39,14 @@ namespace GOO.Model.Optimizers
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
-                // Phase 1 : Marry / Divorce Clusters & Schedule Clusters 
-                List<AbstractCluster> newClusters = Phase1(currentSolution);
+                currentSolution = SelectAndExecuteMove(currentSolution);
 
-                // Phase 2 : Create routes and use either Opt2, Opt2.5, Opt3, Genetic, Random to optimize
-                Phase2RouteGeneration(newClusters);
-                currentSolution = Phase2Optimizers(currentSolution);
+                // TODO: Add Planning for routes after a move has been done  -> for instance
+                // Check if there are still available routes. Plan those
+                // And use a strategy to either destroy the unused ones or remove used ones so that unused ones can be planned
 
-                // Phase 3 : Assign routes to truckers
-                currentSolution = Phase3(currentSolution, newClusters); // TODO : MAKE SURE THE NEW ROUTES ARE ADDED IN THE RIGHT CLUSTER
-                newSolutionScore = currentSolution.GetSolutionScore();
-                //Console.WriteLine("Found a new solution. \nOld score: {0:N} \nNew score: {1:N}", oldSolutionScore, newSolutionScore);
-
-                // Phase 4 : Accept or reject new solution
-                if (Phase4(currentSolution)) // New Solution accepted
+                // Accept or reject new solution
+                if (AcceptOrReject(currentSolution)) // New Solution accepted
                 {
                     startSolution = currentSolution;
                     oldSolutionScore = newSolutionScore;
@@ -83,19 +77,8 @@ namespace GOO.Model.Optimizers
             return currentSolution;
         }
 
-        private List<AbstractCluster> Phase1(Solution toStartFrom) // Deal with clusters & marriages
-        {
-            MarriageCounselorStrategy MarriageCounselor = new MarriageCounselorStrategy();
-
-            return MarriageCounselor.executeStrategy(toStartFrom);
-        }
-
-        private void Phase2RouteGeneration(List<AbstractCluster> clustersToPlan) // Deal with clusters & marriages
-        {
-            RoutePlanner.GenerateRoutesFromClusters(clustersToPlan);
-        }
-
-        private Solution Phase2Optimizers(Solution toStartFrom) // Deal with Routes
+        //TODO : Update this method to make the calculation of what chance a move has to be executed clearer and easier to manage
+        private Solution SelectAndExecuteMove(Solution toStartFrom) // Deal with Routes
         {
             //weighted value of each strategy
             double opt2Chance = 10.0d;
@@ -133,13 +116,14 @@ namespace GOO.Model.Optimizers
             return strategy.executeStrategy(toStartFrom);
         }
 
+        // TODO : Use or not?
         private Solution Phase3(Solution toStartFrom, List<AbstractCluster> clustersToPlan) // Distribute routes to truckers
         {
             toStartFrom.clearTruckPlanning();
             return RoutePlanner.PlanRoutesFromClustersIntoSolution(toStartFrom, clustersToPlan);
         }
 
-        private bool Phase4(Solution toAcceptOrReject) // Accept Solution or not
+        private bool AcceptOrReject(Solution toAcceptOrReject) // Accept Solution or not
         {
             double deltaScore = oldSolutionScore - newSolutionScore;
             double chanceToBeAccepted = Math.Exp(deltaScore / annealingSchedule.AnnealingTemperature);
