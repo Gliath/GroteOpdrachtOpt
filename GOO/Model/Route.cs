@@ -98,6 +98,7 @@ namespace GOO.Model
             TravelTime += order.EmptyingTimeInSeconds;
             Weight += order.VolumePerContainer * order.NumberOfContainers;
             Orders.Insert(Orders.Count - 1, order);
+            order.AddedToRoute(this);
         }
 
         public void AddOrderAt(Order newOrder, Order orderToInsertAfter)
@@ -124,6 +125,7 @@ namespace GOO.Model
             TravelTime += newOrder.EmptyingTimeInSeconds;
             Weight += newOrder.VolumePerContainer * newOrder.NumberOfContainers;
             Orders.Insert(IndexOfOrderToInsertAfter + 1, newOrder);
+            newOrder.AddedToRoute(this);
         }
 
         public void RemoveOrder(Order order)
@@ -140,6 +142,7 @@ namespace GOO.Model
             TravelTime -= order.EmptyingTimeInSeconds;
             Weight -= order.VolumePerContainer * order.NumberOfContainers;
             Orders.Remove(order);
+            order.RemoveFromRoute(this);
         }
 
         public void SwapOrders(Order A, Order B)
