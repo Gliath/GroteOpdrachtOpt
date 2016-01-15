@@ -16,7 +16,7 @@ namespace GOO.Model
 
         public Solution(List<ParentCluster> clusters)
         {
-            this.ordersCounter = new OrdersCounter();
+            this.ordersCounter = OrdersCounter.Instance;
             this.clusters = clusters;
             this.truckPlanning = new List<Tuple<Days, int, List<Route>>>();
         }
