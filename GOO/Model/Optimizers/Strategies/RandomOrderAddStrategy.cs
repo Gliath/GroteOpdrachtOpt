@@ -5,15 +5,16 @@ using GOO.Utilities;
 
 namespace GOO.Model.Optimizers.Strategies
 {
-    public class RandomOrderRemoveStrategy : Strategy
+    public class RandomOrderAddStrategy : Strategy
     {
         private Days day;
         private int truck;
         private Route old_route;
         private Route new_route;
         private List<Route> RoutesFromSolution;
+        private OrdersCounter ordersCounter;
 
-        public RandomOrderRemoveStrategy() : base()
+        public RandomOrderAddStrategy() : base()
         {
 
         }
@@ -21,6 +22,7 @@ namespace GOO.Model.Optimizers.Strategies
         public override Solution executeStrategy(Solution toStartFrom)
         {
             Tuple<Days, int, List<Route>> Planning = toStartFrom.getRandomPlanningForATruck();
+            this.ordersCounter = OrdersCounter.Instance;
             day = Planning.Item1;
             truck = Planning.Item2;
             RoutesFromSolution = Planning.Item3;
@@ -36,14 +38,17 @@ namespace GOO.Model.Optimizers.Strategies
             }
 
             //start removing a random order
-            if (new_route.Orders.Count >= 2)
+            if (new_route.Orders.Count >= 2) //fix needed aswel?
             {
-                int ordertoremove = random.Next(new_route.Orders.Count - 2);
-                Order order = new_route.Orders[ordertoremove];
-                if (order.Frequency == OrderFrequency.PWK1)
+                int ordertoAddAfther = random.Next(new_route.Orders.Count - 2);
+                Order aftherOrder = new_route.Orders[ordertoAddAfther];
+                Order order = new_route.Orders[ordertoAddAfther]; //TODO: Get a right order numbahhhh
+                int neworder = order.OrderNumber;
+
+                if (ordersCounter.CanAddOrder(neworder, new_route.Day) == true)
                 {
-                    new_route.RemoveOrder(order);
-                    //TODO: add the order back to the order list
+                    new_route.AddOrderAt(aftherOrder, order);
+                    //TODO: remove order form orderlist
                 }
             }
 
