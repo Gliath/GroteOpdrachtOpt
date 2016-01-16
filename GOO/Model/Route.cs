@@ -59,20 +59,24 @@ namespace GOO.Model
 
         public bool CanAddOrderAfter(Order order, Order orderToInsertAfter, double timeLimit = 43200.0d)
         {
+            if (orderToInsertAfter.OrderNumber == 0)
+                return false;
+
+            if (Orders.Count == 2) // Change if CanAddOrderBefore is going to be implemented
+                return CanAddOrder(order, timeLimit);
+
             if (CanAddOrderCheck(order, timeLimit))
             {
                 for (int i = 0; i < Orders.Count; i++)
                     if (Orders[i] == orderToInsertAfter)
                     {
-                        // Check if Orders[i] is not the Order0
-
                         double tempTT = TravelTime;
-                        int PreviousMatrixID = Orders.Count == 1 ? 287 : Orders[Orders.Count - 2].MatrixID; // NEED TO BE CHANGED
+                        int PreviousMatrixID = Orders[i].MatrixID;
+                        int NextMatrixID = Orders[i + 1].MatrixID;
 
-                        // CHANGE THIS AS WELL
-                        tempTT -= Data.DistanceMatrix[PreviousMatrixID, 287].TravelTime;
+                        tempTT -= Data.DistanceMatrix[PreviousMatrixID, NextMatrixID].TravelTime;
                         tempTT += Data.DistanceMatrix[PreviousMatrixID, order.MatrixID].TravelTime;
-                        tempTT += Data.DistanceMatrix[order.MatrixID, 287].TravelTime;
+                        tempTT += Data.DistanceMatrix[order.MatrixID, NextMatrixID].TravelTime;
                         if (tempTT > timeLimit)
                             return false;
 
