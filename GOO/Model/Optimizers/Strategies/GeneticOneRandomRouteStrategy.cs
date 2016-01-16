@@ -5,14 +5,14 @@ using GOO.Utilities;
 
 namespace GOO.Model.Optimizers.Strategies
 {
-    public class GeneticRouteStrategy : Strategy
+    public class GeneticOneRandomRouteStrategy : Strategy
     {
         private Route originalRoute;
         private Route firstAbominationRoute;
         private Route bestAbominationOffspringRoute;
         private Tuple<Days, int, List<Route>> planningForSelectedRoute;
 
-        public GeneticRouteStrategy()
+        public GeneticOneRandomRouteStrategy()
             : base()
         {
             originalRoute = null;
@@ -23,30 +23,8 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            AbstractCluster targetCluster = null;
-            int firstRouteIndex = -1;
-
-            int numOfMaximumTriesFindingACluster = 32;
-            while (targetCluster == null && numOfMaximumTriesFindingACluster > 0)
-            {
-                targetCluster = toStartFrom.getRandomCluster();
-
-                if (targetCluster.Routes.Count > 0)
-                {
-                    for (int i = 0; i < targetCluster.Routes.Count; i++)
-                        if (targetCluster.Routes[i].Orders.Count > 2)
-                            firstRouteIndex = i; // TODO: Randomize route selection?
-                }
-                else
-                    targetCluster = null;
-
-                numOfMaximumTriesFindingACluster--;
-            }
-
-            if (targetCluster == null)
-                return null;
-
-            originalRoute = targetCluster.Routes[firstRouteIndex];
+            planningForSelectedRoute = toStartFrom.getRandomPlanning();
+            originalRoute = planningForSelectedRoute.Item3[random.Next(planningForSelectedRoute.Item3.Count)];
             double originalTravelTime = originalRoute.TravelTime;
             int numOfSlices = random.Next(1, originalRoute.Orders.Count - 2);
 
@@ -67,7 +45,7 @@ namespace GOO.Model.Optimizers.Strategies
             sliceIndices.Sort();
 
             // COMMENCE THE GENETIC EXPERIMENTS!
-            // OPERATION CUT & SPLICE AN ABOMINATION IS ACTIVE!
+            // OPERATION SLICE & SPLICE AN ABOMINATION IS ACTIVE!
 
             List<Order>[] orderSlices = new List<Order>[sliceIndices.Count];
             for (int i = 0; i < sliceIndices.Count; i++)
@@ -222,14 +200,9 @@ namespace GOO.Model.Optimizers.Strategies
 
             bestAbominationOffspringRoute = boyAbominationIsTheBest ? bestBoyAbominationOffspring : bestGirlAbominationOffspring;
 
-            Console.WriteLine("Original Travel Time:                     {0}", originalTravelTime);
+            Console.WriteLine("Original Travel Time:                     {0}", originalTravelTime); // These three lines are temporarily here
             Console.WriteLine("The First Abomination Travel Time:        {0}", firstAbominationRoute.TravelTime);
             Console.WriteLine("Best Abomination Offspring Travel Time:   {0}", bestAbominationOffspringRoute.TravelTime);
-
-            planningForSelectedRoute = toStartFrom.getRoute(targetCluster.Routes);
-
-            if (planningForSelectedRoute.Item1 != originalRoute.Day)
-                Console.WriteLine("ERROR, found the wrong route!");
 
             planningForSelectedRoute.Item3.Remove(originalRoute);
             planningForSelectedRoute.Item3.Add(bestAbominationOffspringRoute);

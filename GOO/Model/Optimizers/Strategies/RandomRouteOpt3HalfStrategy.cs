@@ -22,7 +22,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            Tuple<Days, int, List<Route>> Planning = toStartFrom.getRandomPlanningForATruck();
+            Tuple<Days, int, List<Route>> Planning = toStartFrom.getRandomPlanning();
             day = Planning.Item1;
             truck = Planning.Item2;
             RoutesFromSolution = Planning.Item3;

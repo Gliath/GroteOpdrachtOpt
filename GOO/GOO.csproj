@@ -57,7 +57,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\Optimizers\Strategies\DivorceAttourneyStrategy.cs" />
-    <Compile Include="Model\Optimizers\Strategies\GeneticRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\GeneticOneRandomRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\GeneticTwoRandomRoutesStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\MarriageCounselorStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomOrderAddStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt2HalfStrategy.cs" />

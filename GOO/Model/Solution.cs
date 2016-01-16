@@ -72,13 +72,13 @@ namespace GOO.Model
             return this.truckPlanning.Find(t => t.Item1 == day && t.Item2 == truckID);
         }
 
-        public Tuple<Days, int, List<Route>> getRandomPlanningForATruck()
+        public Tuple<Days, int, List<Route>> getRandomPlanning()
         {
             int random = new Random().Next(truckPlanning.Count);
             return this.truckPlanning[random];
         }
 
-        public Tuple<Days, int, List<Route>> getRoute(List<Route> route)
+        public Tuple<Days, int, List<Route>> getPlanningForRoute(List<Route> route)
         {
             return this.truckPlanning.Find(t => t.Item3 == route);
         }
