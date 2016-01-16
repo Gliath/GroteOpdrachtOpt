@@ -44,7 +44,7 @@ namespace GOO.Model.Optimizers.Strategies
             }
 
             if (targetCluster == null)
-                return null; // Just in case something weird happens
+                return null;
 
             originalRoute = targetCluster.Routes[firstRouteIndex];
             double originalTravelTime = originalRoute.TravelTime;
@@ -64,9 +64,9 @@ namespace GOO.Model.Optimizers.Strategies
                     }
                 } while (!hasAddedAnIndex);
             }
-            sliceIndices.Sort(); // So that the indices are going for low to high
+            sliceIndices.Sort();
 
-            // COMMENCE THE GENETIC EXPERIMENTS! 
+            // COMMENCE THE GENETIC EXPERIMENTS!
             // OPERATION CUT & SPLICE AN ABOMINATION IS ACTIVE!
 
             List<Order>[] orderSlices = new List<Order>[sliceIndices.Count];
@@ -79,7 +79,7 @@ namespace GOO.Model.Optimizers.Strategies
                     orderSlices[i].Add(originalRoute.Orders[j]);
             }
 
-            // No that you've sliced up the orders in the selected route, it is time for randomizing the slices and putting it back together
+            // Now that you've sliced up the orders in the selected route, it is time for randomizing the slices and putting it back together
 
             firstAbominationRoute = new Route(originalRoute.Day);
             List<int> slicesIndexPutBack = new List<int>();
@@ -101,11 +101,11 @@ namespace GOO.Model.Optimizers.Strategies
                 } while (!hasPutBackASlice);
             }
 
-            // COMMENCE THE GENETIC EXPERIMENTS PHASE TWO! 
+            // COMMENCE THE GENETIC EXPERIMENTS PHASE TWO!
             // OPERATION DARWIN'S ABOMINATION REPRODUCTION IS NOW OPERATIONAL!
 
             int numOfGenerationsToMake = 64;
-            Route bestBoyAbominationOffspring = originalRoute; // Is not initially an abomination but is bound to be one soon....
+            Route bestBoyAbominationOffspring = originalRoute;
             Route bestGirlAbominationOffspring = firstAbominationRoute;
             Boolean boyAbominationIsTheBest = bestBoyAbominationOffspring.TravelTime >= bestGirlAbominationOffspring.TravelTime;
             int numberOfGenesThatAreTransferred = originalRoute.Orders.Count / 2;
@@ -114,7 +114,7 @@ namespace GOO.Model.Optimizers.Strategies
             while (numOfGenerationsToMake > 0)
             {
                 ordersSelectedForGeneticSwap.Clear();
-                
+
                 int orderIndex = -1;
                 do
                 {
@@ -144,7 +144,7 @@ namespace GOO.Model.Optimizers.Strategies
                 Route newBoyAbominationOffspring = new Route(originalRoute.Day);
                 Route newGirlAbominationOffspring = new Route(originalRoute.Day);
 
-                for (int index = 0; index < originalRoute.Orders.Count - 1; index++) // any route (except newAbominations) can be used for this for loop
+                for (int index = 0; index < originalRoute.Orders.Count - 1; index++)
                 {
                     if (indicesToBeSwaped.Contains(index))
                     {
@@ -157,7 +157,6 @@ namespace GOO.Model.Optimizers.Strategies
                         newGirlAbominationOffspring.AddOrder(bestGirlAbominationOffspring.Orders[index]);
                     }
                 }
-                // Made children! Now put them to the test! Darwin style! IN THE IF MONSTER CONSTRUCTION!
 
                 Boolean newGirlAbominationOffspringIstheBest = newBoyAbominationOffspring.TravelTime <= newGirlAbominationOffspring.TravelTime;
                 if (boyAbominationIsTheBest)
@@ -219,7 +218,7 @@ namespace GOO.Model.Optimizers.Strategies
                 numOfGenerationsToMake--;
             }
 
-            // PHASE 3 - INSERT ABOMINATION INTO THE PUBLIC!
+            // PHASE 3 - INSERT THE ABOMINATION INTO THE PUBLIC!
 
             bestAbominationOffspringRoute = boyAbominationIsTheBest ? bestBoyAbominationOffspring : bestGirlAbominationOffspring;
 
@@ -243,7 +242,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            // Revert abomination to Patient Zero... 
+            // Revert abomination to Patient Zero...
             planningForSelectedRoute.Item3.Remove(bestAbominationOffspringRoute);
             planningForSelectedRoute.Item3.Add(originalRoute);
 

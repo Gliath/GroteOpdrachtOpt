@@ -33,12 +33,10 @@ namespace GOO.Model.Optimizers.Strategies
             //copy the begin route for the 2-opt and create the route for the 2-opt check
             new_route = new Route(day);
             foreach (Order order in old_route.Orders)
-            {
                 new_route.AddOrder(order);
-            }
 
             //start removing a random order
-            if (new_route.Orders.Count >= 2) //fix needed aswel?
+            if (new_route.Orders.Count >= 2) //fix needed as well?
             {
                 int ordertoAddAfther = random.Next(new_route.Orders.Count - 2);
                 Order aftherOrder = new_route.Orders[ordertoAddAfther];
@@ -46,10 +44,7 @@ namespace GOO.Model.Optimizers.Strategies
                 int neworder = order.OrderNumber;
 
                 if (ordersCounter.CanAddOrder(neworder, new_route.Day) == true)
-                {
-                    new_route.AddOrderAt(aftherOrder, order);
-                    //TODO: remove order form orderlist
-                }
+                    new_route.AddOrderAt(aftherOrder, order);  //TODO: remove order form orderlist
             }
 
             RoutesFromSolution.Remove(old_route);

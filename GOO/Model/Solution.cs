@@ -34,47 +34,37 @@ namespace GOO.Model
             updateOrdersCounterAfterRemoval(toRemove.Item3);
         }
 
-        public void recountOrdersCounter()
-        {
-            ordersCounter.ClearAllOccurences();
-            foreach (Tuple<Days, int, List<Route>> tuple in truckPlanning)
-            {
-                updateOrdersCounterAfterAdding(tuple.Item3);
-            }
-        }
-
         public List<Tuple<Days, int, List<Route>>> getEntirePlanning()
         {
             return this.truckPlanning;
-        }
-
-        private void updateOrdersCounterAfterRemoval(List<Route> removedRoutes)
-        {
-            foreach (Route route in removedRoutes)
-            {
-                foreach (Order order in route.Orders)
-	            {
-                    ordersCounter.RemoveOccurrence(order.OrderNumber, route.Day);
-	            }
-            }
-        }
-
-        private void updateOrdersCounterAfterAdding(List<Route> addedRoutes)
-        {
-            foreach (Route route in addedRoutes)
-            {
-                foreach (Order order in route.Orders)
-                {
-                    if(order.OrderNumber != 0)
-                        ordersCounter.AddOccurrence(order.OrderNumber, route.Day);
-                }
-            }
         }
 
         public void clearTruckPlanning()
         {
             truckPlanning.Clear();
             ordersCounter.ClearAllOccurences();
+        }
+
+        public void recountOrdersCounter() // Unused (?)
+        {
+            ordersCounter.ClearAllOccurences();
+            foreach (Tuple<Days, int, List<Route>> tuple in truckPlanning)
+                updateOrdersCounterAfterAdding(tuple.Item3);
+        }
+
+        private void updateOrdersCounterAfterAdding(List<Route> addedRoutes)
+        {
+            foreach (Route route in addedRoutes)
+                foreach (Order order in route.Orders)
+                    if(order.OrderNumber != 0)
+                        ordersCounter.AddOccurrence(order.OrderNumber, route.Day);
+        }
+
+        private void updateOrdersCounterAfterRemoval(List<Route> removedRoutes)
+        {
+            foreach (Route route in removedRoutes)
+                foreach (Order order in route.Orders)
+                    ordersCounter.RemoveOccurrence(order.OrderNumber, route.Day);
         }
 
         public Tuple<Days, int, List<Route>> getPlanningForATruck(Days day, int truckID)
@@ -88,6 +78,11 @@ namespace GOO.Model
             return this.truckPlanning[random];
         }
 
+        public Tuple<Days, int, List<Route>> getRoute(List<Route> route)
+        {
+            return this.truckPlanning.Find(t => t.Item3 == route);
+        }
+
         public AbstractCluster getRandomCluster()
         {
             int random = new Random().Next(clusters.Count);
@@ -97,11 +92,6 @@ namespace GOO.Model
         public List<ParentCluster> getAllClusters()
         {
             return this.clusters;
-        }
-
-        public Tuple<Days, int, List<Route>> getRoute(List<Route> route)
-        {
-            return this.truckPlanning.Find(t => t.Item3 == route);
         }
 
         public double GetSolutionScore() // TODO: Maybe start working with delta's instead of recalculating everytime
@@ -118,15 +108,15 @@ namespace GOO.Model
                     if (uncompleteOrders.Contains(orderNumber)) // Has already been punished
                         continue;
                     else
-                        uncompleteOrders.Add(orderNumber); // Is going to be punished, add it to the list
+                        uncompleteOrders.Add(orderNumber);
 
                     penaltyTime += Data.Orders[orderNumber].PenaltyTime;
                     break;
                 }
-            } // penaltyTime has been calculated
+            }
 
             foreach (Tuple<Days, int, List<Route>> tuple in truckPlanning)
-                foreach (Route route in tuple.Item3) // Item3 in the tuple is always a List<Route>
+                foreach (Route route in tuple.Item3)
                     travelTime += route.TravelTime;
 
             return travelTime + penaltyTime;
@@ -141,12 +131,8 @@ namespace GOO.Model
                 List<Route> routes = tuple.Item3;
                 int sequenceID = 0;
                 for (int routeID = 0; routeID < routes.Count; routeID++)
-                {
                     for (int orderID = 0; orderID < routes[routeID].Orders.Count; orderID++)
-                    {
                         sb.AppendLine(String.Format("{0};{1};{2};{3}", tuple.Item2 + 1, (int)DayInt(tuple.Item1), ++sequenceID, routes[routeID].Orders[orderID].OrderNumber));
-                    }
-                }
             }
 
             return sb.ToString();

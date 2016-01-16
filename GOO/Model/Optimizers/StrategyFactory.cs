@@ -8,11 +8,11 @@ namespace GOO.Model.Optimizers
     {
         public static Strategy[] GetAllPhase2Strategies()
         {
-            return new Strategy[] { // Create routes and use either Opt2, Opt2.5, Opt3, Genetic, Random to optimize Strategies
-                //new GeneticRouteStrategy(), 
-                new RandomRouteOpt2Strategy(), 
-                new RandomRouteOpt2HalfStrategy(), 
-                new RandomRouteOpt3Strategy(), 
+            return new Strategy[] {
+                //new GeneticRouteStrategy(),
+                new RandomRouteOpt2Strategy(),
+                new RandomRouteOpt2HalfStrategy(),
+                new RandomRouteOpt3Strategy(),
                 new RandomRouteOpt3HalfStrategy() };
         }
     }

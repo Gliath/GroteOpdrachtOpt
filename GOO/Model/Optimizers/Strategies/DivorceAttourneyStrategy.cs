@@ -14,8 +14,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public List<AbstractCluster> executeStrategy(List<AbstractCluster> clustersToDivorce)
         {
-            // Randomly divorce clusters or divorce them because it can make filled clusters?
-
+            
 
             return clustersToDivorce;
         }

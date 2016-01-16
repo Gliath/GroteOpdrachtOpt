@@ -75,23 +75,16 @@ namespace GOO.Model
         public void AddRouteToCluster(Route toAdd)
         {
             Routes.Add(toAdd);
-
-            //foreach (Order order in toAdd.Orders)
-            //    OrdersCounter.AddOccurrence(order.OrderNumber, toAdd.Day); /* A job for Solution or the class who adds the orders themselves */
         }
 
         public void RemoveRouteFromCluster(Route toRemove)
         {
             Routes.Remove(toRemove);
-
-            //foreach (Order order in toRemove.Orders)
-            //    OrdersCounter.RemoveOccurrence(order.OrderNumber, toRemove.Day); /* A job for Solution or the class who removes the orders themselves */
         }
 
         public void RemoveAllRoutesFromCluster()
         {
             Routes.Clear();
-            //OrdersCounter.ClearAllOccurences(); /* A job for Solution or the class who clears the orders themselves */
         }
 
         public override string ToString()
