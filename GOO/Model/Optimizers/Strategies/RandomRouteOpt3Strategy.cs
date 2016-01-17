@@ -9,8 +9,7 @@ namespace GOO.Model.Optimizers.Strategies
     {
         private readonly int NumberOfRoutesCreated = 6;
 
-        private Days day;
-        private int truck;
+        private Tuple<Days, int, List<Route>> Planning;
         private Route old_route;
         private Route new_route;
         private Route[] routesToWorkWith;
@@ -24,9 +23,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            Tuple<Days, int, List<Route>> Planning = toStartFrom.getRandomPlanning();
-            day = Planning.Item1;
-            truck = Planning.Item2;
+            Planning = toStartFrom.getRandomPlanning();
             RoutesFromSolution = Planning.Item3;
 
             //save the begin route for rollback
@@ -34,9 +31,9 @@ namespace GOO.Model.Optimizers.Strategies
 
             //copy the begin route for the 2-opt and create the route for the 2-opt check
             for (int i = 0; i < routesToWorkWith.Length; i++)
-                routesToWorkWith[i] = new Route(day);
+                routesToWorkWith[i] = new Route(Planning.Item1);
 
-            new_route = new Route(day);
+            new_route = new Route(Planning.Item1);
             foreach (Order order in old_route.Orders)
             {
                 if (order.OrderNumber != 0)
@@ -99,7 +96,7 @@ namespace GOO.Model.Optimizers.Strategies
                             if (hasABetterTime)
                             {
                                 for (int index = 0; index < routesToWorkWith.Length; index++)
-                                    routesToWorkWith[index] = new Route(day);
+                                    routesToWorkWith[index] = new Route(Planning.Item1);
 
                                 foreach (Order order in old_route.Orders)
                                     if (order.OrderNumber != 0)
@@ -117,8 +114,8 @@ namespace GOO.Model.Optimizers.Strategies
             RoutesFromSolution.Remove(old_route);
             RoutesFromSolution.Add(new_route);
 
-            toStartFrom.RemoveItemFromPlanning(day, truck);
-            toStartFrom.AddNewItemToPlanning(day, truck, RoutesFromSolution);
+            toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
+            toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, RoutesFromSolution);
 
             return toStartFrom;
         }
@@ -130,12 +127,12 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            // Nette manier zou zijn om de tuple weer op te halen gebaseerd op truck en dag.
+            // Nette manier zou zijn om de tuple weer op te halen gebaseerd op Planning.Item2 en dag.
             RoutesFromSolution.Remove(new_route);
             RoutesFromSolution.Add(old_route);
 
-            toStartFrom.RemoveItemFromPlanning(day, truck);
-            toStartFrom.AddNewItemToPlanning(day, truck, RoutesFromSolution);
+            toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
+            toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, RoutesFromSolution);
 
             return toStartFrom;
         }
