@@ -33,9 +33,7 @@ namespace GOO.Model
             if (Weight + (order.VolumePerContainer * order.NumberOfContainers) > 100000)
                 return false;
 
-            // Check if order is already planned full & (if applicable) check if order can be added with its daysrestriction
-
-            return true;
+            return order.CanBeAddedOnDay(this.Day);
         }
 
         public bool CanAddOrder(Order order, double timeLimit = 43200.0d)

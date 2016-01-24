@@ -41,7 +41,7 @@ namespace GOO.Model
 
         public double PenaltyTime { get; private set; }
         public List<Days> DayRestrictions { get; private set; }
-        public List<Route> partOfRoutes { get; private set; }
+        public List<Route> PartOfRoutes { get; private set; }
 
         private OrdersCounter orderCounter;
 
@@ -59,19 +59,19 @@ namespace GOO.Model
 
             PenaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInSeconds) * 3.0d;
             DayRestrictions = DayRestrictionFactory.GetDayRestrictions(Frequency);
-            partOfRoutes = new List<Route>();
+            PartOfRoutes = new List<Route>();
             orderCounter = OrdersCounter.Instance;
         }
 
         public void AddedToRoute(Route routeAddedTo)
         {
-            partOfRoutes.Add(routeAddedTo);
+            PartOfRoutes.Add(routeAddedTo);
             orderCounter.AddOccurrence(this.OrderNumber, routeAddedTo.Day);
         }
 
         public void RemoveFromRoute(Route removedFrom)
         {
-            partOfRoutes.Remove(removedFrom);
+            PartOfRoutes.Remove(removedFrom);
             orderCounter.RemoveOccurrence(this.OrderNumber, removedFrom.Day);
         }
 

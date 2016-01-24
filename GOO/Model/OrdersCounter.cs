@@ -7,23 +7,22 @@ namespace GOO.Model
 {
     public class OrdersCounter
     {
-
         private static OrdersCounter instance;
 
-        private OrdersCounter() {
+        private OrdersCounter() 
+        {
             CounterList = new List<OrderCounter>();
         }
 
-        public List<OrderCounter> CounterList { get; set; }
+        public List<OrderCounter> CounterList { get; private set; }
 
         public static OrdersCounter Instance
         {
             get 
             {
                 if (instance == null)
-                {
                     instance = new OrdersCounter();
-                }
+
                 return instance;
             }
         }
@@ -37,20 +36,11 @@ namespace GOO.Model
         public void AddOccurrence(int OrderNumber, Days OccurredOn)
         {
             if(!CounterList.Exists(o => o.OrderNumber == OrderNumber))
-            {
                 CounterList.Add(new OrderCounter(OrderNumber, new List<Days>(Data.Orders[OrderNumber].DayRestrictions)));
-            }
 
             foreach (OrderCounter order in CounterList)
                 if (order.OrderNumber == OrderNumber)
                 {
-                    if ((order.OrderDayOccurrences & OccurredOn) == Days.None)
-                    {
-                        #if DEBUG
-                        //Console.WriteLine("Order {0} has already occurred on {1}", OrderNumber, OccurredOn);
-                        #endif
-                    }
-
                     order.OrderDayOccurrences |= OccurredOn;
                     UpdateDayRestrictions(order);
                     break;
@@ -62,13 +52,6 @@ namespace GOO.Model
             foreach (OrderCounter order in CounterList)
                 if (order.OrderNumber == OrderNumber)
                 {
-                    if (!((order.OrderDayOccurrences & OccurredOn) == Days.None))
-                    {
-                        #if DEBUG
-                        //Console.WriteLine("Order {0} has yet to occur on {1}", OrderNumber, OccurredOn);
-                        #endif
-                    }
-
                     order.OrderDayOccurrences ^= (order.OrderDayOccurrences & OccurredOn);
                     UpdateDayRestrictions(order);
                     break;
@@ -148,11 +131,6 @@ namespace GOO.Model
 
             public Boolean IsCompleted()
             {
-                #if DEBUG // Debug, test if order occurrs to many times
-                //if (OrderDayOccurrences > OrderDayRestrictions) // TODO FIXZ THIS DEBUG CODE
-                //    Console.WriteLine("Order {0} has occurred to many times, {1}/{2} times", OrderNumber, OrderDayOccurrences, OrderDayRestrictions);
-                #endif
-
                 foreach (Days restrictions in OrderDayRestrictions)
                     if(OrderDayOccurrences.Equals(restrictions))
                         return true;
