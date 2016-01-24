@@ -57,13 +57,28 @@ namespace GOO.Model
                 return false;
         }
 
+        public bool CanAddOrderAtStart(Order order, double timeLimit = 43200.0d)
+        {
+            if (CanAddOrderCheck(order, timeLimit))
+            {
+                double tempTT = TravelTime;
+
+                tempTT -= Data.DistanceMatrix[287, Orders[1].MatrixID].TravelTime;
+                tempTT += Data.DistanceMatrix[287, order.MatrixID].TravelTime;
+                tempTT += Data.DistanceMatrix[order.MatrixID, Orders[1].MatrixID].TravelTime;
+                if (tempTT > timeLimit)
+                    return false;
+
+                return true;
+            }
+            else
+                return false;
+        }
+
         public bool CanAddOrderAfter(Order order, Order orderToInsertAfter, double timeLimit = 43200.0d)
         {
             if (orderToInsertAfter.OrderNumber == 0)
                 return false;
-
-            if (Orders.Count == 2) // Change if CanAddOrderBefore is going to be implemented
-                return CanAddOrder(order, timeLimit);
 
             if (CanAddOrderCheck(order, timeLimit))
             {
@@ -102,6 +117,22 @@ namespace GOO.Model
             TravelTime += order.EmptyingTimeInSeconds;
             Weight += order.VolumePerContainer * order.NumberOfContainers;
             Orders.Insert(Orders.Count - 1, order);
+            order.AddedToRoute(this);
+        }
+
+        public void AddOrderAtStart(Order order)
+        {
+            int FirstMatrixID = 287;
+            int NewMatrixID = order.MatrixID;
+            int NextMatrixID = Orders[1].MatrixID;
+
+            TravelTime -= Data.DistanceMatrix[FirstMatrixID, NextMatrixID].TravelTime;
+            TravelTime += Data.DistanceMatrix[FirstMatrixID, NewMatrixID].TravelTime;
+            TravelTime += Data.DistanceMatrix[NewMatrixID, NextMatrixID].TravelTime;
+
+            TravelTime += order.EmptyingTimeInSeconds;
+            Weight += order.VolumePerContainer * order.NumberOfContainers;
+            Orders.Insert(1, order);
             order.AddedToRoute(this);
         }
 
