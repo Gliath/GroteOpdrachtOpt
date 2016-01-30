@@ -60,7 +60,7 @@ namespace GOO.Model.Optimizers
  * Old Clusters model:
  * standardStartingTemperature = 1000.0d + standardAnnealingTemperatureStep = 0.1d + standardMaxIterationsBeforeAnnealing = 2 ~= UNKNOWNms processingtime
  * 
- * Obeselite model:
+ * Obsolete model:
  * standardStartingTemperature = 1.0d + standardAnnealingTemperatureStep = 0.001d + standardMaxIterationsBeforeAnnealing = 2 ~= 50000ms processingtime
  * standardStartingTemperature = 1.0d + standardAnnealingTemperatureStep = 0.0000001d + standardMaxIterationsBeforeAnnealing = 100 ==(estimated) 350 days processingtime
 */

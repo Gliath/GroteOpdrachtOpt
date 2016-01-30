@@ -14,6 +14,8 @@ namespace GOO.Model
         private static Clusterer clusterer;
         private static List<Cluster> clusters;
 
+        private static SimulatedAnnealingOptimizer optimizer = new SimulatedAnnealingOptimizer();
+
         public static Solution generateSolution()
         {
             Console.WriteLine("Start generating clusters!");
@@ -25,24 +27,23 @@ namespace GOO.Model
             List<ParentCluster> splitClusters = clusterer.splitClusters(clusters);
             Console.WriteLine("Done splitting clusters!");
 
-            List<AbstractCluster> abstractClusters = new List<AbstractCluster>();
             List<ParentCluster> parentClusters = RoutePlanner.PlanStartClusters(splitClusters);
+
+            List<AbstractCluster> abstractClusters = new List<AbstractCluster>();
             foreach (ParentCluster parentCluster in parentClusters)
 	            abstractClusters.Add(parentCluster);
 
             return RoutePlanner.PlanRoutesFromClustersIntoSolution(new Solution(splitClusters), abstractClusters);
         }
 
-        private static SimulatedAnnealingOptimizer sAO;
         public static double getMaximumNumberOfSAIterations()
         {
-            sAO = new SimulatedAnnealingOptimizer();
-            return sAO.getAnnealingSchedule().getMaximumNumberOfIterations();
+            return optimizer.getAnnealingSchedule().getMaximumNumberOfIterations();
         }
 
         public static Solution optimizeSolution(Solution solution, MainViewModel reportProgressTo = null)
         {
-            return sAO.runOptimizer(solution, reportProgressTo);
+            return optimizer.runOptimizer(solution, reportProgressTo);
         }
     }
 }
