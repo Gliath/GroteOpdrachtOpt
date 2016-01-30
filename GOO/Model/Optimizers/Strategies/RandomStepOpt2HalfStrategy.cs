@@ -20,23 +20,35 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            Planning = toStartFrom.getRandomPlanning();
-            RoutesFromSolution = Planning.Item3;
-            old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
+            List<Tuple<Days, int, List<Route>>> planningsTried = new List<Tuple<Days, int, List<Route>>>();
+            bool hasValidRoute = false;
+
+            for (int planningCounter = 0; planningCounter < 5 && !hasValidRoute; planningCounter++)
+            {
+                Planning = toStartFrom.getRandomPlanning();
+                RoutesFromSolution = Planning.Item3;
+                old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
+
+                for (int counter = 0; counter < 5 && old_route.Orders.Count < 3; counter++)
+                    old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
+
+                if (old_route.Orders.Count >= 3)
+                    break;
+            }
+
+            if (old_route.Orders.Count < 3)
+                return toStartFrom; // Could not find a valid route to shuffle
 
             new_route = new Route(Planning.Item1);
             foreach (Order order in old_route.Orders)
                 new_route.AddOrder(order);
-
-            while (old_route.Orders.Count < 3) // Prevent infinite runs? (if it has only routes with less than 3 orders, one being Order0)
-                old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
 
             int firstIndex = random.Next(old_route.Orders.Count - 2);
             int secondIndex = random.Next(old_route.Orders.Count - 2);
             while (firstIndex == secondIndex)
                 secondIndex = random.Next(old_route.Orders.Count - 2);
 
-            swapOrders(old_route.Orders[firstIndex], old_route.Orders[secondIndex], new_route); // Check if can be swapped
+            swapOrders(old_route.Orders[firstIndex], old_route.Orders[secondIndex], new_route);
 
             RoutesFromSolution.Remove(old_route);
             RoutesFromSolution.Add(new_route);
@@ -49,8 +61,8 @@ namespace GOO.Model.Optimizers.Strategies
 
         private void swapOrders(Order A, Order B, Route route)
         {
-            route.RemoveOrder(B);
-            route.AddOrderAt(B, A);
+            if (route.CanHalfSwapOrder(A, B))
+                route.HalfSwapOrders(A, B);
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
