@@ -12,14 +12,18 @@ namespace GOO.Model
         public Days Day { get; private set; }
         public int Weight { get; private set; }
 
+        private OrdersTracker OrdersTracker;
+
         public Route(Days Day)
         {
-            Orders = new List<Order>();
-            TravelTime = 1800.0d;
-            Weight = 0;
+            this.Orders = new List<Order>();
+            this.TravelTime = 1800.0d;
+            this.Weight = 0;
             this.Day = Day;
 
-            Orders.Add(Data.GetOrder0());
+            this.OrdersTracker = OrdersTracker.Instance;
+
+            this.Orders.Add(Data.GetOrder0());
         }
 
         private bool CanAddOrderCheck(Order order)
@@ -109,7 +113,7 @@ namespace GOO.Model
             TravelTime += order.EmptyingTimeInSeconds;
             Weight += order.VolumePerContainer * order.NumberOfContainers;
             Orders.Insert(Orders.Count - 1, order);
-            order.AddedToRoute(this);
+            OrdersTracker.AddOrderOccurrence(order.OrderNumber, this);
         }
 
         public void AddOrderAtStart(Order order)
@@ -125,7 +129,7 @@ namespace GOO.Model
             TravelTime += order.EmptyingTimeInSeconds;
             Weight += order.VolumePerContainer * order.NumberOfContainers;
             Orders.Insert(1, order);
-            order.AddedToRoute(this);
+            OrdersTracker.AddOrderOccurrence(order.OrderNumber, this);
         }
 
         public void AddOrderAt(Order newOrder, Order orderToInsertAfter)
@@ -152,7 +156,7 @@ namespace GOO.Model
             TravelTime += newOrder.EmptyingTimeInSeconds;
             Weight += newOrder.VolumePerContainer * newOrder.NumberOfContainers;
             Orders.Insert(IndexOfOrderToInsertAfter + 1, newOrder);
-            newOrder.AddedToRoute(this);
+            OrdersTracker.AddOrderOccurrence(newOrder.OrderNumber, this);
         }
 
         public void RemoveOrder(Order order)
@@ -169,7 +173,7 @@ namespace GOO.Model
             TravelTime -= order.EmptyingTimeInSeconds;
             Weight -= order.VolumePerContainer * order.NumberOfContainers;
             Orders.Remove(order);
-            order.RemoveFromRoute(this);
+            OrdersTracker.RemoveOrderOccurrence(order.OrderNumber, this);
         }
 
         public bool CanSwapOrder(Order firstOrder, Order secondOrder, double timeLimit = 43200.0d)

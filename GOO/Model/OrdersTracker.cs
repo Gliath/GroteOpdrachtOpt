@@ -5,62 +5,83 @@ using GOO.Utilities;
 
 namespace GOO.Model
 {
-    public class OrdersCounter
+    public class OrdersTracker
     {
-        private static OrdersCounter instance;
+        public List<OrderCounter> CounterList { get; private set; }
+        public List<Route> AllRoutes { get; private set; }
 
-        private OrdersCounter() 
+        private static OrdersTracker instance;
+
+        private OrdersTracker()
         {
             CounterList = new List<OrderCounter>();
+            AllRoutes = new List<Route>();
         }
 
-        public List<OrderCounter> CounterList { get; private set; }
 
-        public static OrdersCounter Instance
+        public static OrdersTracker Instance
         {
-            get 
+            get
             {
                 if (instance == null)
-                    instance = new OrdersCounter();
+                    instance = new OrdersTracker();
 
                 return instance;
             }
         }
 
-        public void ClearAllOccurences()
+        public void updateOrdersCounterAfterAdding(List<Route> addedRoutes)
+        {
+            foreach (Route route in addedRoutes)
+                foreach (Order order in route.Orders)
+                    if (order.OrderNumber != 0)
+                        AddOrderOccurrence(order.OrderNumber, route);
+        }
+
+        public void updateOrdersCounterAfterRemoval(List<Route> removedRoutes)
+        {
+            foreach (Route route in removedRoutes)
+                foreach (Order order in route.Orders)
+                    RemoveOrderOccurrence(order.OrderNumber, route);
+        }
+
+        public void ClearAllOccurences() // TODO: How to deal with routes containing the order?
         {
             CounterList.Clear();
             CounterList = new List<OrderCounter>();
         }
 
-        public void AddOccurrence(int OrderNumber, Days OccurredOn)
+        public void AddOrderOccurrence(int OrderNumber, Route OccurredIn)
         {
-            if(!CounterList.Exists(o => o.OrderNumber == OrderNumber))
+            if (!CounterList.Exists(o => o.OrderNumber == OrderNumber))
                 CounterList.Add(new OrderCounter(OrderNumber, new List<Days>(Data.Orders[OrderNumber].DayRestrictions)));
 
             foreach (OrderCounter order in CounterList)
                 if (order.OrderNumber == OrderNumber)
                 {
-                    order.OrderDayOccurrences |= OccurredOn;
-                    UpdateDayRestrictions(order);
+                    order.OrderDayOccurrences |= OccurredIn.Day;
+                    UpdateOrderDayRestrictions(order);
+                    if (!order.PartOfRoutes.Contains(OccurredIn))
+                        order.PartOfRoutes.Add(OccurredIn);
                     break;
                 }
         }
 
-        public void RemoveOccurrence(int OrderNumber, Days OccurredOn)
+        public void RemoveOrderOccurrence(int OrderNumber, Route OccurredIn)
         {
             foreach (OrderCounter order in CounterList)
                 if (order.OrderNumber == OrderNumber)
                 {
-                    order.OrderDayOccurrences ^= (order.OrderDayOccurrences & OccurredOn);
-                    UpdateDayRestrictions(order);
+                    order.OrderDayOccurrences ^= (order.OrderDayOccurrences & OccurredIn.Day);
+                    UpdateOrderDayRestrictions(order);
+                    order.PartOfRoutes.Remove(OccurredIn);
                     break;
                 }
 
             CounterList.RemoveAll(o => o.OrderNumber == OrderNumber && o.OrderDayOccurrences.Equals(Days.None));
         }
 
-        private void UpdateDayRestrictions(OrderCounter order)
+        private void UpdateOrderDayRestrictions(OrderCounter order)
         {
             order.OrderDayRestrictions.Clear();
 
@@ -92,7 +113,7 @@ namespace GOO.Model
             return false; // Could not be found in the CounterList or the orders restrictions, it is not supposed to be added this day
         }
 
-        public Boolean HasOccurence(Days day, int OrderNumber)
+        public Boolean OrderHasOccurence(Days day, int OrderNumber)
         {
             return CounterList.Find(o => o.OrderNumber == OrderNumber && o.OrderDayOccurrences.HasFlag(day)) != null;
         }
@@ -119,6 +140,7 @@ namespace GOO.Model
         {
             public int OrderNumber { get; private set; }
             public List<Days> OrderDayRestrictions { get; private set; }
+            public List<Route> PartOfRoutes { get; private set; }
             public Days OrderDayOccurrences { get; set; }
 
             public OrderCounter(int OrderNumber, List<Days> OrderDayRestrictions)
@@ -126,13 +148,14 @@ namespace GOO.Model
                 this.OrderNumber = OrderNumber;
                 this.OrderDayRestrictions = OrderDayRestrictions;
 
-                OrderDayOccurrences = Days.None;
+                this.OrderDayOccurrences = Days.None;
+                this.PartOfRoutes = new List<Route>();
             }
 
             public Boolean IsCompleted()
             {
                 foreach (Days restrictions in OrderDayRestrictions)
-                    if(OrderDayOccurrences.Equals(restrictions))
+                    if (OrderDayOccurrences.Equals(restrictions))
                         return true;
 
                 return false;

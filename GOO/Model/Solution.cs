@@ -9,14 +9,14 @@ namespace GOO.Model
 {
     public class Solution
     {
-        private OrdersCounter ordersCounter;
+        private OrdersTracker ordersTracker;
 
         private List<ParentCluster> clusters;
         private List<Tuple<Days, int, List<Route>>> truckPlanning;
 
         public Solution(List<ParentCluster> clusters)
         {
-            this.ordersCounter = OrdersCounter.Instance;
+            this.ordersTracker = OrdersTracker.Instance;
             this.clusters = clusters;
             this.truckPlanning = new List<Tuple<Days, int, List<Route>>>();
         }
@@ -24,14 +24,14 @@ namespace GOO.Model
         public void AddNewItemToPlanning(Days day, int truckID, List<Route> routes)
         {
             this.truckPlanning.Add(new Tuple<Days, int, List<Route>>(day, truckID, routes));
-            updateOrdersCounterAfterAdding(routes);
+            this.ordersTracker.updateOrdersCounterAfterAdding(routes);
         }
 
         public void RemoveItemFromPlanning(Days day, int truckID)
         {
             Tuple<Days, int, List<Route>> toRemove = getPlanningForATruck(day, truckID);
             this.truckPlanning.Remove(toRemove);
-            updateOrdersCounterAfterRemoval(toRemove.Item3);
+            this.ordersTracker.updateOrdersCounterAfterRemoval(toRemove.Item3);
         }
 
         public List<Tuple<Days, int, List<Route>>> getEntirePlanning()
@@ -42,29 +42,7 @@ namespace GOO.Model
         public void clearTruckPlanning()
         {
             truckPlanning.Clear();
-            ordersCounter.ClearAllOccurences();
-        }
-
-        public void recountOrdersCounter() // Unused (?)
-        {
-            ordersCounter.ClearAllOccurences();
-            foreach (Tuple<Days, int, List<Route>> tuple in truckPlanning)
-                updateOrdersCounterAfterAdding(tuple.Item3);
-        }
-
-        private void updateOrdersCounterAfterAdding(List<Route> addedRoutes)
-        {
-            foreach (Route route in addedRoutes)
-                foreach (Order order in route.Orders)
-                    if(order.OrderNumber != 0)
-                        ordersCounter.AddOccurrence(order.OrderNumber, route.Day);
-        }
-
-        private void updateOrdersCounterAfterRemoval(List<Route> removedRoutes)
-        {
-            foreach (Route route in removedRoutes)
-                foreach (Order order in route.Orders)
-                    ordersCounter.RemoveOccurrence(order.OrderNumber, route.Day);
+            ordersTracker.ClearAllOccurences();
         }
 
         public Tuple<Days, int, List<Route>> getPlanningForATruck(Days day, int truckID)
@@ -100,11 +78,11 @@ namespace GOO.Model
             double penaltyTime = 0.0d;
 
             List<int> uncompleteOrders = new List<int>();
-            for (int i = 0; i < ordersCounter.CounterList.Count; i++)
+            for (int i = 0; i < ordersTracker.CounterList.Count; i++)
             {
-                if (!ordersCounter.CounterList[i].IsCompleted())
+                if (!ordersTracker.CounterList[i].IsCompleted())
                 {
-                    int orderNumber = ordersCounter.CounterList[i].OrderNumber;
+                    int orderNumber = ordersTracker.CounterList[i].OrderNumber;
                     if (uncompleteOrders.Contains(orderNumber)) // Has already been punished
                         continue;
                     else

@@ -193,7 +193,7 @@ namespace GOO.Model
             return toReturn;
         }
 
-        private static List<Order> createAvailableOrdersForDay(Days day, OrdersCounter orderCounter, List<Order> ordersToUse)
+        private static List<Order> createAvailableOrdersForDay(Days day, OrdersTracker orderCounter, List<Order> ordersToUse)
         {
             List<Order> toReturn = new List<Order>();
             foreach (Order order in ordersToUse)

@@ -17,6 +17,11 @@ namespace GOO.Model
         public int X { get; private set; }
         public int Y { get; private set; }
 
+        public double PenaltyTime { get; private set; }
+        public List<Days> DayRestrictions { get; private set; }
+
+        private OrdersTracker orderCounter;
+
         public int FrequencyNumber
         {
             get
@@ -39,11 +44,6 @@ namespace GOO.Model
             }
         }
 
-        public double PenaltyTime { get; private set; }
-        public List<Days> DayRestrictions { get; private set; }
-        public List<Route> PartOfRoutes { get; private set; }
-
-        private OrdersCounter orderCounter;
 
         public Order(int OrderNumber, String Place, OrderFrequency Frequency, int NumberOfContainers, int VolumePerContainer, double EmptyingTimeInSeconds, int MatrixID, int X, int Y)
         {
@@ -59,20 +59,7 @@ namespace GOO.Model
 
             PenaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInSeconds) * 3.0d;
             DayRestrictions = DayRestrictionFactory.GetDayRestrictions(Frequency);
-            PartOfRoutes = new List<Route>();
-            orderCounter = OrdersCounter.Instance;
-        }
-
-        public void AddedToRoute(Route routeAddedTo)
-        {
-            PartOfRoutes.Add(routeAddedTo);
-            orderCounter.AddOccurrence(this.OrderNumber, routeAddedTo.Day);
-        }
-
-        public void RemoveFromRoute(Route removedFrom)
-        {
-            PartOfRoutes.Remove(removedFrom);
-            orderCounter.RemoveOccurrence(this.OrderNumber, removedFrom.Day);
+            orderCounter = OrdersTracker.Instance;
         }
 
         public bool CanBeAddedOnDay(Days day)

@@ -12,7 +12,7 @@ namespace GOO.Model.Optimizers.Strategies
         private Route old_route;
         private Route new_route;
         private List<Route> RoutesFromSolution;
-        private OrdersCounter ordersCounter;
+        private OrdersTracker ordersCounter;
 
         public RandomOrderAddStrategy() : base()
         {
@@ -22,7 +22,7 @@ namespace GOO.Model.Optimizers.Strategies
         public override Solution executeStrategy(Solution toStartFrom)
         {
             Tuple<Days, int, List<Route>> Planning = toStartFrom.getRandomPlanning();
-            this.ordersCounter = OrdersCounter.Instance;
+            this.ordersCounter = OrdersTracker.Instance;
             day = Planning.Item1;
             truck = Planning.Item2;
             RoutesFromSolution = Planning.Item3;
