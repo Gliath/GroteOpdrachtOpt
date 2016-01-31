@@ -41,7 +41,8 @@ namespace GOO.Model.Optimizers.Strategies
                 cluster.OrdersInCluster.RemoveAt(randomIndex);
             }
 
-            toStartFrom.AllRoutes.Add(routeCreated);
+            if (routeCreated.Orders.Count > 1) // Does have orders
+                toStartFrom.AllRoutes.Add(routeCreated);
 
             return toStartFrom; // Nottin' really changed in the solution itself
         }

@@ -83,12 +83,10 @@ namespace GOO.Model
             List<Days> days = new List<Days>();
 
             foreach (Days Day in Enum.GetValues(typeof(Days)))
-            {
                 if (Day == Days.None)
                     continue;
-
-                days.Add(Day);
-            }
+                else
+                    days.Add(Day);
 
             foreach (ParentCluster parent in clusters)
             {
@@ -103,11 +101,13 @@ namespace GOO.Model
                             assigned = parent.SetDaysPlannedForQuadrant(parent.Quadrants[quadrantIndex], dayToAttempt);
 
                         numOfTries++;
-                    } while (!assigned && numOfTries < 100);
+                    } while (!assigned && numOfTries < 32);
+
+                    if (!assigned)
+                        Console.WriteLine("Error, a quadrant could not be assigned to a day");
                 }
             }
 
-            RandomRouteOpt2Strategy opt2 = new RandomRouteOpt2Strategy();
             foreach (ParentCluster parent in clusters)
             {
                 foreach (Cluster quadrant in parent.Quadrants)
@@ -124,6 +124,37 @@ namespace GOO.Model
             }
 
             return clusters;
+        }
+
+        public static void AssignDaysToClusters(List<ParentCluster> clusters)
+        {
+            List<Days> days = new List<Days>();
+
+            foreach (Days Day in Enum.GetValues(typeof(Days)))
+                if (Day == Days.None)
+                    continue;
+                else
+                    days.Add(Day);
+
+            foreach (ParentCluster parent in clusters)
+            {
+                for (int quadrantIndex = 0; quadrantIndex < parent.Quadrants.Length; quadrantIndex++)
+                {
+                    bool assigned = false;
+                    int numOfTries = 0;
+                    do
+                    {
+                        Days dayToAttempt = days[random.Next(days.Count)];
+                        if (parent.CanSetDaysPlanned(parent.Quadrants[quadrantIndex], dayToAttempt))
+                            assigned = parent.SetDaysPlannedForQuadrant(parent.Quadrants[quadrantIndex], dayToAttempt);
+
+                        numOfTries++;
+                    } while (!assigned && numOfTries < 32);
+
+                    if (!assigned)
+                        Console.WriteLine("Error, a quadrant could not be assigned to a day");
+                }
+            }
         }
 
         public static void GenerateRoutesFromClusters(List<AbstractCluster> clustersToPlan)
