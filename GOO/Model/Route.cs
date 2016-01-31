@@ -426,5 +426,10 @@ namespace GOO.Model
             RemoveOrder(secondOrder);
             AddOrderAt(secondOrder, firstOrder);
         }
+
+        public bool isValid(double timeLimit = 43200.0d)
+        {
+            return TravelTime < timeLimit && Weight < 100000;
+        }
     }
 }
