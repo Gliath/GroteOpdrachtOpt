@@ -56,6 +56,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\Optimizers\Strategies\DestroyRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\SwapRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RemoveRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\AddRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\PlanRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomOrderShiftStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomOrderSwapStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\DivorceAttourneyStrategy.cs" />

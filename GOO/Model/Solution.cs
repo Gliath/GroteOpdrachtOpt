@@ -61,10 +61,17 @@ namespace GOO.Model
             return this.truckPlanning.Find(t => t.Item3 == route);
         }
 
-        public AbstractCluster getRandomCluster()
+        public ParentCluster getRandomParentCluster()
         {
             int random = new Random().Next(clusters.Count);
             return this.clusters[random];
+        }
+
+        public Cluster getRandomCluster()
+        {
+            Random rng = new Random();
+            ParentCluster cluster = this.clusters[rng.Next(clusters.Count)];
+            return cluster.Quadrants[rng.Next(cluster.Quadrants.Length)];
         }
 
         public List<ParentCluster> getAllClusters()

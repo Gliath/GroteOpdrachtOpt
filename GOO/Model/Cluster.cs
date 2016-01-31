@@ -26,21 +26,15 @@ namespace GOO.Model
             this.OrdersInCluster = ordersInCluster;
             this.DaysPlannedFor = daysPlannedFor;
             this.Routes = new List<Route>();
+
+            foreach (Order order in ordersInCluster)
+                order.PutOrderInCluster(this);
         }
-
-        //public bool canbeplannedon(days day)
-        //{
-        //    for (int i = 0; i < ordersincluster.count; i++)
-        //        //if (!orderscounter.canaddorder(ordersincluster[i].ordernumber, day)) /* ask solution */
-        //            return false;
-
-        //    return true;
-        //}
 
         public bool ReCenterPoint()
         {
-            double newX = 0;
-            double newY = 0;
+            double newX = 0.0d;
+            double newY = 0.0d;
             foreach (Order order in OrdersInCluster)
             {
                 newX += order.X;
@@ -60,15 +54,20 @@ namespace GOO.Model
         public void AddOrderToCluster(Order toAdd)
         {
             OrdersInCluster.Add(toAdd);
+            toAdd.PutOrderInCluster(this);
         }
 
         public void RemoveOrderFromCluster(Order toRemove)
         {
+            toRemove.RemoveOrderFromCluster();
             OrdersInCluster.Remove(toRemove);
         }
 
         public void RemoveAllOrdersFromCluster()
         {
+            foreach (Order order in OrdersInCluster)
+                order.RemoveOrderFromCluster();
+
             OrdersInCluster.Clear();
         }
 

@@ -23,10 +23,10 @@ namespace GOO.Model
 
         public List<Cluster> createClusters()
         {
-            return createClusters(Clusterer.startingAmountOfClusters, this.createStartOrders(this.allOrders, Clusterer.startingAmountOfClusters), this.allOrders);
+            return createClusters(Clusterer.startingAmountOfClusters, this.createStartOrders(Clusterer.startingAmountOfClusters));
         }
 
-        public List<Cluster> createClusters(int amountOfClusters, List<Order> startingPoints, Dictionary<int, Order> allOrders)
+        public List<Cluster> createClusters(int amountOfClusters, List<Order> startingPoints)
         {
             List<Cluster> toReturn = new List<Cluster>();
 
@@ -35,7 +35,7 @@ namespace GOO.Model
 
             for (int i = 0; i < 3000; i++) // Try to reposition the center-point 3000 times for each cluster
             {
-                assignOrdersToClustersEuclidean(toReturn, allOrders);
+                assignOrdersToClustersEuclidean(toReturn);
                 toReturn.RemoveAll(c => c.OrdersInCluster.Count == 0);
             }
 
@@ -351,7 +351,7 @@ namespace GOO.Model
                             cluster.OrdersInCluster.Add(order);
         }
 
-        private void assignOrdersToClustersEuclidean(List<Cluster> clusters, Dictionary<int, Order> toAssign)
+        private void assignOrdersToClustersEuclidean(List<Cluster> clusters)
         {
             // Grouping orders based on Euclidean distance method
             // Note : calculating the root is currently not neccessary due to look at relative points
@@ -375,27 +375,27 @@ namespace GOO.Model
             }
         }
 
-        private List<Order> createStartOrders(Dictionary<int, Order> allOrders, int amountOfClusters)
+        private List<Order> createStartOrders(int amountOfClusters)
         {
             List<Order> toReturn = new List<Order>();
 
             List<List<Order>> freqOrders = new List<List<Order>>(); // The following order is intentional!
-            freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK3));
-            freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK4));
+            freqOrders.Add(this.findOrdersWithFrequency(OrderFrequency.PWK3));
+            freqOrders.Add(this.findOrdersWithFrequency(OrderFrequency.PWK4));
 
             int numMaxAdditions = (amountOfClusters - freqOrders.Count + 1) / 2;
 
-            freqOrders.Add(this.findOrdersWithFrequencyRandomly(allOrders, OrderFrequency.PWK2, numMaxAdditions));
-            freqOrders.Add(this.findOrdersWithFrequencyRandomly(allOrders, OrderFrequency.PWK1, numMaxAdditions));
+            freqOrders.Add(this.findOrdersWithFrequencyRandomly(OrderFrequency.PWK2, numMaxAdditions));
+            freqOrders.Add(this.findOrdersWithFrequencyRandomly(OrderFrequency.PWK1, numMaxAdditions));
 
             foreach (List<Order> orders in freqOrders)
             {
                 for (int i = 0; i < orders.Count; i++)
                 {
+                    toReturn.Add(orders[i]);
+
                     if (toReturn.Count >= amountOfClusters)
                         return toReturn;
-
-                    toReturn.Add(orders[i]);
                 }
             }
             return toReturn;
@@ -412,26 +412,26 @@ namespace GOO.Model
             return toReturn;
         }
 
-        private List<Order> findOrdersWithFrequency(Dictionary<int, Order> toLookIn, OrderFrequency toLookFor)
+        private List<Order> findOrdersWithFrequency(OrderFrequency toLookFor)
         {
             List<Order> toReturn = new List<Order>();
 
-            foreach (Order order in toLookIn.Values)
+            foreach (Order order in allOrders.Values)
                 if (order.Frequency == toLookFor)
                     toReturn.Add(order);
 
             return toReturn;
         }
 
-        private List<Order> findOrdersWithFrequencyRandomly(Dictionary<int, Order> toLookIn, OrderFrequency toLookFor, int maxAdditions)
+        private List<Order> findOrdersWithFrequencyRandomly(OrderFrequency toLookFor, int maxAdditions)
         {
             int numAdditions = 0;
             List<Order> toReturn = new List<Order>();
             Random random = new Random();
 
-            for (int i = 0; i < toLookIn.Count; i++)
+            for (int i = 0; i < allOrders.Count; i++)
             {
-                Order order = toLookIn.ElementAt(random.Next(toLookIn.Count)).Value;
+                Order order = allOrders.ElementAt(random.Next(allOrders.Count)).Value;
 
                 if (order.Frequency == toLookFor)
                 {
