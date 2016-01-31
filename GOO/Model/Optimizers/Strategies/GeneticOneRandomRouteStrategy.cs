@@ -136,7 +136,23 @@ namespace GOO.Model.Optimizers.Strategies
                     }
                 }
 
-                Boolean newGirlAbominationOffspringIstheBest = newBoyAbominationOffspring.TravelTime <= newGirlAbominationOffspring.TravelTime;
+                if (newBoyAbominationOffspring.isValid() && !newGirlAbominationOffspring.isValid()) // One is allowed
+                    if (bestBoyAbominationOffspring.TravelTime < bestGirlAbominationOffspring.TravelTime)
+                        bestGirlAbominationOffspring = newBoyAbominationOffspring;
+                    else
+                        bestBoyAbominationOffspring = newBoyAbominationOffspring;
+                else if (!newBoyAbominationOffspring.isValid() && newGirlAbominationOffspring.isValid()) // Other one allowed
+                    if (bestBoyAbominationOffspring.TravelTime < bestGirlAbominationOffspring.TravelTime)
+                        bestGirlAbominationOffspring = newGirlAbominationOffspring;
+                    else
+                        bestBoyAbominationOffspring = newGirlAbominationOffspring;
+                else if (!newBoyAbominationOffspring.isValid() && !newGirlAbominationOffspring.isValid()) // Neither is allowed
+                {
+                    numOfGenerationsToMake--;
+                    continue;
+                }
+
+                bool newGirlAbominationOffspringIstheBest = newBoyAbominationOffspring.TravelTime <= newGirlAbominationOffspring.TravelTime;
                 if (boyAbominationIsTheBest)
                 {
                     if (newGirlAbominationOffspringIstheBest)
@@ -145,7 +161,7 @@ namespace GOO.Model.Optimizers.Strategies
                         {
                             bestGirlAbominationOffspring = newGirlAbominationOffspring;
 
-                            if(bestBoyAbominationOffspring.TravelTime < newBoyAbominationOffspring.TravelTime)
+                            if (bestBoyAbominationOffspring.TravelTime < newBoyAbominationOffspring.TravelTime)
                             {
                                 bestBoyAbominationOffspring = newBoyAbominationOffspring;
                             }
