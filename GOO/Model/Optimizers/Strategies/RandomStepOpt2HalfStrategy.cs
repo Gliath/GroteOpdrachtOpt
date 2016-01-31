@@ -20,10 +20,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            List<Tuple<Days, int, List<Route>>> planningsTried = new List<Tuple<Days, int, List<Route>>>();
-            bool hasValidRoute = false;
-
-            for (int planningCounter = 0; planningCounter < 5 && !hasValidRoute; planningCounter++)
+            for (int planningCounter = 0; planningCounter < 5; planningCounter++)
             {
                 Planning = toStartFrom.getRandomPlanning();
                 RoutesFromSolution = Planning.Item3;
