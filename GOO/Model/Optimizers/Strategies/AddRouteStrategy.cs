@@ -23,12 +23,12 @@ namespace GOO.Model.Optimizers.Strategies
                 day = (Days)dayArray.GetValue(random.Next(dayArray.Length) - 1);
 
             routeCreated = new Route(day);
-            Cluster cluster = toStartFrom.getRandomCluster();
+            Cluster cluster = toStartFrom.GetRandomCluster();
 
             for (int i = 0; i < 64; i++)
             {
                 while (cluster.OrdersInCluster.Count == 0)
-                    cluster = toStartFrom.getRandomCluster();
+                    cluster = toStartFrom.GetRandomCluster();
 
                 int randomIndex = random.Next(cluster.OrdersInCluster.Count);
                 Order order = cluster.OrdersInCluster[randomIndex];
@@ -41,7 +41,7 @@ namespace GOO.Model.Optimizers.Strategies
                 cluster.OrdersInCluster.RemoveAt(randomIndex);
             }
 
-            OrdersTracker.Instance.AllRoutes.Add(routeCreated);
+            toStartFrom.AllRoutes.Add(routeCreated);
 
             return toStartFrom; // Nottin' really changed in the solution itself
         }
@@ -52,7 +52,8 @@ namespace GOO.Model.Optimizers.Strategies
                 if (!order.ClusterOrderIsLocatedIn.OrdersInCluster.Contains(order))
                     order.ClusterOrderIsLocatedIn.OrdersInCluster.Add(order);
 
-            OrdersTracker.Instance.AllRoutes.Remove(routeCreated);
+            toStartFrom.AllRoutes.Remove(routeCreated);
+            routeCreated.Destroy();
 
             return toStartFrom; // Again nottin' changed
         }

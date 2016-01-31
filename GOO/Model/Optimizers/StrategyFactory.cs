@@ -11,7 +11,7 @@ namespace GOO.Model.Optimizers
             return new Strategy[] {
                 new AddRouteStrategy(),
                 new SwapRouteStrategy(),
-                new DestroyRouteStrategy(),
+                new DestroyPlannedRouteStrategy(),
                 new RemoveRouteStrategy(),
                 new PlanRouteStrategy(),
 

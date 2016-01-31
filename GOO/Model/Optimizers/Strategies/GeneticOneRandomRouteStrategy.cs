@@ -23,7 +23,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            planningForSelectedRoute = toStartFrom.getRandomPlanning();
+            planningForSelectedRoute = toStartFrom.GetRandomPlanning();
             originalRoute = planningForSelectedRoute.Item3[random.Next(planningForSelectedRoute.Item3.Count)];
             double originalTravelTime = originalRoute.TravelTime;
             int numOfSlices = random.Next(1, originalRoute.Orders.Count - 2);

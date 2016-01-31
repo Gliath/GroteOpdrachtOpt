@@ -22,7 +22,7 @@ namespace GOO.Model.Optimizers.Strategies
         {
             for (int planningCounter = 0; planningCounter < 5; planningCounter++)
             {
-                Planning = toStartFrom.getRandomPlanning();
+                Planning = toStartFrom.GetRandomPlanning();
                 RoutesFromSolution = Planning.Item3;
                 old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
 

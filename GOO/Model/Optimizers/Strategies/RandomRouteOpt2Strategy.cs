@@ -21,7 +21,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            Planning = toStartFrom.getRandomPlanning();
+            Planning = toStartFrom.GetRandomPlanning();
             RoutesFromSolution = Planning.Item3;
 
             //save the begin route for rollback

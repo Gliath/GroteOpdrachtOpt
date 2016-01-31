@@ -33,11 +33,7 @@ namespace GOO
             Console.WriteLine("Program booting up...");
             FilesInitializer.InitializeFiles();
             Console.WriteLine("Files have been processed");
-
-            Console.WriteLine("Initializing OrdersTracker");
-            OrdersTracker.Instance.InitializeOrdersTracker();
-            Console.WriteLine("Done Initializing OrdersTracker");
-
+            
             Stopwatch sw = Stopwatch.StartNew();
             Solution start = Solver.generateSolution();
             sw.Stop();

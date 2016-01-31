@@ -24,7 +24,7 @@ namespace GOO.Model.Optimizers.Strategies
                 double totalTravelTime = 0.0d;
                 for (int planningCounter = 0; planningCounter < 5; planningCounter++)
                 {
-                    Planning = toStartFrom.getRandomPlanning();
+                    Planning = toStartFrom.GetRandomPlanning();
                     totalTravelTime = 0.0d;
 
                     foreach (Route route in Planning.Item3)
@@ -40,8 +40,8 @@ namespace GOO.Model.Optimizers.Strategies
                 int routeIndex = -1;
                 for (int routeCounter = 0; routeCounter < 8; routeCounter++)
                 {
-                    routeIndex = random.Next(OrdersTracker.Instance.AllRoutes.Count);
-                    routePlanned = OrdersTracker.Instance.AllRoutes[routeIndex];
+                    routeIndex = random.Next(toStartFrom.AvailableRoutes.Count);
+                    routePlanned = toStartFrom.AvailableRoutes[routeIndex]; // TODO : Fix count = null
 
                     if (totalTravelTime + routePlanned.TravelTime <= 43200.0d)
                         break;
@@ -50,12 +50,7 @@ namespace GOO.Model.Optimizers.Strategies
                 if (totalTravelTime + routePlanned.TravelTime > 43200.0d)
                     continue;
 
-                OrdersTracker.Instance.AllRoutes.RemoveAt(routeIndex);
-                Planning.Item3.Add(routePlanned);
-
-                toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
-                toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, Planning.Item3);
-
+                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routePlanned);
                 break;
             }
 
@@ -64,12 +59,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            OrdersTracker.Instance.AllRoutes.Add(routePlanned);
-            Planning.Item3.Remove(routePlanned);
-
-            toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
-            toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, Planning.Item3);
-
+            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, routePlanned);
             return toStartFrom;
         }
     }

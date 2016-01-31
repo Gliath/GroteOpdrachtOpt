@@ -11,17 +11,13 @@ namespace GOO.Model
         public double TravelTime { get; private set; }
         public Days Day { get; private set; }
         public int Weight { get; private set; }
-
-        private OrdersTracker OrdersTracker;
-
+        
         public Route(Days Day)
         {
             this.Orders = new List<Order>();
             this.TravelTime = 1800.0d;
             this.Weight = 0;
             this.Day = Day;
-
-            this.OrdersTracker = OrdersTracker.Instance;
 
             this.Orders.Add(Data.GetOrder0());
         }
@@ -113,7 +109,7 @@ namespace GOO.Model
             TravelTime += order.EmptyingTimeInSeconds;
             Weight += order.VolumePerContainer * order.NumberOfContainers;
             Orders.Insert(Orders.Count - 1, order);
-            OrdersTracker.AddOrderOccurrence(order.OrderNumber, this);
+            order.AddOrderOccurrence(this);
         }
 
         public void AddOrderAtStart(Order order)
@@ -129,7 +125,7 @@ namespace GOO.Model
             TravelTime += order.EmptyingTimeInSeconds;
             Weight += order.VolumePerContainer * order.NumberOfContainers;
             Orders.Insert(1, order);
-            OrdersTracker.AddOrderOccurrence(order.OrderNumber, this);
+            order.AddOrderOccurrence(this);
         }
 
         public void AddOrderAt(Order newOrder, Order orderToInsertAfter)
@@ -156,7 +152,7 @@ namespace GOO.Model
             TravelTime += newOrder.EmptyingTimeInSeconds;
             Weight += newOrder.VolumePerContainer * newOrder.NumberOfContainers;
             Orders.Insert(IndexOfOrderToInsertAfter + 1, newOrder);
-            OrdersTracker.AddOrderOccurrence(newOrder.OrderNumber, this);
+            newOrder.AddOrderOccurrence(this);
         }
 
         public void RemoveOrder(Order order)
@@ -173,7 +169,7 @@ namespace GOO.Model
             TravelTime -= order.EmptyingTimeInSeconds;
             Weight -= order.VolumePerContainer * order.NumberOfContainers;
             Orders.Remove(order);
-            OrdersTracker.RemoveOrderOccurrence(order.OrderNumber, this);
+            order.RemoveOrderOccurrence(this); 
         }
 
         public bool CanSwapOrder(Order firstOrder, Order secondOrder, double timeLimit = 43200.0d)
@@ -430,6 +426,13 @@ namespace GOO.Model
         public bool isValid(double timeLimit = 43200.0d)
         {
             return TravelTime < timeLimit && Weight < 100000;
+        }
+
+        public void Destroy()
+        {
+            foreach (Order order in Orders)
+                if(order.OrderNumber != 0)
+                    order.RemoveOrderOccurrence(this); 
         }
     }
 }

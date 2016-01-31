@@ -29,7 +29,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            planningForSelectedRoute = toStartFrom.getRandomPlanning();
+            planningForSelectedRoute = toStartFrom.GetRandomPlanning();
             firstOriginalRoute = planningForSelectedRoute.Item3[random.Next(planningForSelectedRoute.Item3.Count)];
             secondOriginalRoute = planningForSelectedRoute.Item3[random.Next(planningForSelectedRoute.Item3.Count)];
 

@@ -5,13 +5,13 @@ using GOO.Utilities;
 
 namespace GOO.Model.Optimizers.Strategies
 {
-    public class DestroyRouteStrategy : Strategy
+    public class DestroyPlannedRouteStrategy : Strategy
     {
         private Tuple<Days, int, List<Route>> Planning;
         private List<Order> ordersDestroyed;
         private Days dayDestroyed;
         
-        public DestroyRouteStrategy()
+        public DestroyPlannedRouteStrategy()
             : base()
         {
             Planning = null;
@@ -22,7 +22,7 @@ namespace GOO.Model.Optimizers.Strategies
         {
             for (int planningCounter = 0; planningCounter < 5; planningCounter++)
             {
-                Planning = toStartFrom.getRandomPlanning();
+                Planning = toStartFrom.GetRandomPlanning();
                 if (Planning.Item3.Count > 0)
                     break;
             }
@@ -34,13 +34,9 @@ namespace GOO.Model.Optimizers.Strategies
             Route routeDestroyed = Planning.Item3[routeIndex];
             ordersDestroyed = routeDestroyed.Orders;
             dayDestroyed = routeDestroyed.Day;
-            Planning.Item3.RemoveAt(routeIndex);
-
-            foreach (Order order in ordersDestroyed)
-                routeDestroyed.RemoveOrder(order);
-
-            toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
-            toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, Planning.Item3);
+            
+            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, routeDestroyed);
+            routeDestroyed.Destroy();
 
             return toStartFrom;
         }
@@ -51,10 +47,7 @@ namespace GOO.Model.Optimizers.Strategies
             foreach (Order order in ordersDestroyed)
                 routeRestored.AddOrder(order);
 
-            Planning.Item3.Add(routeRestored);
-
-            toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
-            toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, Planning.Item3);
+            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeRestored);
 
             return toStartFrom;
         }

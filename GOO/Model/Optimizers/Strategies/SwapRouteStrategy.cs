@@ -26,7 +26,7 @@ namespace GOO.Model.Optimizers.Strategies
             {
                 for (int planningCounter = 0; planningCounter < 5; planningCounter++)
                 {
-                    Plannings[i] = toStartFrom.getRandomPlanning();
+                    Plannings[i] = toStartFrom.GetRandomPlanning();
                     if (Plannings[i].Item3.Count > 0)
                         break;
                 }

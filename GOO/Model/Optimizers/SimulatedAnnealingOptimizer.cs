@@ -24,9 +24,9 @@ namespace GOO.Model.Optimizers
 
         public Solution runOptimizer(Solution startSolution, GOO.ViewModel.MainViewModel reportProgress)
         {
-            Solution currentSolution = new Solution(startSolution.getAllClusters());
+            Solution currentSolution = new Solution(startSolution.GetAllClusters());
 
-            foreach (Tuple<Days, int, List<Route>> t in startSolution.getEntirePlanning())
+            foreach (Tuple<Days, int, List<Route>> t in startSolution.GetEntirePlanning())
             {
                 List<Route> copyRoute = new List<Route>();
                 foreach (Route r in t.Item3)
@@ -50,10 +50,10 @@ namespace GOO.Model.Optimizers
                 {
                     startSolution = currentSolution;
                     oldSolutionScore = newSolutionScore;
-                    currentSolution = new Solution(startSolution.getAllClusters());
+                    currentSolution = new Solution(startSolution.GetAllClusters());
                     //Console.WriteLine("The solution is better");
 
-                    foreach (Tuple<Days, int, List<Route>> t in startSolution.getEntirePlanning())
+                    foreach (Tuple<Days, int, List<Route>> t in startSolution.GetEntirePlanning())
                     {
                         List<Route> copyRoute = new List<Route>();
                         foreach (Route r in t.Item3)
@@ -191,7 +191,7 @@ namespace GOO.Model.Optimizers
         // TODO : Use or not?
         private Solution Phase3(Solution toStartFrom, List<AbstractCluster> clustersToPlan) // Distribute routes to truckers
         {
-            toStartFrom.clearTruckPlanning();
+            toStartFrom.ClearTruckPlanning();
             return RoutePlanner.PlanRoutesFromClustersIntoSolution(toStartFrom, clustersToPlan);
         }
 

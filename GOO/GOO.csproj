@@ -56,7 +56,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\Optimizers\Strategies\DestroyRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\DestroyPlannedRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\SwapRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RemoveRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\AddRouteStrategy.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="Model\MarriedCluster.cs" />
     <Compile Include="Model\Clusterer.cs" />
     <Compile Include="Model\Order.cs" />
-    <Compile Include="Model\OrdersTracker.cs" />
+    <Compile Include="Model\OrderTracker.cs" />
     <Compile Include="Model\ParentCluster.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="Model\RoutePlanner.cs" />

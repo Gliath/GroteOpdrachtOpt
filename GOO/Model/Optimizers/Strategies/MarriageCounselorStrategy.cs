@@ -17,7 +17,7 @@ namespace GOO.Model.Optimizers.Strategies
         public List<AbstractCluster> executeStrategy(Solution toStartFrom)
         {
             List<AbstractCluster> Couples = new List<AbstractCluster>();
-            List<ParentCluster> Clusters = toStartFrom.getAllClusters();
+            List<ParentCluster> Clusters = toStartFrom.GetAllClusters();
             List<Cluster> SingleClusters = new List<Cluster>();
 
             OriginalClusters.Clear();

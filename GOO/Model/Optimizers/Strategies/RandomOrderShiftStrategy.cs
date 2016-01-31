@@ -23,10 +23,10 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            Plans[0] = toStartFrom.getRandomPlanning();
-            Plans[1] = toStartFrom.getRandomPlanning();
+            Plans[0] = toStartFrom.GetRandomPlanning();
+            Plans[1] = toStartFrom.GetRandomPlanning();
             while (Plans[0].Item1 != Plans[1].Item1)
-                Plans[1] = toStartFrom.getRandomPlanning();
+                Plans[1] = toStartFrom.GetRandomPlanning();
 
             Order[] ordersToSwitch = new Order[2];
 

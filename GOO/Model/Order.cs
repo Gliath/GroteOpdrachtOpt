@@ -7,21 +7,21 @@ namespace GOO.Model
 {
     public class Order
     {
-        private OrdersTracker orderCounter;
+        public OrderTracker OrderTracker { get; private set; }
+        public String Place { get; private set; }
+        public List<Days> DayRestrictions { get; private set; }
+        public Cluster ClusterOrderIsLocatedIn { get; private set; }
+
+        public OrderFrequency Frequency { get; private set; }
 
         public int OrderNumber { get; private set; }
-        public String Place { get; private set; }
-        public OrderFrequency Frequency { get; private set; }
         public int NumberOfContainers { get; private set; }
         public int VolumePerContainer { get; private set; }
-        public double EmptyingTimeInSeconds { get; private set; }
         public int MatrixID { get; private set; }
         public int X { get; private set; }
         public int Y { get; private set; }
-
+        public double EmptyingTimeInSeconds { get; private set; }
         public double PenaltyTime { get; private set; }
-        public List<Days> DayRestrictions { get; private set; }
-        public Cluster ClusterOrderIsLocatedIn { get; private set; }
 
         public int FrequencyNumber
         {
@@ -60,7 +60,7 @@ namespace GOO.Model
             ClusterOrderIsLocatedIn = null;
             PenaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInSeconds) * 3.0d;
             DayRestrictions = DayRestrictionFactory.GetDayRestrictions(Frequency);
-            orderCounter = OrdersTracker.Instance;
+            OrderTracker = new OrderTracker(OrderNumber, DayRestrictions);
         }
 
         public bool PutOrderInCluster(Cluster ClusterOrderIsLocatedIn)
@@ -72,6 +72,15 @@ namespace GOO.Model
             return true;
         }
 
+        public void AddOrderOccurrence(Route OccurredIn)
+        {
+            OrderTracker.AddOrderOccurrence(OccurredIn);
+        }
+
+        public void RemoveOrderOccurrence(Route OccurredIn)
+        {
+            OrderTracker.RemoveOrderOccurrence(OccurredIn);
+        }
         public void RemoveOrderFromCluster()
         {
             this.ClusterOrderIsLocatedIn = null;
@@ -79,7 +88,7 @@ namespace GOO.Model
 
         public bool CanBeAddedOnDay(Days day)
         {
-            return this.orderCounter.CanAddOrder(this.OrderNumber, day);
+            return this.OrderTracker.CanAddOrder(day);
         }
     }
 }
