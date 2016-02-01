@@ -74,28 +74,28 @@ namespace GOO.Model.Optimizers
             if (annealingSchedule.AnnealingTemperature < 43750.0d) // after 37.5% progression
                 return new int[] { 
                     1, // new AddRouteStrategy()
-                    1, // new SwapRouteStrategy()
+                    2, // new SwapRouteStrategy()
                     1, // new DestroyPlannedRouteStrategy()
                     1, // new DestroyPoolRouteStrategy()
                     1, // new RemoveRouteStrategy()
-                    1, // new PlanRouteStrategy()
+                    2, // new PlanRouteStrategy()
 
-                    5, // new RandomOrderAddStrategy()
-                    5, // new RandomOrderRemoveStrategy()
-                    5, // new RandomOrderShiftStrategy()
-                    5, // new RandomOrderSwapStrategy()
+                    6, // new RandomOrderAddStrategy()
+                    6, // new RandomOrderRemoveStrategy()
+                    6, // new RandomOrderShiftStrategy()
+                    6, // new RandomOrderSwapStrategy()
 
-                    15, // new RandomStepOpt2Strategy()
-                    15, // new RandomStepOpt2HalfStrategy()
-                    15, // new RandomStepOpt3Strategy()
-                    15, // new RandomStepOpt3HalfStrategy()
+                    18, // new RandomStepOpt2Strategy()
+                    17, // new RandomStepOpt2HalfStrategy()
+                    18, // new RandomStepOpt3Strategy()
+                    17, // new RandomStepOpt3HalfStrategy()
 
                     0, // new RandomRouteOpt2Strategy()
                     0, // new RandomRouteOpt2HalfStrategy()
                     0, // new RandomRouteOpt3Strategy()
                     0, // new RandomRouteOpt3HalfStrategy()
 
-                    14, // new GeneticOneRandomRouteStrategy()
+                    0, // new GeneticOneRandomRouteStrategy()
                     //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
                 };
             else if (annealingSchedule.AnnealingTemperature < 49500.0d) // after 1% progression
@@ -107,13 +107,13 @@ namespace GOO.Model.Optimizers
                     8, // new RemoveRouteStrategy()
                     8, // new PlanRouteStrategy()
 
-                    10, // new RandomOrderAddStrategy()
-                    10, // new RandomOrderRemoveStrategy()
-                    10, // new RandomOrderShiftStrategy()
-                    10, // new RandomOrderSwapStrategy()
+                    11, // new RandomOrderAddStrategy()
+                    11, // new RandomOrderRemoveStrategy()
+                    11, // new RandomOrderShiftStrategy()
+                    11, // new RandomOrderSwapStrategy()
 
                     8, // new RandomStepOpt2Strategy()
-                    7, // new RandomStepOpt2HalfStrategy()
+                    8, // new RandomStepOpt2HalfStrategy()
                     0, // new RandomStepOpt3Strategy()
                     0, // new RandomStepOpt3HalfStrategy()
 
@@ -122,7 +122,7 @@ namespace GOO.Model.Optimizers
                     0, // new RandomRouteOpt3Strategy()
                     0, // new RandomRouteOpt3HalfStrategy()
 
-                    5, // new GeneticOneRandomRouteStrategy()
+                    0, // new GeneticOneRandomRouteStrategy()
                     //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
                 };
             else // before 1% progression

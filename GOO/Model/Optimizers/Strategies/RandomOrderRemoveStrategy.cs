@@ -38,7 +38,7 @@ namespace GOO.Model.Optimizers.Strategies
                     break;
             }
 
-            if (OriginalRoute.Orders.Count < 3)
+            if (OriginalRoute == null || OriginalRoute.Orders.Count < 3)
                 return toStartFrom;
 
             int orderIndex = random.Next(OriginalRoute.Orders.Count - 1);
