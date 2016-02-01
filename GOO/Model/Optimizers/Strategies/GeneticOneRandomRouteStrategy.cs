@@ -27,7 +27,7 @@ namespace GOO.Model.Optimizers.Strategies
             int numOfSlices = random.Next(1, originalRoute.Orders.Count - 2);
 
             List<int> sliceIndices = new List<int>();
-            for (int i = 0; i < numOfSlices; i++)
+            for (int i = 1; i < numOfSlices; i++)
             {
                 bool hasAddedAnIndex = false;
                 do
@@ -80,21 +80,20 @@ namespace GOO.Model.Optimizers.Strategies
             // COMMENCE THE GENETIC EXPERIMENTS PHASE TWO!
             // OPERATION DARWIN'S ABOMINATION REPRODUCTION IS NOW OPERATIONAL!
 
-            int numOfGenerationsToMake = 64;
             Route bestBoyAbominationOffspring = originalRoute;
             Route bestGirlAbominationOffspring = firstAbominationRoute;
             Boolean boyAbominationIsTheBest = bestBoyAbominationOffspring.TravelTime >= bestGirlAbominationOffspring.TravelTime;
             int numberOfGenesThatAreTransferred = originalRoute.Orders.Count / 2;
             List<Order> ordersSelectedForGeneticSwap = new List<Order>();
 
-            while (numOfGenerationsToMake > 0)
+            for (int numOfGenerationsToMake = 64; numOfGenerationsToMake > 0; numOfGenerationsToMake--)
             {
                 ordersSelectedForGeneticSwap.Clear();
 
                 int orderIndex = -1;
                 do
                 {
-                    orderIndex = random.Next(orderSlices.Length - 1);
+                    orderIndex = random.Next(orderSlices.Length - 1); // What?
                     Order randomOrder = null;
 
                     if (boyAbominationIsTheBest)
@@ -109,7 +108,7 @@ namespace GOO.Model.Optimizers.Strategies
 
                 } while (ordersSelectedForGeneticSwap.Count * 2 < numberOfGenesThatAreTransferred - 1);
 
-                List<int> indicesToBeSwaped = new List<int>();
+                List<int> indicesToBeSwaped = new List<int>(); // Change into a array [2], to keep track which index belongs where
                 foreach (Order order in ordersSelectedForGeneticSwap)
                 {
                     indicesToBeSwaped.Add(bestBoyAbominationOffspring.Orders.FindIndex(o => o == order));
@@ -122,7 +121,7 @@ namespace GOO.Model.Optimizers.Strategies
 
                 for (int index = 0; index < originalRoute.Orders.Count - 1; index++)
                 {
-                    if (indicesToBeSwaped.Contains(index))
+                    if (indicesToBeSwaped.Contains(index)) // Erm.. What?
                     {
                         newBoyAbominationOffspring.AddOrder(bestGirlAbominationOffspring.Orders[index]);
                         newGirlAbominationOffspring.AddOrder(bestBoyAbominationOffspring.Orders[index]);
