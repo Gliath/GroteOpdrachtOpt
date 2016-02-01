@@ -14,7 +14,9 @@ namespace GOO.Model.Optimizers.Strategies
         public RandomStepOpt3HalfStrategy()
             : base()
         {
-
+            Planning = null;
+            old_route = null;
+            new_route = null;
         }
 
         public override Solution executeStrategy(Solution toStartFrom)
@@ -68,8 +70,11 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, new_route);
-            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, old_route);
+            if (new_route != null)
+            {
+                toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, new_route);
+                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, old_route);
+            }
 
             return toStartFrom;
         }

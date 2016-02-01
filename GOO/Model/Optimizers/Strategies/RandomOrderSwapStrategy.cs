@@ -61,12 +61,14 @@ namespace GOO.Model.Optimizers.Strategies
                 {
                     if (i == 1)
                     {
-                        newRoutes[i].AddOrderAt(ordersToSwitch[1], ordersToSwitch[0]);
-                        newRoutes[i].RemoveOrder(ordersToSwitch[0]);
+                        newRoutes[0].AddOrderAt(ordersToSwitch[1], ordersToSwitch[0]);
+                        newRoutes[0].RemoveOrder(ordersToSwitch[0]);
                     }
 
                     newRoutes[i].AddOrderAt(ordersToSwitch[0], ordersToSwitch[1]);
                     newRoutes[i].RemoveOrder(ordersToSwitch[1]);
+
+                    newRoutes[i] = null; // Acceptable?
 
                     return toStartFrom;
                 }
@@ -83,6 +85,10 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
+            for (int i = 0; i < 2; i++)
+                if (newRoutes[i] == null || !newRoutes[i].isValid())
+                    return toStartFrom;
+
             for (int i = 0; i < 2; i++)
             {
                 toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, newRoutes[i]);

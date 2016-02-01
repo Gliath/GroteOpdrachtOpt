@@ -48,23 +48,29 @@ namespace GOO.Model.Optimizers.Strategies
 
             int randomIndex = random.Next(cluster.AvailableOrdersInCluster.Count);
             OrderAdded = cluster.AvailableOrdersInCluster[randomIndex];
-            cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
 
             int typeOfInsert = random.Next(3); // 3 choices, start, after and at the end
             switch (typeOfInsert)
             {
                 case 0:
                     if (OriginalRoute.CanAddOrderAtStart(OrderAdded))
+                    {
                         OriginalRoute.AddOrderAtStart(OrderAdded);
+                        cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
+                    }
                     break;
                 case 1:
                     Order orderToInsertAfter = OriginalRoute.Orders[random.Next(OriginalRoute.Orders.Count - 1)];
-                    if (OriginalRoute.CanAddOrderAfter(OrderAdded, orderToInsertAfter))
+                    if (OriginalRoute.CanAddOrderAfter(OrderAdded, orderToInsertAfter)) {
                         OriginalRoute.AddOrderAt(OrderAdded, orderToInsertAfter);
+                        cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
+                    }
                     break;
                 case 2:
-                    if (OriginalRoute.CanAddOrder(OrderAdded))
+                    if (OriginalRoute.CanAddOrder(OrderAdded)) {
                         OriginalRoute.AddOrder(OrderAdded);
+                        cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
+                    } 
                     break;
                 default:
                     Console.WriteLine("THE END IS NIGH! (Impossible error at RandomOrderAddStrategy, line 67~");
@@ -77,8 +83,11 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            OrderAdded.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(OrderAdded);
-            OriginalRoute.RemoveOrder(OrderAdded);
+            if (OriginalRoute != null && OrderAdded != null && OriginalRoute.Orders.Contains(OrderAdded))
+            {
+                OrderAdded.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(OrderAdded);
+                OriginalRoute.RemoveOrder(OrderAdded);
+            }
 
             return toStartFrom;
         }

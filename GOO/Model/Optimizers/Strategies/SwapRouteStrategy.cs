@@ -54,6 +54,10 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
+            for (int i = 0; i < 2; i++)
+                if (Plannings[i].Item3.Count == 0)
+                    return toStartFrom;
+
             Route first = Plannings[0].Item3[routeIndicesSwapped[0]];
             Route second = Plannings[1].Item3[routeIndicesSwapped[1]];
 

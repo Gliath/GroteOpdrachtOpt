@@ -34,13 +34,16 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            Route routeRestored = new Route(dayDestroyed);
-            foreach (Order order in ordersDestroyed)
-                if (order.OrderNumber != 0)
-                    routeRestored.AddOrder(order);
+            if (ordersDestroyed != null)
+            {
+                Route routeRestored = new Route(dayDestroyed);
+                foreach (Order order in ordersDestroyed)
+                    if (order.OrderNumber != 0)
+                        routeRestored.AddOrder(order);
 
-            toStartFrom.AllRoutes.Add(routeRestored);
-            toStartFrom.AvailableRoutes.Add(routeRestored);
+                toStartFrom.AllRoutes.Add(routeRestored);
+                toStartFrom.AvailableRoutes.Add(routeRestored);
+            }
 
             return toStartFrom;
         }

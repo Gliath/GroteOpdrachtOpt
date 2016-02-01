@@ -70,8 +70,11 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, new_route);
-            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, old_route);
+            if (new_route != null)
+            {
+                toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, new_route);
+                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, old_route);
+            }
 
             return toStartFrom;
         }

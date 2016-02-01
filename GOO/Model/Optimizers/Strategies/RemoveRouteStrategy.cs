@@ -39,7 +39,9 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeDeleted);
+            if (routeDeleted != null)
+                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeDeleted);
+
             return toStartFrom;
         }
     }

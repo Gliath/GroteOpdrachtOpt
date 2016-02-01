@@ -55,14 +55,17 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            if (OriginalRoute.Orders.Count == 1) // If empty 
-                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
+            if (OriginalRoute != null && OrderRemoved != null)
+            {
+                if (OriginalRoute.Orders.Count == 1) // If empty 
+                    toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
 
-            OrderRemoved.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Remove(OrderRemoved);
-            if (OrderBefore == null)
-                OriginalRoute.AddOrderAtStart(OrderRemoved);
-            else
-                OriginalRoute.AddOrderAt(OrderRemoved, OrderBefore);
+                OrderRemoved.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Remove(OrderRemoved);
+                if (OrderBefore == null)
+                    OriginalRoute.AddOrderAtStart(OrderRemoved);
+                else
+                    OriginalRoute.AddOrderAt(OrderRemoved, OrderBefore);
+            }
 
             return toStartFrom;
         }
