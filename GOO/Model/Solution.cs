@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
+using System.Text;
 
 using GOO.Utilities;
-using System.Text;
 
 namespace GOO.Model
 {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using GOO.Utilities;
 using GOO.Model.Optimizers.Strategies;
+using GOO.Utilities;
 
 namespace GOO.Model
 {
