@@ -15,11 +15,7 @@ namespace GOO.Model
         public static Solution generateClusters()
         {
             Clusterer clusterer = new Clusterer(Data.Orders, k);
-            List<ParentCluster> splitClusters = clusterer.splitClusters(clusterer.createClusters());
-            RoutePlanner.AssignDaysToClusters(splitClusters);
-
-            Console.WriteLine("Done generating clusters!");
-            return new Solution(splitClusters);
+            return new Solution(clusterer.splitClusters(clusterer.createClusters()));
         }
 
         public static Solution generateSolution()
