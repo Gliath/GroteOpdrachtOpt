@@ -133,6 +133,7 @@ namespace GOO.Model
 
             this.TruckPlanning.Clear();
             this.TravelTimeScore -= TravelTimeScore;
+            this.MakeBasicPlannings();
         }
 
         public void UpdateOrdersCounterAfterAdding(List<Route> addedRoutes)
