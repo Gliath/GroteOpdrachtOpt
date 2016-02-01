@@ -10,7 +10,6 @@ namespace GOO.Model.Optimizers.Strategies
         private Tuple<Days, int, List<Route>> Planning;
         private Route old_route;
         private Route new_route;
-        private List<Route> RoutesFromSolution;
 
         public RandomStepOpt3HalfStrategy()
             : base()
@@ -23,39 +22,40 @@ namespace GOO.Model.Optimizers.Strategies
             for (int planningCounter = 0; planningCounter < 5; planningCounter++)
             {
                 Planning = toStartFrom.GetRandomPlanning();
-                RoutesFromSolution = Planning.Item3;
-                old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
+                if (Planning.Item3.Count == 0)
+                    continue;
+
+                old_route = Planning.Item3[random.Next(Planning.Item3.Count)];
 
                 for (int counter = 0; counter < 5 && old_route.Orders.Count < 4; counter++)
-                    old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
+                    old_route = Planning.Item3[random.Next(Planning.Item3.Count)];
 
                 if (old_route.Orders.Count >= 4)
                     break;
             }
 
-            if (old_route.Orders.Count < 4)
+            if (old_route == null || old_route.Orders.Count < 4)
                 return toStartFrom; // Could not find a valid route to shuffle
 
             new_route = new Route(Planning.Item1);
             foreach (Order order in old_route.Orders)
                 new_route.AddOrder(order);
 
-            int firstIndex = random.Next(old_route.Orders.Count - 2);
-            int secondIndex = random.Next(old_route.Orders.Count - 2);
-            int thirdIndex = random.Next(old_route.Orders.Count - 2);
+            int firstIndex = random.Next(old_route.Orders.Count - 1);
+            int secondIndex = random.Next(old_route.Orders.Count - 1);
+            int thirdIndex = random.Next(old_route.Orders.Count - 1);
 
             while (firstIndex == secondIndex)
-                secondIndex = random.Next(old_route.Orders.Count - 2);
+                secondIndex = random.Next(old_route.Orders.Count - 1);
             while (firstIndex == thirdIndex || secondIndex == thirdIndex)
-                thirdIndex = random.Next(old_route.Orders.Count - 2);
+                thirdIndex = random.Next(old_route.Orders.Count - 1);
 
             swapOrders(old_route.Orders[firstIndex], old_route.Orders[thirdIndex], old_route.Orders[thirdIndex], new_route);
 
-            RoutesFromSolution.Remove(old_route);
-            RoutesFromSolution.Add(new_route);
+            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, old_route);
+            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, new_route);
 
-            toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
-            toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, RoutesFromSolution);
+            toStartFrom.AvailableRoutes.Remove(old_route);
 
             return toStartFrom;
         }
@@ -68,12 +68,8 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            // Nette manier zou zijn om de tuple weer op te halen gebaseerd op truck en dag.
-            RoutesFromSolution.Remove(new_route);
-            RoutesFromSolution.Add(old_route);
-
-            toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
-            toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, RoutesFromSolution);
+            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, new_route);
+            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, old_route);
 
             return toStartFrom;
         }
