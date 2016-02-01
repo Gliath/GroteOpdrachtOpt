@@ -25,7 +25,7 @@ namespace GOO.Model
             private set
             {
                 SolutionScore += value - penalty;
-                penalty += value;
+                penalty = value;
             }
         }
 
