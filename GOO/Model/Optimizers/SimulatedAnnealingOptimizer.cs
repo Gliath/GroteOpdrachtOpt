@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GOO.Model;
 using GOO.Model.Optimizers.Strategies;
 using GOO.Utilities;
+using GOO.ViewModel;
 
 namespace GOO.Model.Optimizers
 {
@@ -22,63 +23,34 @@ namespace GOO.Model.Optimizers
             newSolutionScore = Double.MaxValue;
         }
 
-        public Solution runOptimizer(Solution startSolution, GOO.ViewModel.MainViewModel reportProgress)
+        public Solution runOptimizer(Solution solution, GOO.ViewModel.MainViewModel reportProgress)
         {
-            Solution currentSolution = new Solution(startSolution.GetAllClusters());
-
-            foreach (Tuple<Days, int, List<Route>> t in startSolution.GetEntirePlanning())
-            {
-                List<Route> copyRoute = new List<Route>();
-                foreach (Route r in t.Item3)
-                    copyRoute.Add(r);
-
-                currentSolution.AddNewItemToPlanning(t.Item1, t.Item2, copyRoute);
-            }
-
-            oldSolutionScore = startSolution.SolutionScore;
+            oldSolutionScore = solution.SolutionScore;
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
-                currentSolution = SelectAndExecuteMove(currentSolution);
-
-                // TODO: Add Planning for routes after a move has been done  -> for instance
-                // Check if there are still available routes. Plan those
-                // And use a strategy to either destroy the unused ones or remove used ones so that unused ones can be planned
+                Strategy usedStrategy = SelectAndExecuteMove(solution);
+                newSolutionScore = solution.SolutionScore;
 
                 // Accept or reject new solution
-                if (AcceptOrReject(currentSolution)) // New Solution accepted
+                if (AcceptOrReject(solution)) // New Solution accepted
                 {
-                    startSolution = currentSolution;
                     oldSolutionScore = newSolutionScore;
-                    currentSolution = new Solution(startSolution.GetAllClusters());
-                    //Console.WriteLine("The solution is better");
-
-                    foreach (Tuple<Days, int, List<Route>> t in startSolution.GetEntirePlanning())
-                    {
-                        List<Route> copyRoute = new List<Route>();
-                        foreach (Route r in t.Item3)
-                            copyRoute.Add(r);
-
-                        currentSolution.AddNewItemToPlanning(t.Item1, t.Item2, copyRoute);
-                    }
                 }
                 else // New solution rejected
                 {
-                    //Console.WriteLine("The solution is not better");
-                    currentSolution = startSolution;
+                    usedStrategy.undoStrategy(solution);
                 }
 
                 if (reportProgress != null)
                     reportProgress.ProgressValue++;
             }
 
-            //Console.WriteLine("SimulatedAnnealingOptimizer : Done optimizing solution!");
-
-            return currentSolution;
+            return solution;
         }
 
         //TODO : Update this method to make the calculation of what chance a move has to be executed clearer and easier to manage
-        private Solution SelectAndExecuteMove(Solution toStartFrom) // Deal with Routes
+        private Strategy SelectAndExecuteMove(Solution toStartFrom) // Deal with Routes
         {
             int[] chances = whatAreTheChances();
             int totalPercentages = 0;
@@ -93,8 +65,8 @@ namespace GOO.Model.Optimizers
                     break;
                 }
             }
-
-            return strategy.executeStrategy(toStartFrom);
+            strategy.executeStrategy(toStartFrom);
+            return strategy;
         }
 
         private int[] whatAreTheChances()
@@ -182,19 +154,12 @@ namespace GOO.Model.Optimizers
                 };
         }
 
-        // TODO : Use or not?
-        private Solution Phase3(Solution toStartFrom, List<AbstractCluster> clustersToPlan) // Distribute routes to truckers
-        {
-            toStartFrom.ClearTruckPlanning();
-            return RoutePlanner.PlanRoutesFromClustersIntoSolution(toStartFrom, clustersToPlan);
-        }
-
         private bool AcceptOrReject(Solution toAcceptOrReject) // Accept Solution or not
         {
             double deltaScore = oldSolutionScore - newSolutionScore;
             double chanceToBeAccepted = Math.Exp(deltaScore / annealingSchedule.AnnealingTemperature);
 
-            return deltaScore > 0 || random.NextDouble() <= chanceToBeAccepted;
+            return deltaScore >= 0 || random.NextDouble() <= chanceToBeAccepted;
         }
 
         public AnnealingSchedule getAnnealingSchedule()
