@@ -30,8 +30,11 @@ namespace GOO.Model.Optimizers.Strategies
 
             for (int i = 0; i < 64; i++)
             {
-                while (cluster.AvailableOrdersInCluster.Count == 0)
+                for (int clusterCounter = 0; clusterCounter < 16 && cluster.AvailableOrdersInCluster.Count == 0; clusterCounter++)
                     cluster = toStartFrom.GetRandomCluster();
+
+                if (cluster.AvailableOrdersInCluster.Count == 0)
+                    break;
 
                 int randomIndex = random.Next(cluster.AvailableOrdersInCluster.Count);
                 Order order = cluster.AvailableOrdersInCluster[randomIndex];
