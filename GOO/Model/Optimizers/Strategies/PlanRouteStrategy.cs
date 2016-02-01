@@ -19,6 +19,9 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
+            if (toStartFrom.AvailableRoutes.Count == 0)
+                return toStartFrom; // No routes to plan
+
             for (int numOfTries = 16; numOfTries > 0; numOfTries--)
             {
                 double totalTravelTime = 0.0d;
@@ -38,10 +41,10 @@ namespace GOO.Model.Optimizers.Strategies
                     continue;
 
                 int routeIndex = -1;
-                for (int routeCounter = 0; routeCounter < 8; routeCounter++)
+                for (int routeCounter = 0; routeCounter < 8 && toStartFrom.AvailableRoutes.Count > 0; routeCounter++)
                 {
                     routeIndex = random.Next(toStartFrom.AvailableRoutes.Count);
-                    routePlanned = toStartFrom.AvailableRoutes[routeIndex]; // TODO : Fix count = null
+                    routePlanned = toStartFrom.AvailableRoutes[routeIndex];
 
                     if (totalTravelTime + routePlanned.TravelTime <= 43200.0d)
                         break;

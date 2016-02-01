@@ -21,7 +21,7 @@ namespace GOO.Model.Optimizers.Strategies
             Days day = Days.None;
             while (day.Equals(Days.None))
             {
-                int dayIndex = random.Next(dayArray.Length) - 1;
+                int dayIndex = random.Next(dayArray.Length);
                 day = (Days)dayArray.GetValue(dayIndex);
             }
 
@@ -45,9 +45,12 @@ namespace GOO.Model.Optimizers.Strategies
             }
 
             if (routeCreated.Orders.Count > 1) // Does have orders
+            {
                 toStartFrom.AllRoutes.Add(routeCreated);
+                toStartFrom.AvailableRoutes.Add(routeCreated);
+            }
 
-            return toStartFrom; // Nottin' really changed in the solution itself
+            return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
@@ -57,9 +60,10 @@ namespace GOO.Model.Optimizers.Strategies
                     order.ClusterOrderIsLocatedIn.OrdersInCluster.Add(order);
 
             toStartFrom.AllRoutes.Remove(routeCreated);
+            toStartFrom.AvailableRoutes.Remove(routeCreated);
             routeCreated.Destroy();
 
-            return toStartFrom; // Again nottin' changed
+            return toStartFrom;
         }
     }
 }
