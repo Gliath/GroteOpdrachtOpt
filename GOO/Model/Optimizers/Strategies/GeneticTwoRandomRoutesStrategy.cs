@@ -29,9 +29,6 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            if (toStartFrom.GetEntirePlanning().Count == 0)
-                return toStartFrom;
-
             planningForSelectedRoute = toStartFrom.GetRandomPlanning();
             firstOriginalRoute = planningForSelectedRoute.Item3[random.Next(planningForSelectedRoute.Item3.Count)];
             secondOriginalRoute = planningForSelectedRoute.Item3[random.Next(planningForSelectedRoute.Item3.Count)];

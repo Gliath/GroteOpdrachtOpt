@@ -30,6 +30,18 @@ namespace GOO.Model
             TruckPlanning = new List<Tuple<Days, int, List<Route>>>();
         }
 
+        public void MakeBasicPlannings()
+        {
+            foreach (Days day in Enum.GetValues(typeof(Days)))
+            {
+                if (day.Equals(Days.None))
+                    continue;
+
+                for (int i = 0; i < 2; i++)
+                    this.AddNewItemToPlanning(day, i, new List<Route>());
+            }
+        }
+
         public ParentCluster GetRandomParentCluster()
         {
             int random = new Random().Next(clusters.Count);
@@ -183,14 +195,11 @@ namespace GOO.Model
             counter.OrderDayOccurrences ^= (counter.OrderDayOccurrences & OccurredIn.Day);
             counter.UpdateOrderDayRestrictions();
             counter.PartOfRoutes.Remove(OccurredIn);
-
-            // Why remove if all orders need to be added in anyway?
-            // CounterList.RemoveAll(o => o.OrderNumber == OrderNumber && o.OrderDayOccurrences.Equals(Days.None));
         }
 
         public bool CanAddOrder(int OrderNumber, Days day)
         {
-            return this.FindOrderTracker(OrderNumber).CanAddOrder(day); // restrictions is either empty or does not have the specified day in its restriction
+            return this.FindOrderTracker(OrderNumber).CanAddOrder(day);
         }
 
         public Boolean OrderHasOccurence(Days day, int OrderNumber)
@@ -291,6 +300,5 @@ namespace GOO.Model
                     return -1;
             }
         }
-
     }
 }

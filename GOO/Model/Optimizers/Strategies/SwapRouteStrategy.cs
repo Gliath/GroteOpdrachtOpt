@@ -22,9 +22,6 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom) // switch two routes from different(?) plannings
         {
-            if (toStartFrom.GetEntirePlanning().Count == 0)
-                return toStartFrom;
-
             for (int i = 0; i < 2; i++)
             {
                 for (int planningCounter = 0; planningCounter < 5; planningCounter++)

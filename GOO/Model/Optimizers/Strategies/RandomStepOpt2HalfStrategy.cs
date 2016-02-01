@@ -20,9 +20,6 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            if (toStartFrom.GetEntirePlanning().Count == 0)
-                return toStartFrom;
-
             for (int planningCounter = 0; planningCounter < 5; planningCounter++)
             {
                 Planning = toStartFrom.GetRandomPlanning();

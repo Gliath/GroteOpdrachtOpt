@@ -23,9 +23,6 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            if (toStartFrom.GetEntirePlanning().Count < 2)
-                return toStartFrom;
-
             Plans[0] = toStartFrom.GetRandomPlanning();
             Plans[1] = toStartFrom.GetRandomPlanning();
             while (Plans[0].Item1 != Plans[1].Item1)

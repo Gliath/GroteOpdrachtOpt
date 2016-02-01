@@ -19,9 +19,6 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            if (toStartFrom.GetEntirePlanning().Count == 0)
-                return toStartFrom;
-
             for (int numOfTries = 16; numOfTries > 0; numOfTries--)
             {
                 double totalTravelTime = 0.0d;
