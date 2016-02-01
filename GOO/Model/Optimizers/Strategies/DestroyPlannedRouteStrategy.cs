@@ -30,14 +30,13 @@ namespace GOO.Model.Optimizers.Strategies
             if (Planning.Item3.Count == 0)
                 return toStartFrom;
 
-            int routeIndex = random.Next(Planning.Item3.Count);
-            Route routeToDestroy = Planning.Item3[routeIndex];
+            Route routeToDestroy = Planning.Item3[random.Next(Planning.Item3.Count)];
             toStartFrom.AllRoutes.Remove(routeToDestroy);
             ordersDestroyed = routeToDestroy.Orders;
             dayDestroyed = routeToDestroy.Day;
             
             toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, routeToDestroy);
-            toStartFrom.AvailableRoutes.RemoveAt(routeIndex);
+            toStartFrom.AvailableRoutes.Remove(routeToDestroy);
             routeToDestroy.Destroy();
 
             return toStartFrom;
