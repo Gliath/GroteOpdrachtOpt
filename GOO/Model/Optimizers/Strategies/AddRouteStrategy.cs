@@ -20,7 +20,10 @@ namespace GOO.Model.Optimizers.Strategies
             var dayArray = Enum.GetValues(typeof(Days));
             Days day = Days.None;
             while (day.Equals(Days.None))
-                day = (Days)dayArray.GetValue(random.Next(dayArray.Length) - 1);
+            {
+                int dayIndex = random.Next(dayArray.Length) - 1;
+                day = (Days)dayArray.GetValue(dayIndex);
+            }
 
             routeCreated = new Route(day);
             Cluster cluster = toStartFrom.GetRandomCluster();

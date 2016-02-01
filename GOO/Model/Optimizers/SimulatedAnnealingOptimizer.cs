@@ -103,7 +103,8 @@ namespace GOO.Model.Optimizers
                 return new int[] { 
                     1, // new AddRouteStrategy()
                     1, // new SwapRouteStrategy()
-                    1, // new DestroyRouteStrategy()
+                    1, // new DestroyPlannedRouteStrategy()
+                    1, // new DestroyPoolRouteStrategy()
                     1, // new RemoveRouteStrategy()
                     1, // new PlanRouteStrategy()
 
@@ -125,14 +126,15 @@ namespace GOO.Model.Optimizers
                     0, // new RandomRouteOpt3Strategy()
                     0, // new RandomRouteOpt3HalfStrategy()
 
-                    15, // new GeneticOneRandomRouteStrategy()
+                    14, // new GeneticOneRandomRouteStrategy()
                     //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
                 };
             else if (annealingSchedule.AnnealingTemperature < 49500.0d) // after 1% progression
                 return new int[] { 
                     8, // new AddRouteStrategy()
                     8, // new SwapRouteStrategy()
-                    8, // new DestroyRouteStrategy()
+                    4, // new DestroyPlannedRouteStrategy()
+                    4, // new DestroyPoolRouteStrategy()
                     8, // new RemoveRouteStrategy()
                     8, // new PlanRouteStrategy()
 
@@ -159,16 +161,17 @@ namespace GOO.Model.Optimizers
                 };
             else // before 1% progression
                 return new int[] { 
-                    16, // new AddRouteStrategy()
-                    16, // new SwapRouteStrategy()
-                    16, // new DestroyRouteStrategy()
-                    16, // new RemoveRouteStrategy()
-                    16, // new PlanRouteStrategy()
+                    55, // new AddRouteStrategy()
+                    0, // new SwapRouteStrategy()
+                    0, // new DestroyPlannedRouteStrategy()
+                    5, // new DestroyPoolRouteStrategy()
+                    0, // new RemoveRouteStrategy()
+                    40, // new PlanRouteStrategy()
 
-                    5, // new RandomOrderAddStrategy()
-                    5, // new RandomOrderRemoveStrategy()
-                    5, // new RandomOrderShiftStrategy()
-                    5, // new RandomOrderSwapStrategy()
+                    0, // new RandomOrderAddStrategy()
+                    0, // new RandomOrderRemoveStrategy()
+                    0, // new RandomOrderShiftStrategy()
+                    0, // new RandomOrderSwapStrategy()
 
                     //0, // new MarriageCounselorStrategy(), both not yet implemented as strategies
                     //0, // new DivorceAttourneyStrategy()

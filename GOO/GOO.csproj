@@ -56,6 +56,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\Optimizers\Strategies\DestroyPoolRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\DestroyPlannedRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\SwapRouteStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RemoveRouteStrategy.cs" />

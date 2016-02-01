@@ -12,6 +12,7 @@ namespace GOO.Model.Optimizers
                 new AddRouteStrategy(),
                 new SwapRouteStrategy(),
                 new DestroyPlannedRouteStrategy(),
+                new DestroyPoolRouteStrategy(),
                 new RemoveRouteStrategy(),
                 new PlanRouteStrategy(),
 

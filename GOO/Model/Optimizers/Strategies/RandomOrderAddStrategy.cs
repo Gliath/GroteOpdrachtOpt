@@ -20,6 +20,9 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
+            if (toStartFrom.GetEntirePlanning().Count == 0)
+                return toStartFrom;
+
             Tuple<Days, int, List<Route>> Planning = toStartFrom.GetRandomPlanning();
             day = Planning.Item1;
             truck = Planning.Item2;
