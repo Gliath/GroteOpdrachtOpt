@@ -113,9 +113,6 @@ namespace GOO.Model.Optimizers
                     5, // new RandomOrderShiftStrategy()
                     5, // new RandomOrderSwapStrategy()
 
-                    //0, // new MarriageCounselorStrategy(), both not yet implemented as strategies
-                    //0, // new DivorceAttourneyStrategy()
-
                     15, // new RandomStepOpt2Strategy()
                     15, // new RandomStepOpt2HalfStrategy()
                     15, // new RandomStepOpt3Strategy()
@@ -143,9 +140,6 @@ namespace GOO.Model.Optimizers
                     10, // new RandomOrderShiftStrategy()
                     10, // new RandomOrderSwapStrategy()
 
-                    //0, // new MarriageCounselorStrategy(), both not yet implemented as strategies
-                    //0, // new DivorceAttourneyStrategy()
-
                     8, // new RandomStepOpt2Strategy()
                     7, // new RandomStepOpt2HalfStrategy()
                     0, // new RandomStepOpt3Strategy()
@@ -172,9 +166,6 @@ namespace GOO.Model.Optimizers
                     0, // new RandomOrderRemoveStrategy()
                     0, // new RandomOrderShiftStrategy()
                     0, // new RandomOrderSwapStrategy()
-
-                    //0, // new MarriageCounselorStrategy(), both not yet implemented as strategies
-                    //0, // new DivorceAttourneyStrategy()
 
                     0, // new RandomStepOpt2Strategy()
                     0, // new RandomStepOpt2HalfStrategy()

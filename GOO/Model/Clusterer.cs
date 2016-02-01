@@ -36,7 +36,7 @@ namespace GOO.Model
             for (int i = 0; i < 3000; i++) // Try to reposition the center-point 3000 times for each cluster
             {
                 assignOrdersToClustersEuclidean(toReturn);
-                toReturn.RemoveAll(c => c.OrdersInCluster.Count == 0);
+                toReturn.RemoveAll(c => c.AvailableOrdersInCluster.Count == 0);
             }
 
             foreach (Cluster cluster in toReturn)
@@ -65,7 +65,7 @@ namespace GOO.Model
                 Point centroid = parentCluster.CenterPoint;
                 List<Cluster> quadrants = new List<Cluster>();
 
-                foreach (Order order in parentCluster.OrdersInCluster)
+                foreach (Order order in parentCluster.AvailableOrdersInCluster)
                 {
                     if (order.Frequency == OrderFrequency.PWK2)
                         fre2 = true;
@@ -81,14 +81,14 @@ namespace GOO.Model
                 {
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.AvailableOrdersInCluster, centroid, fre2, fre3, fre4);
                 }
                 else if (fre3 && !(fre2 || fre4))
                 {
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.AvailableOrdersInCluster, centroid, fre2, fre3, fre4);
                 }
 
                 else if (fre2 || fre3 || fre4)
@@ -97,14 +97,14 @@ namespace GOO.Model
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.AvailableOrdersInCluster, centroid, fre2, fre3, fre4);
                 }
                 else
                 {
                     quadrants.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.AvailableOrdersInCluster, centroid, fre2, fre3, fre4);
                 }
-                toReturn.Add(new ParentCluster(centroid, parentCluster.OrdersInCluster, quadrants.ToArray())); // TODO : Double-check day restrictions
+                toReturn.Add(new ParentCluster(centroid, parentCluster.AvailableOrdersInCluster, quadrants.ToArray())); // TODO : Double-check day restrictions
             }
             return toReturn;
         }
@@ -293,13 +293,13 @@ namespace GOO.Model
             bool addedToFre3 = false;
             foreach (Cluster cluster in quadrants)
             {
-                if (!addedToFre3 && cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) != null)
+                if (!addedToFre3 && cluster.AvailableOrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) != null)
                 {
-                    cluster.OrdersInCluster.AddRange(allFre2Orders);
+                    cluster.AvailableOrdersInCluster.AddRange(allFre2Orders);
                     addedToFre3 = true;
                 }
-                else if (cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) == null)
-                    cluster.OrdersInCluster.AddRange(allFre2Orders);
+                else if (cluster.AvailableOrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) == null)
+                    cluster.AvailableOrdersInCluster.AddRange(allFre2Orders);
             }
         }
 
@@ -311,7 +311,7 @@ namespace GOO.Model
             // assign the rest to the remaining clusters
 
             foreach (Cluster quadrant in quadrants)
-                quadrant.OrdersInCluster.AddRange(fre2Orders);
+                quadrant.AvailableOrdersInCluster.AddRange(fre2Orders);
         }
 
         private void multiOrderAssignFre2Excusively(List<Cluster> quadrants, List<Order> fre2Orders1, List<Order> fre2Orders2)
@@ -328,8 +328,8 @@ namespace GOO.Model
             Cluster secondCluster = copy[random.Next(copy.Count)];
             copy.Remove(secondCluster);
 
-            firstCluster.OrdersInCluster.AddRange(fre2Orders1);
-            secondCluster.OrdersInCluster.AddRange(fre2Orders2);
+            firstCluster.AvailableOrdersInCluster.AddRange(fre2Orders1);
+            secondCluster.AvailableOrdersInCluster.AddRange(fre2Orders2);
 
         }
 
@@ -337,8 +337,8 @@ namespace GOO.Model
         {
             foreach (Cluster cluster in quadrants)
                 foreach (Order order in freOrders)
-                    if (!cluster.OrdersInCluster.Contains(order))
-                        cluster.OrdersInCluster.Add(order);
+                    if (!cluster.AvailableOrdersInCluster.Contains(order))
+                        cluster.AvailableOrdersInCluster.Add(order);
         }
 
         private void multiOrderAssignFre3(List<Cluster> quadrants, List<Order> freOrders)
@@ -347,8 +347,8 @@ namespace GOO.Model
             foreach (Cluster cluster in quadrants)
                 if (cluster != noAssign)
                     foreach (Order order in freOrders)
-                        if (!cluster.OrdersInCluster.Contains(order))
-                            cluster.OrdersInCluster.Add(order);
+                        if (!cluster.AvailableOrdersInCluster.Contains(order))
+                            cluster.AvailableOrdersInCluster.Add(order);
         }
 
         private void assignOrdersToClustersEuclidean(List<Cluster> clusters)

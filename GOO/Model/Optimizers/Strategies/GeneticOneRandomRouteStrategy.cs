@@ -8,7 +8,6 @@ namespace GOO.Model.Optimizers.Strategies
     public class GeneticOneRandomRouteStrategy : Strategy
     {
         private Route originalRoute;
-        private Route firstAbominationRoute;
         private Route bestAbominationOffspringRoute;
         private Tuple<Days, int, List<Route>> planningForSelectedRoute;
 
@@ -16,7 +15,6 @@ namespace GOO.Model.Optimizers.Strategies
             : base()
         {
             originalRoute = null;
-            firstAbominationRoute = null;
             bestAbominationOffspringRoute = null;
             planningForSelectedRoute = null;
         }
@@ -59,7 +57,7 @@ namespace GOO.Model.Optimizers.Strategies
 
             // Now that you've sliced up the orders in the selected route, it is time for randomizing the slices and putting it back together
 
-            firstAbominationRoute = new Route(originalRoute.Day);
+            Route firstAbominationRoute = new Route(originalRoute.Day);
             List<int> slicesIndexPutBack = new List<int>();
             for (int i = 0; i < orderSlices.Length - 2; i++)
             {
@@ -220,11 +218,8 @@ namespace GOO.Model.Optimizers.Strategies
             Console.WriteLine("The First Abomination Travel Time:        {0}", firstAbominationRoute.TravelTime);
             Console.WriteLine("Best Abomination Offspring Travel Time:   {0}", bestAbominationOffspringRoute.TravelTime);
 
-            planningForSelectedRoute.Item3.Remove(originalRoute);
-            planningForSelectedRoute.Item3.Add(bestAbominationOffspringRoute);
-
-            toStartFrom.RemoveItemFromPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2);
-            toStartFrom.AddNewItemToPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, planningForSelectedRoute.Item3);
+            toStartFrom.RemoveRouteFromPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, originalRoute);
+            toStartFrom.AddRouteToPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, bestAbominationOffspringRoute);
 
             return toStartFrom;
         }
@@ -232,11 +227,8 @@ namespace GOO.Model.Optimizers.Strategies
         public override Solution undoStrategy(Solution toStartFrom)
         {
             // Revert abomination to Patient Zero...
-            planningForSelectedRoute.Item3.Remove(bestAbominationOffspringRoute);
-            planningForSelectedRoute.Item3.Add(originalRoute);
-
-            toStartFrom.RemoveItemFromPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2);
-            toStartFrom.AddNewItemToPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, planningForSelectedRoute.Item3);
+            toStartFrom.RemoveRouteFromPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, bestAbominationOffspringRoute);
+            toStartFrom.AddRouteToPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, originalRoute);
 
             return toStartFrom;
         }

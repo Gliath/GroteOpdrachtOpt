@@ -113,7 +113,7 @@ namespace GOO.Model
                 foreach (Cluster quadrant in parent.Quadrants)
                 {
                     Route toAdd = new Route(quadrant.DaysPlannedFor);
-                    foreach (Order order in quadrant.OrdersInCluster) // TODO : Check for max-weight
+                    foreach (Order order in quadrant.AvailableOrdersInCluster) // TODO : Check for max-weight
                         toAdd.AddOrder(order);
 
                     if (toAdd.Orders.Count > 1)

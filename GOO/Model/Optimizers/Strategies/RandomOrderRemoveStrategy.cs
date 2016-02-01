@@ -31,17 +31,24 @@ namespace GOO.Model.Optimizers.Strategies
                 RoutesFromSolution = Planning.Item3;
                 old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
 
-                for (int counter = 0; counter < 5 && old_route.Orders.Count < 3; counter++)
+                for (int counter = 0; counter < 5 && old_route.Orders.Count < 2; counter++)
                     old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
 
-                if (old_route.Orders.Count >= 3)
+                if (old_route.Orders.Count >= 2)
                     break;
             }
 
-            //copy the begin route for the 2-opt and create the route for the 2-opt check
             new_route = new Route(day);
             foreach (Order order in old_route.Orders)
-                new_route.AddOrder(order);
+                if (order.OrderNumber != 0)
+                    new_route.AddOrder(order);
+
+
+
+            if (new_route.Orders.Count == 2) // basically delete route
+            {
+
+            }
 
             //start removing a random order
             if (new_route.Orders.Count >= 2)

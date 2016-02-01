@@ -63,7 +63,7 @@ namespace GOO.Model
             OrderTracker = new OrderTracker(this, DayRestrictions);
         }
 
-        public bool PutOrderInCluster(Cluster ClusterOrderIsLocatedIn)
+        public bool PutInCluster(Cluster ClusterOrderIsLocatedIn)
         {
             if (this.ClusterOrderIsLocatedIn != null)
                 return false;

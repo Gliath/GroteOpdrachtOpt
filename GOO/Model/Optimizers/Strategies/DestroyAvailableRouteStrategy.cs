@@ -5,27 +5,26 @@ using GOO.Utilities;
 
 namespace GOO.Model.Optimizers.Strategies
 {
-    public class DestroyPoolRouteStrategy : Strategy
+    public class DestroyAvailableRouteStrategy : Strategy
     {
-        private Tuple<Days, int, List<Route>> Planning;
         private List<Order> ordersDestroyed;
         private Days dayDestroyed;
         
-        public DestroyPoolRouteStrategy()
+        public DestroyAvailableRouteStrategy()
             : base()
         {
-            Planning = null;
             ordersDestroyed = null;
         }
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            if (toStartFrom.AllRoutes.Count == 0)
+            if (toStartFrom.AvailableRoutes.Count == 0)
                 return toStartFrom;
 
-            int routeIndex = random.Next(toStartFrom.AllRoutes.Count);
-            Route routeToDestroy = toStartFrom.AllRoutes[routeIndex];
-            toStartFrom.AllRoutes.RemoveAt(routeIndex);
+            int routeIndex = random.Next(toStartFrom.AvailableRoutes.Count);
+            Route routeToDestroy = toStartFrom.AvailableRoutes[routeIndex];
+            toStartFrom.AvailableRoutes.RemoveAt(routeIndex);
+            toStartFrom.AllRoutes.Remove(routeToDestroy);
             ordersDestroyed = routeToDestroy.Orders;
             dayDestroyed = routeToDestroy.Day;
             routeToDestroy.Destroy();
@@ -37,9 +36,11 @@ namespace GOO.Model.Optimizers.Strategies
         {
             Route routeRestored = new Route(dayDestroyed);
             foreach (Order order in ordersDestroyed)
-                routeRestored.AddOrder(order);
+                if (order.OrderNumber != 0)
+                    routeRestored.AddOrder(order);
 
             toStartFrom.AllRoutes.Add(routeRestored);
+            toStartFrom.AvailableRoutes.Add(routeRestored);
 
             return toStartFrom;
         }

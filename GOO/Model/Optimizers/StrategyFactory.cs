@@ -12,7 +12,7 @@ namespace GOO.Model.Optimizers
                 new AddRouteStrategy(),
                 new SwapRouteStrategy(),
                 new DestroyPlannedRouteStrategy(),
-                new DestroyPoolRouteStrategy(),
+                new DestroyAvailableRouteStrategy(),
                 new RemoveRouteStrategy(),
                 new PlanRouteStrategy(),
 
@@ -20,9 +20,6 @@ namespace GOO.Model.Optimizers
                 new RandomOrderRemoveStrategy(),
                 new RandomOrderShiftStrategy(),
                 new RandomOrderSwapStrategy(),
-
-                //new MarriageCounselorStrategy(), both not yet implemented as strategies
-                //new DivorceAttourneyStrategy(),
                 
                 new RandomStepOpt2Strategy(),
                 new RandomStepOpt2HalfStrategy(),

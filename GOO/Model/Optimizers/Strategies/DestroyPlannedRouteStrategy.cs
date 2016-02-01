@@ -31,12 +31,14 @@ namespace GOO.Model.Optimizers.Strategies
                 return toStartFrom;
 
             int routeIndex = random.Next(Planning.Item3.Count);
-            Route routeDestroyed = Planning.Item3[routeIndex];
-            ordersDestroyed = routeDestroyed.Orders;
-            dayDestroyed = routeDestroyed.Day;
+            Route routeToDestroy = Planning.Item3[routeIndex];
+            toStartFrom.AllRoutes.Remove(routeToDestroy);
+            ordersDestroyed = routeToDestroy.Orders;
+            dayDestroyed = routeToDestroy.Day;
             
-            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, routeDestroyed);
-            routeDestroyed.Destroy();
+            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, routeToDestroy);
+            toStartFrom.AvailableRoutes.RemoveAt(routeIndex);
+            routeToDestroy.Destroy();
 
             return toStartFrom;
         }
@@ -45,8 +47,10 @@ namespace GOO.Model.Optimizers.Strategies
         {
             Route routeRestored = new Route(dayDestroyed);
             foreach (Order order in ordersDestroyed)
-                routeRestored.AddOrder(order);
+                if(order.OrderNumber != 0)
+                    routeRestored.AddOrder(order);
 
+            toStartFrom.AllRoutes.Add(routeRestored);
             toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeRestored);
 
             return toStartFrom;

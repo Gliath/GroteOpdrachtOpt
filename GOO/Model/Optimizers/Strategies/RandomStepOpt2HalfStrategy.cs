@@ -47,11 +47,13 @@ namespace GOO.Model.Optimizers.Strategies
 
             swapOrders(old_route.Orders[firstIndex], old_route.Orders[secondIndex], new_route);
 
-            RoutesFromSolution.Remove(old_route);
-            RoutesFromSolution.Add(new_route);
+            toStartFrom.AllRoutes.Remove(old_route);
+            toStartFrom.AllRoutes.Add(new_route);
 
-            toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
-            toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, RoutesFromSolution);
+            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, old_route);
+            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, new_route);
+
+            toStartFrom.AvailableRoutes.Remove(old_route);
 
             return toStartFrom;
         }
@@ -66,6 +68,9 @@ namespace GOO.Model.Optimizers.Strategies
         {
             RoutesFromSolution.Remove(new_route);
             RoutesFromSolution.Add(old_route);
+
+            toStartFrom.AllRoutes.Remove(new_route);
+            toStartFrom.AllRoutes.Add(old_route);
 
             toStartFrom.RemoveItemFromPlanning(Planning.Item1, Planning.Item2);
             toStartFrom.AddNewItemToPlanning(Planning.Item1, Planning.Item2, RoutesFromSolution);

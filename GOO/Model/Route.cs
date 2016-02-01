@@ -188,9 +188,9 @@ namespace GOO.Model
                 return false;
 
             int firstOrderIndex = Orders.FindIndex(o => o.OrderNumber == firstOrder.OrderNumber);
-            int preFirstOrderIndex = firstOrderIndex == 0 ? 287 : firstOrderIndex - 1;
+            int preFirstOrderIndex = firstOrderIndex == 0 ? Orders.Count - 1 : firstOrderIndex - 1;
             int secondOrderIndex = Orders.FindIndex(o => o.OrderNumber == secondOrder.OrderNumber);
-            int preSecondOrderIndex = secondOrderIndex == 0 ? 287 : secondOrderIndex - 1;
+            int preSecondOrderIndex = secondOrderIndex == 0 ? Orders.Count - 1 : secondOrderIndex - 1;
 
             int preFirstMatrixID = Orders[preFirstOrderIndex].MatrixID;
             int firstOrderMatrixID = firstOrder.MatrixID;
@@ -219,11 +219,11 @@ namespace GOO.Model
                 return false;
 
             int firstOrderIndex = Orders.FindIndex(o => o.OrderNumber == firstOrder.OrderNumber);
-            int preFirstOrderIndex = firstOrderIndex == 0 ? 287 : firstOrderIndex - 1;
+            int preFirstOrderIndex = firstOrderIndex == 0 ? Orders.Count - 1 : firstOrderIndex - 1;
             int secondOrderIndex = Orders.FindIndex(o => o.OrderNumber == secondOrder.OrderNumber);
-            int preSecondOrderIndex = secondOrderIndex == 0 ? 287 : secondOrderIndex - 1;
+            int preSecondOrderIndex = secondOrderIndex == 0 ? Orders.Count - 1 : secondOrderIndex - 1;
             int thirdOrderIndex = Orders.FindIndex(o => o.OrderNumber == thirdOrder.OrderNumber);
-            int preThirdOrderIndex = thirdOrderIndex == 0 ? 287 : thirdOrderIndex - 1;
+            int preThirdOrderIndex = thirdOrderIndex == 0 ? Orders.Count - 1 : thirdOrderIndex - 1;
 
             int preFirstMatrixID = Orders[preFirstOrderIndex].MatrixID;
             int firstOrderMatrixID = firstOrder.MatrixID;
@@ -261,7 +261,7 @@ namespace GOO.Model
 
             int firstOrderIndex = Orders.FindIndex(o => o.OrderNumber == firstOrder.OrderNumber);
             int secondOrderIndex = Orders.FindIndex(o => o.OrderNumber == secondOrder.OrderNumber);
-            int preSecondOrderIndex = secondOrderIndex == 0 ? 287 : secondOrderIndex - 1;
+            int preSecondOrderIndex = secondOrderIndex == 0 ? Orders.Count - 1 : secondOrderIndex - 1;
 
             int firstOrderMatrixID = firstOrder.MatrixID;
             int postFirstMatrixID = Orders[firstOrderIndex + 1].MatrixID;
@@ -288,9 +288,9 @@ namespace GOO.Model
 
             int firstOrderIndex = Orders.FindIndex(o => o.OrderNumber == firstOrder.OrderNumber);
             int secondOrderIndex = Orders.FindIndex(o => o.OrderNumber == secondOrder.OrderNumber);
-            int preSecondOrderIndex = secondOrderIndex == 0 ? 287 : secondOrderIndex - 1;
+            int preSecondOrderIndex = secondOrderIndex == 0 ? Orders.Count - 1 : secondOrderIndex - 1;
             int thirdOrderIndex = Orders.FindIndex(o => o.OrderNumber == thirdOrder.OrderNumber);
-            int preThirdOrderIndex = thirdOrderIndex == 0 ? 287 : thirdOrderIndex - 1;
+            int preThirdOrderIndex = thirdOrderIndex == 0 ? Orders.Count - 1 : thirdOrderIndex - 1;
 
             int firstOrderMatrixID = firstOrder.MatrixID;
             int postFirstMatrixID = Orders[firstOrderIndex + 1].MatrixID;
@@ -441,8 +441,8 @@ namespace GOO.Model
         public void Destroy()
         {
             foreach (Order order in Orders)
-                if(order.OrderNumber != 0)
-                    order.RemoveOrderOccurrence(this); 
+                if (order.OrderNumber != 0)
+                    order.RemoveOrderOccurrence(this);
         }
     }
 }

@@ -30,18 +30,18 @@ namespace GOO.Model.Optimizers.Strategies
 
             for (int i = 0; i < 64; i++)
             {
-                while (cluster.OrdersInCluster.Count == 0)
+                while (cluster.AvailableOrdersInCluster.Count == 0)
                     cluster = toStartFrom.GetRandomCluster();
 
-                int randomIndex = random.Next(cluster.OrdersInCluster.Count);
-                Order order = cluster.OrdersInCluster[randomIndex];
+                int randomIndex = random.Next(cluster.AvailableOrdersInCluster.Count);
+                Order order = cluster.AvailableOrdersInCluster[randomIndex];
 
                 if (routeCreated.CanAddOrder(order))
                     routeCreated.AddOrder(order);
                 else
                     continue;
 
-                cluster.OrdersInCluster.RemoveAt(randomIndex);
+                cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
             }
 
             if (routeCreated.Orders.Count > 1) // Does have orders
@@ -56,8 +56,8 @@ namespace GOO.Model.Optimizers.Strategies
         public override Solution undoStrategy(Solution toStartFrom)
         {
             foreach (Order order in routeCreated.Orders)
-                if (!order.ClusterOrderIsLocatedIn.OrdersInCluster.Contains(order))
-                    order.ClusterOrderIsLocatedIn.OrdersInCluster.Add(order);
+                if (!order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Contains(order))
+                    order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(order);
 
             toStartFrom.AllRoutes.Remove(routeCreated);
             toStartFrom.AvailableRoutes.Remove(routeCreated);
