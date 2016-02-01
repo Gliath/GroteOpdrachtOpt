@@ -24,6 +24,9 @@ namespace GOO.Model.Optimizers.Strategies
             for (int planningCounter = 0; planningCounter < 5; planningCounter++)
             {
                 Planning = toStartFrom.GetRandomPlanning();
+                if (Planning.Item3.Count == 0)
+                    continue;
+
                 OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
 
                 for (int counter = 0; counter < 5 && OriginalRoute.Orders.Count < 2; counter++)
