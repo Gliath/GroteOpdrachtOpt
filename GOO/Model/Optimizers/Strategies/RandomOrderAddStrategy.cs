@@ -36,7 +36,7 @@ namespace GOO.Model.Optimizers.Strategies
                     break;
             }
 
-            if (OriginalRoute.Orders.Count < 2)
+            if (OriginalRoute == null || OriginalRoute.Orders.Count < 2)
                 return toStartFrom;
 
             Cluster cluster = toStartFrom.GetRandomCluster();
