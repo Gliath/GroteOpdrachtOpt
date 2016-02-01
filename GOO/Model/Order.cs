@@ -60,7 +60,7 @@ namespace GOO.Model
             ClusterOrderIsLocatedIn = null;
             PenaltyTime = Convert.ToDouble(FrequencyNumber) * Convert.ToDouble(EmptyingTimeInSeconds) * 3.0d;
             DayRestrictions = DayRestrictionFactory.GetDayRestrictions(Frequency);
-            OrderTracker = new OrderTracker(OrderNumber, DayRestrictions);
+            OrderTracker = new OrderTracker(this, DayRestrictions);
         }
 
         public bool PutOrderInCluster(Cluster ClusterOrderIsLocatedIn)

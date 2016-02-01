@@ -9,26 +9,169 @@ namespace GOO.Model
 {
     public class Solution
     {
-        private List<ParentCluster> clusters;
+        private List<ParentCluster> Clusters;
 
         public List<OrderTracker> CounterList { get; private set; }
         public List<Route> AllRoutes { get; private set; }
         public List<Route> AvailableRoutes { get; private set; }
 
         public double SolutionScore { get; private set; }
-        public double PenaltyScore { get; private set; }
-        public double TravelTimeScore { get; private set; }
+
+        private double penalty;
+        public double PenaltyScore
+        {
+            get { return penalty; }
+
+            private set
+            {
+                SolutionScore += value - penalty;
+                penalty += value;
+            }
+        }
+
+        private double travelTime;
+        public double TravelTimeScore
+        {
+            get { return travelTime; }
+            set
+            {
+                SolutionScore += value - travelTime;
+                travelTime = value;
+            }
+        }
 
         private List<Tuple<Days, int, List<Route>>> TruckPlanning;
 
-        public Solution(List<ParentCluster> clusters)
+        public Solution(List<ParentCluster> Clusters)
         {
-            this.clusters = clusters;
-            CounterList = new List<OrderTracker>();
-            AllRoutes = new List<Route>();
-            AvailableRoutes = new List<Route>();
-            TruckPlanning = new List<Tuple<Days, int, List<Route>>>();
+            this.Clusters = Clusters;
+            this.CounterList = new List<OrderTracker>();
+            this.AllRoutes = new List<Route>();
+            this.AvailableRoutes = new List<Route>();
+            this.TruckPlanning = new List<Tuple<Days, int, List<Route>>>();
+
+            this.SolutionScore = 0;
+            this.PenaltyScore = 0;
+            this.TravelTimeScore = 0;
         }
+        
+        public void InitializeCounterList()
+        {
+            foreach (Order order in Data.Orders.Values)
+            {
+                CounterList.Add(order.OrderTracker);
+                PenaltyScore += order.OrderTracker.CurrentPenalty();
+            }
+        }
+
+        public void RemoveRouteFromPlanning(Days day, int truckID, Route toRemove)
+        {
+            Tuple<Days, int, List<Route>> DayPlanning = TruckPlanning.Find(t => t.Item1 == day && t.Item2 == truckID);
+            if (DayPlanning != null)
+            {
+                if (DayPlanning.Item3.Remove(toRemove))
+                {
+                    TravelTimeScore -= toRemove.TravelTime;
+                    foreach (Order order in toRemove.Orders)
+                        RemovePlannedOccurrence(order.OrderNumber, toRemove);
+                }
+                AvailableRoutes.Add(toRemove);
+            }
+        }
+
+        public void AddRouteToPlanning(Days day, int truckID, Route toAdd)
+        {
+            Tuple<Days, int, List<Route>> DayPlanning = TruckPlanning.Find(t => t.Item1 == day && t.Item2 == truckID);
+            if (DayPlanning != null)
+            {
+                DayPlanning.Item3.Add(toAdd);
+                foreach (Order order in toAdd.Orders)
+                    AddPlannedOccurrence(order.OrderNumber, toAdd);
+                AvailableRoutes.Remove(toAdd);
+                TravelTimeScore += toAdd.TravelTime;
+                toAdd.partOfSolution = this;
+            }
+        }
+
+        public void AddNewItemToPlanning(Days day, int truckID, List<Route> routes)
+        {
+            TruckPlanning.Add(new Tuple<Days, int, List<Route>>(day, truckID, routes));
+            foreach (Route route in routes)
+            {
+                foreach (Order order in route.Orders)
+                    this.AddPlannedOccurrence(order.OrderNumber, route);
+                AvailableRoutes.Remove(route);
+                TravelTimeScore += route.TravelTime;
+            }
+        }
+
+        public void RemoveItemFromPlanning(Days day, int truckID)
+        {
+            Tuple<Days, int, List<Route>> toRemove = GetPlanningForATruck(day, truckID);
+            TruckPlanning.Remove(toRemove);
+            foreach (Route route in toRemove.Item3)
+            {
+                TravelTimeScore -= route.TravelTime;
+                foreach (Order order in route.Orders)
+                    this.RemovePlannedOccurrence(order.OrderNumber, route);
+                AvailableRoutes.Add(route);
+            }
+        }
+
+        public void ClearTruckPlanning()
+        {
+            foreach (OrderTracker oc in CounterList)
+            {
+                oc.PlannedDayOccurences = Days.None;
+                this.PenaltyScore += oc.CurrentPenalty();
+            }
+
+            foreach (Tuple<Days, int, List<Route>> t in TruckPlanning)
+                foreach (Route route in t.Item3)
+                    if (!AvailableRoutes.Contains(route))
+                        AvailableRoutes.Add(route);
+
+            this.TruckPlanning.Clear();
+            this.TravelTimeScore -= TravelTimeScore;
+        }
+
+        public void UpdateOrdersCounterAfterAdding(List<Route> addedRoutes)
+        {
+            foreach (Route route in addedRoutes)
+                foreach (Order order in route.Orders)
+                    if (order.OrderNumber != 0)
+                        AddOrderOccurrence(order.OrderNumber, route);
+        }
+
+        public void UpdateOrdersCounterAfterRemoval(List<Route> removedRoutes)
+        {
+            foreach (Route route in removedRoutes)
+                foreach (Order order in route.Orders)
+                    RemoveOrderOccurrence(order.OrderNumber, route);
+        }
+
+        public void AddPlannedOccurrence(int OrderNumber, Route OccurredIn)
+        {
+            OrderTracker counter = this.FindOrderTracker(OrderNumber);
+            double before = counter.CurrentPenalty();
+
+            counter.PlannedDayOccurences |= OccurredIn.Day;
+            PenaltyScore += counter.CurrentPenalty() - before;
+        }
+
+        public void RemovePlannedOccurrence(int OrderNumber, Route OccurredIn)
+        {
+            OrderTracker counter = this.FindOrderTracker(OrderNumber);
+            double before = counter.CurrentPenalty();
+
+            counter.PlannedDayOccurences ^= (counter.OrderDayOccurrences & OccurredIn.Day);
+            PenaltyScore += counter.CurrentPenalty() - before;
+        }
+
+        //public double GetSolutionScore() // TODO: Account for routes and stuff going overtime?
+        //{
+        //    return SolutionScore;
+        //}
 
         public void MakeBasicPlannings()
         {
@@ -44,73 +187,20 @@ namespace GOO.Model
 
         public ParentCluster GetRandomParentCluster()
         {
-            int random = new Random().Next(clusters.Count);
-            return this.clusters[random];
+            int random = new Random().Next(Clusters.Count);
+            return this.Clusters[random];
         }
 
         public Cluster GetRandomCluster()
         {
             Random rng = new Random();
-            ParentCluster cluster = this.clusters[rng.Next(clusters.Count)];
+            ParentCluster cluster = this.Clusters[rng.Next(Clusters.Count)];
             return cluster.Quadrants[rng.Next(cluster.Quadrants.Length)];
         }
 
         public List<ParentCluster> GetAllClusters()
         {
-            return this.clusters;
-        }
-
-        public void InitializeCounterList()
-        {
-            foreach (Order order in Data.Orders.Values)
-                CounterList.Add(order.OrderTracker);
-        }
-
-        public void RemoveRouteFromPlanning(Days day, int truckID, Route toRemove)
-        {
-            Tuple<Days, int, List<Route>> DayPlanning = TruckPlanning.Find(t => t.Item1 == day && t.Item2 == truckID);
-            if (DayPlanning != null)
-            {
-                if (DayPlanning.Item3.Remove(toRemove))
-                    foreach (Order order in toRemove.Orders)
-                        RemovePlannedOccurrence(order.OrderNumber, toRemove);
-                AvailableRoutes.Add(toRemove);
-            }
-        }
-
-        public void AddRouteToPlanning(Days day, int truckID, Route toAdd)
-        {
-            Tuple<Days, int, List<Route>> DayPlanning = TruckPlanning.Find(t => t.Item1 == day && t.Item2 == truckID);
-            if (DayPlanning != null)
-            {
-                DayPlanning.Item3.Add(toAdd);
-                foreach (Order order in toAdd.Orders)
-                    AddPlannedOccurrence(order.OrderNumber, toAdd);
-                AvailableRoutes.Remove(toAdd);
-            }
-        }
-
-        public void AddNewItemToPlanning(Days day, int truckID, List<Route> routes)
-        {
-            TruckPlanning.Add(new Tuple<Days, int, List<Route>>(day, truckID, routes));
-            foreach (Route route in routes)
-            {
-                foreach (Order order in route.Orders)
-                    this.AddPlannedOccurrence(order.OrderNumber, route);
-                AvailableRoutes.Remove(route);
-            }
-        }
-
-        public void RemoveItemFromPlanning(Days day, int truckID)
-        {
-            Tuple<Days, int, List<Route>> toRemove = GetPlanningForATruck(day, truckID);
-            TruckPlanning.Remove(toRemove);
-            foreach (Route route in toRemove.Item3)
-            {
-                foreach (Order order in route.Orders)
-                    this.RemovePlannedOccurrence(order.OrderNumber, route);
-                AvailableRoutes.Add(route);
-            }
+            return this.Clusters;
         }
 
         public Tuple<Days, int, List<Route>> GetPlanningForATruck(Days day, int truckID)
@@ -134,34 +224,6 @@ namespace GOO.Model
             return this.TruckPlanning;
         }
 
-        public void ClearTruckPlanning()
-        {
-            foreach (OrderTracker oc in CounterList)
-                oc.PlannedDayOccurences = Days.None;
-
-            foreach (Tuple<Days, int, List<Route>> t in TruckPlanning)
-                foreach (Route route in t.Item3)
-                    if (!AvailableRoutes.Contains(route))
-                        AvailableRoutes.Add(route);
-
-            this.TruckPlanning.Clear();
-        }
-
-        public void UpdateOrdersCounterAfterAdding(List<Route> addedRoutes)
-        {
-            foreach (Route route in addedRoutes)
-                foreach (Order order in route.Orders)
-                    if (order.OrderNumber != 0)
-                        AddOrderOccurrence(order.OrderNumber, route);
-        }
-
-        public void UpdateOrdersCounterAfterRemoval(List<Route> removedRoutes)
-        {
-            foreach (Route route in removedRoutes)
-                foreach (Order order in route.Orders)
-                    RemoveOrderOccurrence(order.OrderNumber, route);
-        }
-
         public void ClearAllOccurences() // TODO: How to deal with routes containing the order?
         {
             CounterList.Clear();
@@ -175,18 +237,6 @@ namespace GOO.Model
             counter.UpdateOrderDayRestrictions();
             if (!counter.PartOfRoutes.Contains(OccurredIn))
                 counter.PartOfRoutes.Add(OccurredIn);
-        }
-
-        public void AddPlannedOccurrence(int OrderNumber, Route OccurredIn)
-        {
-            OrderTracker counter = this.FindOrderTracker(OrderNumber);
-            counter.PlannedDayOccurences |= OccurredIn.Day;
-        }
-
-        public void RemovePlannedOccurrence(int OrderNumber, Route OccurredIn)
-        {
-            OrderTracker counter = this.FindOrderTracker(OrderNumber);
-            counter.PlannedDayOccurences ^= (counter.OrderDayOccurrences & OccurredIn.Day);
         }
 
         public void RemoveOrderOccurrence(int OrderNumber, Route OccurredIn)
@@ -233,37 +283,9 @@ namespace GOO.Model
         private OrderTracker FindOrderTracker(int OrderNumber)
         {
             if (!CounterList.Exists(o => o.OrderNumber == OrderNumber))
-                CounterList.Add(new OrderTracker(OrderNumber, new List<Days>(Data.Orders[OrderNumber].DayRestrictions)));
+                CounterList.Add(new OrderTracker(Data.Orders[OrderNumber], new List<Days>(Data.Orders[OrderNumber].DayRestrictions)));
 
             return CounterList.Find(o => o.OrderNumber == OrderNumber); // CounterList.Add states that it adds to end, maybe return [Count - 1]?
-        }
-
-        public double GetSolutionScore() // TODO: Maybe start working with delta's instead of recalculating everytime
-        {
-            double travelTime = 0.0d;
-            double penaltyTime = 0.0d;
-
-            List<int> uncompleteOrders = new List<int>();
-            for (int i = 0; i < CounterList.Count; i++)
-            {
-                if (!CounterList[i].IsCompleted())
-                {
-                    int orderNumber = CounterList[i].OrderNumber;
-                    if (uncompleteOrders.Contains(orderNumber)) // Has already been punished
-                        continue;
-                    else
-                        uncompleteOrders.Add(orderNumber);
-
-                    penaltyTime += Data.Orders[orderNumber].PenaltyTime;
-                    break;
-                }
-            }
-
-            foreach (Tuple<Days, int, List<Route>> tuple in TruckPlanning)
-                foreach (Route route in tuple.Item3)
-                    travelTime += route.TravelTime;
-
-            return travelTime + penaltyTime;
         }
 
         public override string ToString()

@@ -13,9 +13,13 @@ namespace GOO.Model
         public Days OrderDayOccurrences { get; set; }
         public Days PlannedDayOccurences { get; set; }
 
-        public OrderTracker(int OrderNumber, List<Days> OrderDayRestrictions)
+        private Order Order;
+
+        public OrderTracker(Order Order, List<Days> OrderDayRestrictions)
         {
-            this.OrderNumber = OrderNumber;
+            this.Order = Order;
+
+            this.OrderNumber = Order.OrderNumber;
             this.OrderDayRestrictions = OrderDayRestrictions;
 
             this.OrderDayOccurrences = Days.None;
@@ -65,6 +69,13 @@ namespace GOO.Model
                     return true; // Order has yet to occur on specified day and can be added accorrding to the restrictions
 
             return false; // restrictions is either empty or does not have the specified day in its restriction
+        }
+
+        public double CurrentPenalty()
+        {
+            if (IsCompleted())
+                return 0.0d;
+            return Order.PenaltyTime;
         }
     }
 }

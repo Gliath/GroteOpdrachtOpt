@@ -11,7 +11,9 @@ namespace GOO.Model
         public double TravelTime { get; private set; }
         public Days Day { get; private set; }
         public int Weight { get; private set; }
-        
+
+        public Solution partOfSolution;
+
         public Route(Days Day)
         {
             this.Orders = new List<Order>();
@@ -110,6 +112,8 @@ namespace GOO.Model
             Weight += order.VolumePerContainer * order.NumberOfContainers;
             Orders.Insert(Orders.Count - 1, order);
             order.AddOrderOccurrence(this);
+            if (partOfSolution != null)
+                partOfSolution.TravelTimeScore += TravelTime;
         }
 
         public void AddOrderAtStart(Order order)
@@ -126,6 +130,8 @@ namespace GOO.Model
             Weight += order.VolumePerContainer * order.NumberOfContainers;
             Orders.Insert(1, order);
             order.AddOrderOccurrence(this);
+            if (partOfSolution != null)
+                partOfSolution.TravelTimeScore += TravelTime;
         }
 
         public void AddOrderAt(Order newOrder, Order orderToInsertAfter)
@@ -153,6 +159,8 @@ namespace GOO.Model
             Weight += newOrder.VolumePerContainer * newOrder.NumberOfContainers;
             Orders.Insert(IndexOfOrderToInsertAfter + 1, newOrder);
             newOrder.AddOrderOccurrence(this);
+            if (partOfSolution != null)
+                partOfSolution.TravelTimeScore += TravelTime;
         }
 
         public void RemoveOrder(Order order)
@@ -169,7 +177,9 @@ namespace GOO.Model
             TravelTime -= order.EmptyingTimeInSeconds;
             Weight -= order.VolumePerContainer * order.NumberOfContainers;
             Orders.Remove(order);
-            order.RemoveOrderOccurrence(this); 
+            order.RemoveOrderOccurrence(this);
+            if (partOfSolution != null)
+                partOfSolution.TravelTimeScore += TravelTime;
         }
 
         public bool CanSwapOrder(Order firstOrder, Order secondOrder, double timeLimit = 43200.0d)

@@ -35,7 +35,7 @@ namespace GOO.Model.Optimizers
                 currentSolution.AddNewItemToPlanning(t.Item1, t.Item2, copyRoute);
             }
 
-            oldSolutionScore = startSolution.GetSolutionScore();
+            oldSolutionScore = startSolution.SolutionScore;
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
