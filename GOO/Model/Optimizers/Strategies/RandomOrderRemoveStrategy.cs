@@ -7,75 +7,59 @@ namespace GOO.Model.Optimizers.Strategies
 {
     public class RandomOrderRemoveStrategy : Strategy
     {
-        private Days day;
-        private int truck;
-        private Route old_route;
-        private Route new_route;
-        private List<Route> RoutesFromSolution;
+        private Tuple<Days, int, List<Route>> Planning;
+        private Order OrderRemoved;
+        private Order OrderBefore;
+        private Route OriginalRoute;
 
-        public RandomOrderRemoveStrategy() : base()
+        public RandomOrderRemoveStrategy()
+            : base()
         {
-
+            Planning = null;
+            OrderRemoved = null;
+            OriginalRoute = null;
+            OrderBefore = null;
         }
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            Tuple<Days, int, List<Route>> Planning = toStartFrom.GetRandomPlanning();
-            day = Planning.Item1;
-            truck = Planning.Item2;
-            RoutesFromSolution = Planning.Item3;
-
             for (int planningCounter = 0; planningCounter < 5; planningCounter++)
             {
                 Planning = toStartFrom.GetRandomPlanning();
-                RoutesFromSolution = Planning.Item3;
-                old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
+                OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
 
-                for (int counter = 0; counter < 5 && old_route.Orders.Count < 2; counter++)
-                    old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
+                for (int counter = 0; counter < 5 && OriginalRoute.Orders.Count < 3; counter++)
+                    OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
 
-                if (old_route.Orders.Count >= 2)
+                if (OriginalRoute.Orders.Count >= 3)
                     break;
             }
 
-            new_route = new Route(day);
-            foreach (Order order in old_route.Orders)
-                if (order.OrderNumber != 0)
-                    new_route.AddOrder(order);
+            if (OriginalRoute.Orders.Count < 3)
+                return toStartFrom;
 
+            int orderIndex = random.Next(OriginalRoute.Orders.Count - 1);
+            OrderRemoved = OriginalRoute.Orders[orderIndex];
+            OrderBefore = orderIndex == 0 ? null : OriginalRoute.Orders[orderIndex - 1];
+            OrderRemoved.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(OrderRemoved);
+            OriginalRoute.RemoveOrder(OrderRemoved);
 
-
-            if (new_route.Orders.Count == 2) // basically delete route
-            {
-
-            }
-
-            //start removing a random order
-            if (new_route.Orders.Count >= 2)
-            {
-                int ordertoremove = random.Next(new_route.Orders.Count - 2);
-                Order order = new_route.Orders[ordertoremove];
-                if (order.Frequency == OrderFrequency.PWK1)
-                    new_route.RemoveOrder(order);  //TODO: add the order back to the order list
-            }
-
-            RoutesFromSolution.Remove(old_route);
-            RoutesFromSolution.Add(new_route);
-
-            toStartFrom.RemoveItemFromPlanning(day, truck);
-            toStartFrom.AddNewItemToPlanning(day, truck, RoutesFromSolution);
+            if (OriginalRoute.Orders.Count == 1) // Basically delete the route (remove it from planning)
+                toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
 
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            // Nette manier zou zijn om de tuple weer op te halen gebaseerd op truck en dag.
-            RoutesFromSolution.Remove(new_route);
-            RoutesFromSolution.Add(old_route);
+            if (OriginalRoute.Orders.Count == 1) // If empty 
+                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
 
-            toStartFrom.RemoveItemFromPlanning(day, truck);
-            toStartFrom.AddNewItemToPlanning(day, truck, RoutesFromSolution);
+            OrderRemoved.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Remove(OrderRemoved);
+            if (OrderBefore == null)
+                OriginalRoute.AddOrderAtStart(OrderRemoved);
+            else
+                OriginalRoute.AddOrderAt(OrderRemoved, OrderBefore);
 
             return toStartFrom;
         }

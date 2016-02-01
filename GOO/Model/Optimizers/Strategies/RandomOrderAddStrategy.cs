@@ -64,7 +64,7 @@ namespace GOO.Model.Optimizers.Strategies
                         OriginalRoute.AddOrder(OrderAdded);
                     break;
                 default:
-                    Console.WriteLine("THE END IS NIGH! (Impossible error at RandomOrderAddStrategy, line 73~");
+                    Console.WriteLine("THE END IS NIGH! (Impossible error at RandomOrderAddStrategy, line 67~");
                     Console.Beep(); // Sign that the end is coming
                     break;
             }
