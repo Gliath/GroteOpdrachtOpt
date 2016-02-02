@@ -62,7 +62,8 @@ namespace GOO.Model
                 {
                     TravelTimeScore -= toRemove.TravelTime;
                     foreach (Order order in toRemove.Orders)
-                        RemovePlannedOccurrence(order.OrderNumber, toRemove);
+                        if (order.OrderNumber != 0)
+                            RemovePlannedOccurrence(order.OrderNumber, toRemove);
 
                     toRemove.partOfSolution = null;
                 }
@@ -77,7 +78,9 @@ namespace GOO.Model
             {
                 DayPlanning.Item3.Add(toAdd);
                 foreach (Order order in toAdd.Orders)
-                    AddPlannedOccurrence(order.OrderNumber, toAdd);
+                    if (order.OrderNumber != 0)
+                        AddPlannedOccurrence(order.OrderNumber, toAdd);
+
                 AvailableRoutes.Remove(toAdd);
                 TravelTimeScore += toAdd.TravelTime;
                 toAdd.partOfSolution = this;

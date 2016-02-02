@@ -117,7 +117,7 @@ namespace GOO.Model.Optimizers
                     0, // new GeneticOneRandomRouteStrategy()
                     //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
                 };
-            else if (annealingSchedule.AnnealingTemperature < 49000.0d) // after 2% progression
+            else if (annealingSchedule.AnnealingTemperature < 48500.0d) // after 3% progression
                 return new int[] { 
                     8, // new AddRouteStrategy()
                     8, // new SwapRouteStrategy()
@@ -144,12 +144,12 @@ namespace GOO.Model.Optimizers
                     0, // new GeneticOneRandomRouteStrategy()
                     //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
                 };
-            else if (annealingSchedule.AnnealingTemperature < 49500.0d) // after 1% progression
+            else if (annealingSchedule.AnnealingTemperature < 49000.0d) // after 2% progression
                 return new int[] { 
                     0, // new AddRouteStrategy()
                     0, // new SwapRouteStrategy()
-                    0, // new DestroyPlannedRouteStrategy()
-                    100, // new DestroyPoolRouteStrategy()
+                    100, // new DestroyPlannedRouteStrategy()
+                    0, // new DestroyPoolRouteStrategy()
                     0, // new RemoveRouteStrategy()
                     0, // new PlanRouteStrategy()
                     
@@ -171,19 +171,46 @@ namespace GOO.Model.Optimizers
                     0, // new GeneticOneRandomRouteStrategy()
                     //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
                 };
+            else if (annealingSchedule.AnnealingTemperature < 49500.0d) // after 1% progression
+                return new int[] { 
+                    0, // new AddRouteStrategy()
+                    0, // new SwapRouteStrategy()
+                    0, // new DestroyPlannedRouteStrategy()
+                    0, // new DestroyPoolRouteStrategy()
+                    0, // new RemoveRouteStrategy()
+                    100, // new PlanRouteStrategy()
+                    
+                    0, // new RandomOrderAddStrategy()
+                    0, // new RandomOrderRemoveStrategy()
+                    0, // new RandomOrderShiftStrategy()
+                    0, // new RandomOrderSwapStrategy()
+                    
+                    0, // new RandomStepOpt2Strategy()
+                    0, // new RandomStepOpt2HalfStrategy()
+                    0, // new RandomStepOpt3Strategy()
+                    0, // new RandomStepOpt3HalfStrategy()
+
+                    0, // new RandomRouteOpt2Strategy()
+                    0, // new RandomRouteOpt2HalfStrategy()
+                    0, // new RandomRouteOpt3Strategy()
+                    0, // new RandomRouteOpt3HalfStrategy()
+
+                    0, // new GeneticOneRandomRouteStrategy()
+                    //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
+                };
             else // before 1% progression
                 return new int[] { 
-                    100, // new AddRouteStrategy()               
-                    0, // new SwapRouteStrategy()               
-                    0, // new DestroyPlannedRouteStrategy()     
-                    0, // new DestroyPoolRouteStrategy()        
-                    0, // new RemoveRouteStrategy()             
-                    0, // new PlanRouteStrategy()              
+                    100, // new AddRouteStrategy()
+                    0, // new SwapRouteStrategy()
+                    0, // new DestroyPlannedRouteStrategy()
+                    0, // new DestroyPoolRouteStrategy()
+                    0, // new RemoveRouteStrategy()
+                    0, // new PlanRouteStrategy()
 
-                    0, // new RandomOrderAddStrategy()         
-                    0, // new RandomOrderRemoveStrategy()       
-                    0, // new RandomOrderShiftStrategy()        
-                    0, // new RandomOrderSwapStrategy()         
+                    0, // new RandomOrderAddStrategy()
+                    0, // new RandomOrderRemoveStrategy()
+                    0, // new RandomOrderShiftStrategy()
+                    0, // new RandomOrderSwapStrategy()
 
                     0, // new RandomStepOpt2Strategy()
                     0, // new RandomStepOpt2HalfStrategy()
