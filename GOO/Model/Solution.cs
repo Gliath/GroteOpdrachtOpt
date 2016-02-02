@@ -169,6 +169,9 @@ namespace GOO.Model
 
         public void AddPlannedOccurrence(int OrderNumber, Route OccurredIn)
         {
+            if (OrderNumber == 0)
+                return;
+
             OrderTracker counter = this.FindOrderTracker(OrderNumber);
             double before = counter.CurrentPenalty();
 
@@ -179,6 +182,9 @@ namespace GOO.Model
 
         public void RemovePlannedOccurrence(int OrderNumber, Route OccurredIn)
         {
+            if (OrderNumber == 0)
+                return;
+
             OrderTracker counter = this.FindOrderTracker(OrderNumber);
             double before = counter.CurrentPenalty();
 
@@ -269,10 +275,10 @@ namespace GOO.Model
         //    //counter.PartOfRoutes.Remove(OccurredIn);
         //}
 
-        public bool CanAddOrder(int OrderNumber, Days day)
-        {
-            return this.FindOrderTracker(OrderNumber).CanAddOrder(day);
-        }
+        //public bool CanAddOrder(int OrderNumber, Days day)
+        //{
+        //    return this.FindOrderTracker(OrderNumber).CanAddOrder(day);
+        //}
 
         public Boolean OrderHasOccurence(Days day, int OrderNumber)
         {

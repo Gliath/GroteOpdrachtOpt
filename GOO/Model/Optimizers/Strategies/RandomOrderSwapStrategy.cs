@@ -46,8 +46,7 @@ namespace GOO.Model.Optimizers.Strategies
 
                 newRoutes[i] = new Route(Plans[i].Item1);
                 foreach (Order order in oldRoutes[i].Orders)
-                    if (order.OrderNumber != 0)
-                        newRoutes[i].AddOrder(order);
+                    newRoutes[i].AddOrder(order);
 
                 ordersToSwitch[i] = newRoutes[i].Orders[random.Next(newRoutes[i].Orders.Count - 1)];
             }

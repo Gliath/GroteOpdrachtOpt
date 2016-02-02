@@ -59,8 +59,7 @@ namespace GOO.Model.Optimizers.Strategies
             if (routeCreated.Orders.Count > 1)
             {
                 foreach (Order order in routeCreated.Orders)
-                    if (!order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Contains(order))
-                        order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(order);
+                    order.AddAvailableOrderBackToCluster();
 
                 toStartFrom.RemoveRoute(routeCreated);
                 routeCreated.Destroy();

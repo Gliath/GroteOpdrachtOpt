@@ -10,7 +10,7 @@ namespace GOO.Model.Optimizers.Strategies
         private Tuple<Days, int, List<Route>> Planning;
         private List<Order> ordersDestroyed;
         private Days dayDestroyed;
-        
+
         public DestroyPlannedRouteStrategy()
             : base()
         {
@@ -33,7 +33,7 @@ namespace GOO.Model.Optimizers.Strategies
             Route routeToDestroy = Planning.Item3[random.Next(Planning.Item3.Count)];
             ordersDestroyed = routeToDestroy.Orders;
             dayDestroyed = routeToDestroy.Day;
-            
+
             toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, routeToDestroy);
             toStartFrom.RemoveRoute(routeToDestroy);
             routeToDestroy.Destroy();
@@ -47,11 +47,10 @@ namespace GOO.Model.Optimizers.Strategies
             {
                 Route routeRestored = new Route(dayDestroyed);
                 foreach (Order order in ordersDestroyed)
-                    if (order.OrderNumber != 0)
-                    {
-                        routeRestored.AddOrder(order);
-                        order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(order);
-                    }
+                {
+                    routeRestored.AddOrder(order);
+                    order.RemoveAvailableOrderFromCluster();
+                }
 
                 toStartFrom.AddRoute(routeRestored);
                 toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeRestored);

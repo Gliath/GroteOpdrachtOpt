@@ -85,7 +85,7 @@ namespace GOO.Model.Optimizers.Strategies
         {
             if (OriginalRoute != null && OrderAdded != null && OriginalRoute.Orders.Contains(OrderAdded))
             {
-                OrderAdded.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(OrderAdded);
+                OrderAdded.AddAvailableOrderBackToCluster();
                 OriginalRoute.RemoveOrder(OrderAdded);
             }
 

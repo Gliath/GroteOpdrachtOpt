@@ -100,6 +100,9 @@ namespace GOO.Model
 
         public void AddOrder(Order order)
         {
+            if (order.OrderNumber == 0)
+                return;
+
             int LastMatrixID = 287;
             int NewMatrixID = order.MatrixID;
             int PreviousMatrixID = Orders.Count == 1 ? LastMatrixID : Orders[Orders.Count - 2].MatrixID;
@@ -118,6 +121,9 @@ namespace GOO.Model
 
         public void AddOrderAtStart(Order order)
         {
+            if (order.OrderNumber == 0)
+                return;
+
             int FirstMatrixID = 287;
             int NewMatrixID = order.MatrixID;
             int NextMatrixID = Orders[1].MatrixID;
@@ -136,6 +142,9 @@ namespace GOO.Model
 
         public void AddOrderAt(Order newOrder, Order orderToInsertAfter)
         {
+            if (newOrder.OrderNumber == 0 || orderToInsertAfter.OrderNumber == 0)
+                return;
+
             int IndexOfOrderToInsertAfter = Orders.FindIndex(o => o.OrderNumber == orderToInsertAfter.OrderNumber);
 
             if (IndexOfOrderToInsertAfter == -1)
@@ -165,6 +174,9 @@ namespace GOO.Model
 
         public void RemoveOrder(Order order)
         {
+            if (order.OrderNumber == 0)
+                return;
+
             int OldMatrixID = order.MatrixID;
             int indexOfOldOrder = Orders.FindIndex(o => o.OrderNumber == order.OrderNumber);
             int PreviousMatrixID = (indexOfOldOrder - 1) >= 0 ? Orders[indexOfOldOrder - 1].MatrixID : 287;
@@ -320,6 +332,9 @@ namespace GOO.Model
 
         public void SwapOrders(Order firstOrder, Order secondOrder)
         {
+            if (firstOrder.OrderNumber == 0 || secondOrder.OrderNumber == 0)
+                return;
+
             int indexOfTheFirstOrder = Orders.FindIndex(o => o.OrderNumber == firstOrder.OrderNumber);
             int indexOfTheSecondOrder = Orders.FindIndex(o => o.OrderNumber == secondOrder.OrderNumber);
 
@@ -344,6 +359,9 @@ namespace GOO.Model
 
         public void SwapOrders(Order firstOrder, Order secondOrder, Order thirdOrder)
         {
+            if (firstOrder.OrderNumber == 0 || secondOrder.OrderNumber == 0 || thirdOrder.OrderNumber == 0)
+                return;
+
             int indexOfTheFirstOrder = Orders.FindIndex(o => o.OrderNumber == firstOrder.OrderNumber);
             int indexOfTheSecondOrder = Orders.FindIndex(o => o.OrderNumber == secondOrder.OrderNumber);
             int indexOfTheThirdOrder = Orders.FindIndex(o => o.OrderNumber == thirdOrder.OrderNumber);
@@ -441,10 +459,9 @@ namespace GOO.Model
         public void Destroy()
         {
             foreach (Order order in Orders)
-                if (order.OrderNumber != 0)
                 {
                     order.RemoveOrderOccurrence(this);
-                    order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(order);
+                    order.AddAvailableOrderBackToCluster();
                 }
         }
     }

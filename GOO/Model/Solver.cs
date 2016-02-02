@@ -22,6 +22,8 @@ namespace GOO.Model
             Solution solution = new Solution(clusterer.createClusters());
             solution.MakeBasicPlannings();
 
+            Data.Orders.Add(0, Data.GetOrder0());
+            
             return solution;
         }
 

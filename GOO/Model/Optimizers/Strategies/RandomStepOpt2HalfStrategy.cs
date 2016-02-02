@@ -41,8 +41,7 @@ namespace GOO.Model.Optimizers.Strategies
 
             new_route = new Route(Planning.Item1);
             foreach (Order order in old_route.Orders)
-                if(order.OrderNumber != 0)
-                    new_route.AddOrder(order);
+                new_route.AddOrder(order);
 
             int firstIndex = random.Next(old_route.Orders.Count - 1);
             int secondIndex = random.Next(old_route.Orders.Count - 1);

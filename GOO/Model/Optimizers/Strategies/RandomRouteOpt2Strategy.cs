@@ -58,8 +58,7 @@ namespace GOO.Model.Optimizers.Strategies
 
                             routeToWorkWith = new Route(Planning.Item1);
                             foreach (Order order in new_route.Orders)
-                                if (order.OrderNumber != 0)
-                                    routeToWorkWith.AddOrder(order);
+                                routeToWorkWith.AddOrder(order);
                         }
                     }
                 }

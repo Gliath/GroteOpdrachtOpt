@@ -36,13 +36,10 @@ namespace GOO.Model.Optimizers.Strategies
             new_route = new Route(Planning.Item1);
             foreach (Order order in old_route.Orders)
             {
-                if (order.OrderNumber != 0)
-                {
-                    for (int i = 0; i < routesToWorkWith.Length; i++)
-                        routesToWorkWith[i].AddOrder(order);
+                for (int i = 0; i < routesToWorkWith.Length; i++)
+                    routesToWorkWith[i].AddOrder(order);
 
-                    new_route.AddOrder(order);
-                }
+                new_route.AddOrder(order);
             }
 
             //start doing the opt-3 algorithm on the route list
@@ -83,7 +80,7 @@ namespace GOO.Model.Optimizers.Strategies
                             bool hasABetterTime = false;
                             for (int index = 0; index < new_traveltime.Length; index++)
                             {
-                                if(new_traveltime[index] < best_traveltime)
+                                if (new_traveltime[index] < best_traveltime)
                                 {
                                     improvestep = 0;
                                     hasABetterTime = true;
@@ -99,9 +96,8 @@ namespace GOO.Model.Optimizers.Strategies
                                     routesToWorkWith[index] = new Route(Planning.Item1);
 
                                 foreach (Order order in old_route.Orders)
-                                    if (order.OrderNumber != 0)
-                                        for (int index = 0; index < routesToWorkWith.Length; index++)
-                                            routesToWorkWith[index].AddOrder(order);
+                                    for (int index = 0; index < routesToWorkWith.Length; index++)
+                                        routesToWorkWith[index].AddOrder(order);
 
                             }
                         }

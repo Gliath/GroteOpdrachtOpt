@@ -44,7 +44,7 @@ namespace GOO.Model.Optimizers.Strategies
             int orderIndex = random.Next(OriginalRoute.Orders.Count - 1);
             OrderRemoved = OriginalRoute.Orders[orderIndex];
             OrderBefore = orderIndex == 0 ? null : OriginalRoute.Orders[orderIndex - 1];
-            OrderRemoved.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(OrderRemoved);
+            OrderRemoved.AddAvailableOrderBackToCluster();
             OriginalRoute.RemoveOrder(OrderRemoved);
 
             if (OriginalRoute.Orders.Count == 1)
@@ -65,7 +65,7 @@ namespace GOO.Model.Optimizers.Strategies
                     toStartFrom.AddRoute(OriginalRoute);
                 }
 
-                OrderRemoved.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Remove(OrderRemoved);
+                OrderRemoved.RemoveAvailableOrderFromCluster();
                 if (OrderBefore == null)
                     OriginalRoute.AddOrderAtStart(OrderRemoved);
                 else

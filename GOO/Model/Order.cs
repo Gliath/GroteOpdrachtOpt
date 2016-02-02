@@ -72,6 +72,11 @@ namespace GOO.Model
             return true;
         }
 
+        public void RemoveCluster()
+        {
+            this.ClusterOrderIsLocatedIn = null;
+        }
+
         public void AddOrderOccurrence(Route OccurredIn)
         {
             OrderTracker.AddOrderOccurrence(OccurredIn);
@@ -81,9 +86,17 @@ namespace GOO.Model
         {
             OrderTracker.RemoveOrderOccurrence(OccurredIn);
         }
-        public void RemoveOrderFromCluster()
+
+        public void AddAvailableOrderBackToCluster()
         {
-            this.ClusterOrderIsLocatedIn = null;
+            if(OrderNumber != 0)
+                this.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(this);
+        }
+
+        public void RemoveAvailableOrderFromCluster()
+        {
+            if (OrderNumber != 0)
+                this.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Remove(this);
         }
 
         public bool CanBeAddedOnDay(Days day)

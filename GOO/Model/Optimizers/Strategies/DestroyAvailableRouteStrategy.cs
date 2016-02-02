@@ -9,7 +9,7 @@ namespace GOO.Model.Optimizers.Strategies
     {
         private List<Order> ordersDestroyed;
         private Days dayDestroyed;
-        
+
         public DestroyAvailableRouteStrategy()
             : base()
         {
@@ -37,12 +37,10 @@ namespace GOO.Model.Optimizers.Strategies
             {
                 Route routeRestored = new Route(dayDestroyed);
                 foreach (Order order in ordersDestroyed)
-                    if (order.OrderNumber != 0)
-                    {
-                        routeRestored.AddOrder(order);
-                        order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Remove(order);
-                    }
-
+                {
+                    routeRestored.AddOrder(order);
+                    order.RemoveAvailableOrderFromCluster();
+                }
                 toStartFrom.AddRoute(routeRestored);
             }
 

@@ -53,14 +53,14 @@ namespace GOO.Model
 
         public void RemoveOrderFromCluster(Order toRemove)
         {
-            toRemove.RemoveOrderFromCluster();
+            toRemove.RemoveAvailableOrderFromCluster();
             AvailableOrdersInCluster.Remove(toRemove);
         }
 
         public void RemoveAllOrdersFromCluster()
         {
             foreach (Order order in AvailableOrdersInCluster)
-                order.RemoveOrderFromCluster();
+                order.RemoveCluster();
 
             AvailableOrdersInCluster.Clear();
         }
