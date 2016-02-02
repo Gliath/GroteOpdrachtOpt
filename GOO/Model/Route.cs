@@ -48,6 +48,7 @@ namespace GOO.Model
                 tempTT -= Data.DistanceMatrix[PreviousMatrixID, 287].TravelTime;
                 tempTT += Data.DistanceMatrix[PreviousMatrixID, order.MatrixID].TravelTime;
                 tempTT += Data.DistanceMatrix[order.MatrixID, 287].TravelTime;
+                tempTT += order.EmptyingTimeInSeconds;
 
                 return tempTT < timeLimit;
             }
@@ -64,6 +65,7 @@ namespace GOO.Model
                 tempTT -= Data.DistanceMatrix[287, Orders[0].MatrixID].TravelTime;
                 tempTT += Data.DistanceMatrix[287, order.MatrixID].TravelTime;
                 tempTT += Data.DistanceMatrix[order.MatrixID, Orders[0].MatrixID].TravelTime;
+                tempTT += order.EmptyingTimeInSeconds;
 
                 return tempTT < timeLimit;
             }
@@ -88,6 +90,7 @@ namespace GOO.Model
                         tempTT -= Data.DistanceMatrix[PreviousMatrixID, NextMatrixID].TravelTime;
                         tempTT += Data.DistanceMatrix[PreviousMatrixID, order.MatrixID].TravelTime;
                         tempTT += Data.DistanceMatrix[order.MatrixID, NextMatrixID].TravelTime;
+                        tempTT += order.EmptyingTimeInSeconds;
 
                         return tempTT < timeLimit;
                     }
