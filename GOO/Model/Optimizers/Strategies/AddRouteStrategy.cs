@@ -49,8 +49,7 @@ namespace GOO.Model.Optimizers.Strategies
 
             if (routeCreated.Orders.Count > 1) // Does have orders
             {
-                toStartFrom.AllRoutes.Add(routeCreated);
-                toStartFrom.AvailableRoutes.Add(routeCreated);
+                toStartFrom.AddRoute(routeCreated);
             }
 
             return toStartFrom;
@@ -64,8 +63,7 @@ namespace GOO.Model.Optimizers.Strategies
                     if (!order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Contains(order))
                         order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(order);
 
-                toStartFrom.AllRoutes.Remove(routeCreated);
-                toStartFrom.AvailableRoutes.Remove(routeCreated);
+                toStartFrom.RemoveRoute(routeCreated);
                 routeCreated.Destroy();
             }
 

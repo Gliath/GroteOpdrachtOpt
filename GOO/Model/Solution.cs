@@ -93,17 +93,26 @@ namespace GOO.Model
             }
         }
 
+        public void AddRoute(Route toAdd)
+        {
+            if (!AvailableRoutes.Contains(toAdd))
+                AvailableRoutes.Add(toAdd);
+            if (!AllRoutes.Contains(toAdd))
+                AllRoutes.Add(toAdd);
+        }
+
+        public void RemoveRoute(Route toDelete)
+        {
+            if (AvailableRoutes.Contains(toDelete))
+                AvailableRoutes.Remove(toDelete);
+            if (AllRoutes.Contains(toDelete))
+                AllRoutes.Remove(toDelete);
+        }
+
         public void ReplaceRoutes(Route oldRoute, Route newRoute)
         {
-            if (AvailableRoutes.Contains(oldRoute))
-                AvailableRoutes.Remove(oldRoute);
-            if (AllRoutes.Contains(oldRoute))
-                AllRoutes.Remove(oldRoute);
-
-            if (!AvailableRoutes.Contains(newRoute))
-                AvailableRoutes.Add(newRoute);
-            if (!AllRoutes.Contains(newRoute))
-                AllRoutes.Add(newRoute);
+            RemoveRoute(oldRoute);
+            AddRoute(newRoute);
         }
 
         public void AddNewItemToPlanning(Days day, int truckID, List<Route> routes)

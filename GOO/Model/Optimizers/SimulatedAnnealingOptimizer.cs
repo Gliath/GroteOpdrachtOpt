@@ -154,14 +154,14 @@ namespace GOO.Model.Optimizers
                 };
             else // before 1% progression
                 return new int[] { 
-                    55, // new AddRouteStrategy()
+                    45, // new AddRouteStrategy()
                     0, // new SwapRouteStrategy()
-                    0, // new DestroyPlannedRouteStrategy()
+                    5, // new DestroyPlannedRouteStrategy()
                     5, // new DestroyPoolRouteStrategy()
-                    0, // new RemoveRouteStrategy()
-                    40, // new PlanRouteStrategy()
+                    5, // new RemoveRouteStrategy()
+                    30, // new PlanRouteStrategy()
 
-                    0, // new RandomOrderAddStrategy()
+                    10, // new RandomOrderAddStrategy()
                     0, // new RandomOrderRemoveStrategy()
                     0, // new RandomOrderShiftStrategy()
                     0, // new RandomOrderSwapStrategy()

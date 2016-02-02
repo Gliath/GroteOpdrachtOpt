@@ -31,12 +31,11 @@ namespace GOO.Model.Optimizers.Strategies
                 return toStartFrom;
 
             Route routeToDestroy = Planning.Item3[random.Next(Planning.Item3.Count)];
-            toStartFrom.AllRoutes.Remove(routeToDestroy);
             ordersDestroyed = routeToDestroy.Orders;
             dayDestroyed = routeToDestroy.Day;
             
             toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, routeToDestroy);
-            toStartFrom.AvailableRoutes.Remove(routeToDestroy);
+            toStartFrom.RemoveRoute(routeToDestroy);
             routeToDestroy.Destroy();
 
             return toStartFrom;
@@ -51,7 +50,7 @@ namespace GOO.Model.Optimizers.Strategies
                     if (order.OrderNumber != 0)
                         routeRestored.AddOrder(order);
 
-                toStartFrom.AllRoutes.Add(routeRestored);
+                toStartFrom.AddRoute(routeRestored);
                 toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeRestored);
             }
 

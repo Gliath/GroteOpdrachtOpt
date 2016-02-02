@@ -41,7 +41,8 @@ namespace GOO.Model.Optimizers.Strategies
 
             new_route = new Route(Planning.Item1);
             foreach (Order order in old_route.Orders)
-                new_route.AddOrder(order);
+                if(order.OrderNumber != 0)
+                    new_route.AddOrder(order);
 
             int firstIndex = random.Next(old_route.Orders.Count - 1);
             int secondIndex = random.Next(old_route.Orders.Count - 1);
@@ -57,7 +58,7 @@ namespace GOO.Model.Optimizers.Strategies
             toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, old_route);
             toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, new_route);
 
-            toStartFrom.AvailableRoutes.Remove(old_route);
+            toStartFrom.ReplaceRoutes(old_route, new_route);
 
             return toStartFrom;
         }
@@ -74,6 +75,8 @@ namespace GOO.Model.Optimizers.Strategies
             {
                 toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, new_route);
                 toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, old_route);
+
+                toStartFrom.ReplaceRoutes(new_route, old_route);
             }
 
             return toStartFrom;

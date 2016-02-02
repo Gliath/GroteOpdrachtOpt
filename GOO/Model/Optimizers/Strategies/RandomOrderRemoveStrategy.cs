@@ -47,9 +47,11 @@ namespace GOO.Model.Optimizers.Strategies
             OrderRemoved.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(OrderRemoved);
             OriginalRoute.RemoveOrder(OrderRemoved);
 
-            if (OriginalRoute.Orders.Count == 1) // Basically delete the route (remove it from planning)
+            if (OriginalRoute.Orders.Count == 1)
+            { // Basically delete the route (remove it from planning)
                 toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
-
+                toStartFrom.RemoveRoute(OriginalRoute);
+            }
             return toStartFrom;
         }
 
@@ -57,8 +59,11 @@ namespace GOO.Model.Optimizers.Strategies
         {
             if (OriginalRoute != null && OrderRemoved != null)
             {
-                if (OriginalRoute.Orders.Count == 1) // If empty 
+                if (OriginalRoute.Orders.Count == 1)
+                { // If empty 
                     toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
+                    toStartFrom.AddRoute(OriginalRoute);
+                }
 
                 OrderRemoved.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Remove(OrderRemoved);
                 if (OrderBefore == null)
