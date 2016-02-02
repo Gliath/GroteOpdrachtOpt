@@ -107,6 +107,8 @@ namespace GOO.Model
             int NewMatrixID = order.MatrixID;
             int PreviousMatrixID = Orders.Count == 1 ? LastMatrixID : Orders[Orders.Count - 2].MatrixID;
 
+            double OldTravelTime = TravelTime;
+
             TravelTime -= Data.DistanceMatrix[PreviousMatrixID, LastMatrixID].TravelTime;
             TravelTime += Data.DistanceMatrix[PreviousMatrixID, NewMatrixID].TravelTime;
             TravelTime += Data.DistanceMatrix[NewMatrixID, LastMatrixID].TravelTime;
@@ -116,7 +118,7 @@ namespace GOO.Model
             Orders.Insert(Orders.Count - 1, order);
             order.AddOrderOccurrence(this);
             if (partOfSolution != null)
-                partOfSolution.TravelTimeScore += TravelTime;
+                partOfSolution.TravelTimeScore += OldTravelTime - TravelTime;
         }
 
         public void AddOrderAtStart(Order order)
@@ -128,6 +130,8 @@ namespace GOO.Model
             int NewMatrixID = order.MatrixID;
             int NextMatrixID = Orders[1].MatrixID;
 
+            double OldTravelTime = TravelTime;
+
             TravelTime -= Data.DistanceMatrix[FirstMatrixID, NextMatrixID].TravelTime;
             TravelTime += Data.DistanceMatrix[FirstMatrixID, NewMatrixID].TravelTime;
             TravelTime += Data.DistanceMatrix[NewMatrixID, NextMatrixID].TravelTime;
@@ -137,7 +141,7 @@ namespace GOO.Model
             Orders.Insert(1, order);
             order.AddOrderOccurrence(this);
             if (partOfSolution != null)
-                partOfSolution.TravelTimeScore += TravelTime;
+                partOfSolution.TravelTimeScore += OldTravelTime - TravelTime;
         }
 
         public void AddOrderAt(Order newOrder, Order orderToInsertAfter)
@@ -160,6 +164,8 @@ namespace GOO.Model
             int NewMatrixID = newOrder.MatrixID;
             int PreviousMatrixID = orderToInsertAfter.MatrixID;
 
+            double OldTravelTime = TravelTime;
+
             TravelTime -= Data.DistanceMatrix[PreviousMatrixID, NextMatrixID].TravelTime;
             TravelTime += Data.DistanceMatrix[PreviousMatrixID, NewMatrixID].TravelTime;
             TravelTime += Data.DistanceMatrix[NewMatrixID, NextMatrixID].TravelTime;
@@ -169,7 +175,7 @@ namespace GOO.Model
             Orders.Insert(IndexOfOrderToInsertAfter + 1, newOrder);
             newOrder.AddOrderOccurrence(this);
             if (partOfSolution != null)
-                partOfSolution.TravelTimeScore += TravelTime;
+                partOfSolution.TravelTimeScore += OldTravelTime - TravelTime;
         }
 
         public void RemoveOrder(Order order)
@@ -182,6 +188,8 @@ namespace GOO.Model
             int PreviousMatrixID = (indexOfOldOrder - 1) >= 0 ? Orders[indexOfOldOrder - 1].MatrixID : 287;
             int NextMatrixID = indexOfOldOrder < Orders.Count - 2 ? Orders[indexOfOldOrder + 1].MatrixID : 287;
 
+            double OldTravelTime = TravelTime;
+
             TravelTime -= Data.DistanceMatrix[OldMatrixID, NextMatrixID].TravelTime;
             TravelTime -= Data.DistanceMatrix[PreviousMatrixID, OldMatrixID].TravelTime;
             TravelTime += Data.DistanceMatrix[PreviousMatrixID, NextMatrixID].TravelTime;
@@ -191,7 +199,7 @@ namespace GOO.Model
             Orders.Remove(order);
             order.RemoveOrderOccurrence(this);
             if (partOfSolution != null)
-                partOfSolution.TravelTimeScore -= TravelTime;
+                partOfSolution.TravelTimeScore += OldTravelTime - TravelTime;
         }
 
         public bool CanSwapOrder(Order firstOrder, Order secondOrder, double timeLimit = 43200.0d)
