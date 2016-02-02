@@ -191,7 +191,7 @@ namespace GOO.Model
             Orders.Remove(order);
             order.RemoveOrderOccurrence(this);
             if (partOfSolution != null)
-                partOfSolution.TravelTimeScore += TravelTime;
+                partOfSolution.TravelTimeScore -= TravelTime;
         }
 
         public bool CanSwapOrder(Order firstOrder, Order secondOrder, double timeLimit = 43200.0d)
