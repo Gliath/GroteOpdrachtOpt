@@ -29,7 +29,7 @@ namespace GOO.Model.Optimizers.Strategies
             for (int planCounter = 0; planCounter < 8 && (Plans[0].Item1 != Plans[1].Item1 || Plans[1].Item3.Count == 0); planCounter++)
                 Plans[1] = toStartFrom.GetRandomPlanning();
 
-            if (Plans[0].Item3.Count == 0 || Plans[0].Item3.Count == 0 || (Plans[0].Equals(Plans[1]) && Plans[0].Item3.Count < 2))
+            if (Plans[0].Item3.Count == 0 || Plans[1].Item3.Count == 0 || (Plans[0].Equals(Plans[1]) && Plans[0].Item3.Count < 2))
                 return toStartFrom;
 
             Order[] ordersToShift = new Order[2];
