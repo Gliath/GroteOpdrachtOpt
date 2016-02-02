@@ -155,16 +155,16 @@ namespace GOO.Model.Optimizers
             else // before 1% progression
                 return new int[] { 
                     45, // new AddRouteStrategy()
-                    0, // new SwapRouteStrategy()
-                    5, // new DestroyPlannedRouteStrategy()
-                    5, // new DestroyPoolRouteStrategy()
+                    1, // new SwapRouteStrategy()
+                    1, // new DestroyPlannedRouteStrategy()
+                    1, // new DestroyPoolRouteStrategy()
                     5, // new RemoveRouteStrategy()
-                    30, // new PlanRouteStrategy()
+                    35, // new PlanRouteStrategy()
 
                     10, // new RandomOrderAddStrategy()
                     0, // new RandomOrderRemoveStrategy()
-                    0, // new RandomOrderShiftStrategy()
-                    0, // new RandomOrderSwapStrategy()
+                    1, // new RandomOrderShiftStrategy()
+                    1, // new RandomOrderSwapStrategy()
 
                     0, // new RandomStepOpt2Strategy()
                     0, // new RandomStepOpt2HalfStrategy()

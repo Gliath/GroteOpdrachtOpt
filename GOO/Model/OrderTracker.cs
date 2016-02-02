@@ -19,7 +19,7 @@ namespace GOO.Model
             this.Order = Order;
 
             this.OrderNumber = Order.OrderNumber;
-            this.OrderDayRestrictions = OrderDayRestrictions;
+            this.OrderDayRestrictions = new List<Days>(OrderDayRestrictions);
 
             this.OrderDayOccurrences = Days.None;
         }
@@ -34,16 +34,15 @@ namespace GOO.Model
         {
             OrderDayOccurrences ^= (OrderDayOccurrences & OccurredIn.Day);
             UpdateOrderDayRestrictions();
-
         }
 
         public Boolean IsCompleted()
         {
             foreach (Days restrictions in OrderDayRestrictions)
-                if (PlannedDayOccurences.Equals(restrictions))
-                    return true;
+                if (!PlannedDayOccurences.HasFlag(restrictions))
+                    return false;
 
-            return false;
+            return true;
         }
 
         public void UpdateOrderDayRestrictions()

@@ -15,30 +15,16 @@ namespace GOO.Model
         public List<Route> AllRoutes { get; private set; }
         public List<Route> AvailableRoutes { get; private set; }
 
-        public double SolutionScore { get; private set; }
-
-        private double penalty;
-        public double PenaltyScore
+        public double SolutionScore
         {
-            get { return penalty; }
-
-            private set
+            get
             {
-                SolutionScore += value - penalty;
-                penalty = value;
+                return PenaltyScore + TravelTimeScore;
             }
         }
 
-        private double travelTime;
-        public double TravelTimeScore
-        {
-            get { return travelTime; }
-            set
-            {
-                SolutionScore += value - travelTime;
-                travelTime = value;
-            }
-        }
+        public double PenaltyScore { get; private set; }
+        public double TravelTimeScore { get; set; }
 
         private List<Tuple<Days, int, List<Route>>> TruckPlanning;
 
@@ -50,11 +36,11 @@ namespace GOO.Model
             this.AvailableRoutes = new List<Route>();
             this.TruckPlanning = new List<Tuple<Days, int, List<Route>>>();
 
-            this.SolutionScore = 0;
             this.PenaltyScore = 0;
             this.TravelTimeScore = 0;
+            InitializeCounterList();
         }
-        
+
         public void InitializeCounterList()
         {
             foreach (Order order in Data.Orders.Values)
@@ -179,6 +165,7 @@ namespace GOO.Model
             double before = counter.CurrentPenalty();
 
             counter.PlannedDayOccurences |= OccurredIn.Day;
+            counter.UpdateOrderDayRestrictions();
             PenaltyScore += counter.CurrentPenalty() - before;
         }
 
@@ -188,6 +175,7 @@ namespace GOO.Model
             double before = counter.CurrentPenalty();
 
             counter.PlannedDayOccurences ^= (counter.OrderDayOccurrences & OccurredIn.Day);
+            counter.UpdateOrderDayRestrictions();
             PenaltyScore += counter.CurrentPenalty() - before;
         }
 
