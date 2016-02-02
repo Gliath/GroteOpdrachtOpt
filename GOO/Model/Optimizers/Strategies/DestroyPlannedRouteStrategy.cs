@@ -48,7 +48,10 @@ namespace GOO.Model.Optimizers.Strategies
                 Route routeRestored = new Route(dayDestroyed);
                 foreach (Order order in ordersDestroyed)
                     if (order.OrderNumber != 0)
+                    {
                         routeRestored.AddOrder(order);
+                        order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(order);
+                    }
 
                 toStartFrom.AddRoute(routeRestored);
                 toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeRestored);

@@ -35,7 +35,7 @@ namespace GOO.ViewModel
 
             // Start generating basic solution
             sw = System.Diagnostics.Stopwatch.StartNew();
-            solution = Solver.generateSolution();
+            solution = Solver.generateClusters();
             sw.Stop();
             BasicSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
             BasicSolutionScore = solution.SolutionScore;

@@ -10,11 +10,7 @@ namespace GOO.Model
     public class Cluster : AbstractCluster
     {
         public Point CenterPoint { get; private set; }
-        public Days initialRestrictions { get; set; }
-
-        public override Days DaysPlannedFor { get; set; }
         public override List<Order> AvailableOrdersInCluster { get; set; }
-        public override List<Route> Routes { get; set; }
 
         public Cluster(Point centerPoint)
             : this(centerPoint, new List<Order>(), Days.None)
@@ -24,8 +20,6 @@ namespace GOO.Model
         {
             this.CenterPoint = centerPoint;
             this.AvailableOrdersInCluster = ordersInCluster;
-            this.DaysPlannedFor = daysPlannedFor;
-            this.Routes = new List<Route>();
 
             foreach (Order order in ordersInCluster)
                 order.PutInCluster(this);
@@ -71,29 +65,12 @@ namespace GOO.Model
             AvailableOrdersInCluster.Clear();
         }
 
-        public void AddRouteToCluster(Route toAdd)
-        {
-            Routes.Add(toAdd);
-        }
-
-        public void RemoveRouteFromCluster(Route toRemove)
-        {
-            Routes.Remove(toRemove);
-        }
-
-        public void RemoveAllRoutesFromCluster()
-        {
-            Routes.Clear();
-        }
-
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
             builder.AppendLine(String.Format("Single Cluster: "));
-            builder.AppendLine(String.Format("Days planned: {0}", DaysPlannedFor));
             builder.AppendLine(String.Format("Center Point: {0}", CenterPoint.ToString()));
             builder.AppendLine(String.Format("Number of Orders: {0}", AvailableOrdersInCluster.Count));
-            builder.AppendLine(String.Format("Number of Routes: {0}", Routes.Count));
             builder.AppendLine("");
             return builder.ToString();
         }

@@ -9,7 +9,8 @@ namespace GOO.Model
 {
     public class Solution
     {
-        private List<ParentCluster> Clusters;
+        private List<Cluster> Clusters;
+        private Random rng;
 
         public List<OrderTracker> CounterList { get; private set; }
         public List<Route> AllRoutes { get; private set; }
@@ -28,7 +29,7 @@ namespace GOO.Model
 
         private List<Tuple<Days, int, List<Route>>> TruckPlanning;
 
-        public Solution(List<ParentCluster> Clusters)
+        public Solution(List<Cluster> Clusters)
         {
             this.Clusters = Clusters;
             this.CounterList = new List<OrderTracker>();
@@ -39,6 +40,8 @@ namespace GOO.Model
             this.PenaltyScore = 0;
             this.TravelTimeScore = 0;
             InitializeCounterList();
+
+            rng = new Random();
         }
 
         public void InitializeCounterList()
@@ -60,6 +63,8 @@ namespace GOO.Model
                     TravelTimeScore -= toRemove.TravelTime;
                     foreach (Order order in toRemove.Orders)
                         RemovePlannedOccurrence(order.OrderNumber, toRemove);
+
+                    toRemove.partOfSolution = null;
                 }
                 AvailableRoutes.Add(toRemove);
             }
@@ -196,20 +201,23 @@ namespace GOO.Model
             }
         }
 
-        public ParentCluster GetRandomParentCluster()
-        {
-            int random = new Random().Next(Clusters.Count);
-            return this.Clusters[random];
-        }
+        //public ParentCluster GetRandomParentCluster()
+        //{
+        //    int random = new Random().Next(Clusters.Count);
+        //    return this.Clusters[random];
+        //}
 
         public Cluster GetRandomCluster()
         {
-            Random rng = new Random();
-            ParentCluster cluster = this.Clusters[rng.Next(Clusters.Count)];
-            return cluster.Quadrants[rng.Next(cluster.Quadrants.Length)];
+            //Random rng = new Random();
+            //ParentCluster cluster = this.Clusters[rng.Next(Clusters.Count)];
+            //return cluster.Quadrants[rng.Next(cluster.Quadrants.Length)];
+
+            return this.Clusters[rng.Next(Clusters.Count)];
+
         }
 
-        public List<ParentCluster> GetAllClusters()
+        public List<Cluster> GetAllClusters()
         {
             return this.Clusters;
         }

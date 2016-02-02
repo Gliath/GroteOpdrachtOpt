@@ -9,8 +9,6 @@ namespace GOO.Model
     public abstract class AbstractCluster
     {
         public abstract List<Order> AvailableOrdersInCluster { get; set; }
-        public abstract Days DaysPlannedFor { get; set; }
-        public abstract List<Route> Routes { get; set; }
 
         public string ToRouteString(int truckNr, int dayNr)
         {

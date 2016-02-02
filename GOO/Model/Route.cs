@@ -442,7 +442,10 @@ namespace GOO.Model
         {
             foreach (Order order in Orders)
                 if (order.OrderNumber != 0)
+                {
                     order.RemoveOrderOccurrence(this);
+                    order.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(order);
+                }
         }
     }
 }

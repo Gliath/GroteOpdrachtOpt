@@ -26,31 +26,30 @@ namespace GOO.Model.Optimizers.Strategies
             }
 
             routeCreated = new Route(day);
-            Cluster cluster = toStartFrom.GetRandomCluster();
+            var allClusters = toStartFrom.GetAllClusters();
+            int clusterIndex = random.Next(allClusters.Count);
 
             for (int i = 0; i < 64; i++)
             {
-                for (int clusterCounter = 0; clusterCounter < 16 && cluster.AvailableOrdersInCluster.Count == 0; clusterCounter++)
-                    cluster = toStartFrom.GetRandomCluster();
+                for (int clusterCounter = 0; clusterCounter < 16 && allClusters[clusterIndex].AvailableOrdersInCluster.Count == 0; clusterCounter++)
+                    clusterIndex = random.Next(allClusters.Count);
 
-                if (cluster.AvailableOrdersInCluster.Count == 0)
+                if (allClusters[clusterIndex].AvailableOrdersInCluster.Count == 0)
                     break;
 
-                int randomIndex = random.Next(cluster.AvailableOrdersInCluster.Count);
-                Order order = cluster.AvailableOrdersInCluster[randomIndex];
+                int randomIndex = random.Next(allClusters[clusterIndex].AvailableOrdersInCluster.Count);
+                Order order = allClusters[clusterIndex].AvailableOrdersInCluster[randomIndex];
 
                 if (routeCreated.CanAddOrder(order))
                     routeCreated.AddOrder(order);
                 else
                     continue;
 
-                cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
+                toStartFrom.GetAllClusters()[clusterIndex].AvailableOrdersInCluster.RemoveAt(randomIndex);
             }
 
             if (routeCreated.Orders.Count > 1) // Does have orders
-            {
                 toStartFrom.AddRoute(routeCreated);
-            }
 
             return toStartFrom;
         }
