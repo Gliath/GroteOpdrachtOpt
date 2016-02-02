@@ -61,8 +61,8 @@ namespace GOO.Model.Optimizers.Strategies
             {
                 if (OriginalRoute.Orders.Count == 1)
                 { // If empty 
-                    toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
                     toStartFrom.AddRoute(OriginalRoute);
+                    toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
                 }
 
                 OrderRemoved.RemoveAvailableOrderFromCluster();
