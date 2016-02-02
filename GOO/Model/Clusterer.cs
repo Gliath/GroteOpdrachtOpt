@@ -23,10 +23,10 @@ namespace GOO.Model
 
         public List<Cluster> createClusters()
         {
-            return createClusters(Clusterer.startingAmountOfClusters, this.createStartOrders(this.allOrders, Clusterer.startingAmountOfClusters), this.allOrders);
+            return createClusters(Clusterer.startingAmountOfClusters, this.createStartOrders(Clusterer.startingAmountOfClusters));
         }
 
-        public List<Cluster> createClusters(int amountOfClusters, List<Order> startingPoints, Dictionary<int, Order> allOrders)
+        public List<Cluster> createClusters(int amountOfClusters, List<Order> startingPoints)
         {
             List<Cluster> toReturn = new List<Cluster>();
 
@@ -35,8 +35,8 @@ namespace GOO.Model
 
             for (int i = 0; i < 3000; i++) // Try to reposition the center-point 3000 times for each cluster
             {
-                assignOrdersToClustersEuclidean(toReturn, allOrders);
-                toReturn.RemoveAll(c => c.OrdersInCluster.Count == 0);
+                assignOrdersToClustersEuclidean(toReturn);
+                toReturn.RemoveAll(c => c.AvailableOrdersInCluster.Count == 0);
             }
 
             foreach (Cluster cluster in toReturn)
@@ -65,7 +65,7 @@ namespace GOO.Model
                 Point centroid = parentCluster.CenterPoint;
                 List<Cluster> quadrants = new List<Cluster>();
 
-                foreach (Order order in parentCluster.OrdersInCluster)
+                foreach (Order order in parentCluster.AvailableOrdersInCluster)
                 {
                     if (order.Frequency == OrderFrequency.PWK2)
                         fre2 = true;
@@ -81,14 +81,14 @@ namespace GOO.Model
                 {
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.AvailableOrdersInCluster, centroid, fre2, fre3, fre4);
                 }
                 else if (fre3 && !(fre2 || fre4))
                 {
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.AvailableOrdersInCluster, centroid, fre2, fre3, fre4);
                 }
 
                 else if (fre2 || fre3 || fre4)
@@ -97,14 +97,14 @@ namespace GOO.Model
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
                     quadrants.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.AvailableOrdersInCluster, centroid, fre2, fre3, fre4);
                 }
                 else
                 {
                     quadrants.Add(new Cluster(new Point()));
-                    assignOrdersToClustersCentroid(quadrants, parentCluster.OrdersInCluster, centroid, fre2, fre3, fre4);
+                    assignOrdersToClustersCentroid(quadrants, parentCluster.AvailableOrdersInCluster, centroid, fre2, fre3, fre4);
                 }
-                toReturn.Add(new ParentCluster(centroid, parentCluster.OrdersInCluster, quadrants.ToArray())); // TODO : Double-check day restrictions
+                toReturn.Add(new ParentCluster(centroid, parentCluster.AvailableOrdersInCluster, quadrants.ToArray())); // TODO : Double-check day restrictions
             }
             return toReturn;
         }
@@ -293,13 +293,13 @@ namespace GOO.Model
             bool addedToFre3 = false;
             foreach (Cluster cluster in quadrants)
             {
-                if (!addedToFre3 && cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) != null)
+                if (!addedToFre3 && cluster.AvailableOrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) != null)
                 {
-                    cluster.OrdersInCluster.AddRange(allFre2Orders);
+                    cluster.AvailableOrdersInCluster.AddRange(allFre2Orders);
                     addedToFre3 = true;
                 }
-                else if (cluster.OrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) == null)
-                    cluster.OrdersInCluster.AddRange(allFre2Orders);
+                else if (cluster.AvailableOrdersInCluster.Find(o => o.Frequency == OrderFrequency.PWK3) == null)
+                    cluster.AvailableOrdersInCluster.AddRange(allFre2Orders);
             }
         }
 
@@ -311,7 +311,7 @@ namespace GOO.Model
             // assign the rest to the remaining clusters
 
             foreach (Cluster quadrant in quadrants)
-                quadrant.OrdersInCluster.AddRange(fre2Orders);
+                quadrant.AvailableOrdersInCluster.AddRange(fre2Orders);
         }
 
         private void multiOrderAssignFre2Excusively(List<Cluster> quadrants, List<Order> fre2Orders1, List<Order> fre2Orders2)
@@ -328,8 +328,8 @@ namespace GOO.Model
             Cluster secondCluster = copy[random.Next(copy.Count)];
             copy.Remove(secondCluster);
 
-            firstCluster.OrdersInCluster.AddRange(fre2Orders1);
-            secondCluster.OrdersInCluster.AddRange(fre2Orders2);
+            firstCluster.AvailableOrdersInCluster.AddRange(fre2Orders1);
+            secondCluster.AvailableOrdersInCluster.AddRange(fre2Orders2);
 
         }
 
@@ -337,8 +337,8 @@ namespace GOO.Model
         {
             foreach (Cluster cluster in quadrants)
                 foreach (Order order in freOrders)
-                    if (!cluster.OrdersInCluster.Contains(order))
-                        cluster.OrdersInCluster.Add(order);
+                    if (!cluster.AvailableOrdersInCluster.Contains(order))
+                        cluster.AvailableOrdersInCluster.Add(order);
         }
 
         private void multiOrderAssignFre3(List<Cluster> quadrants, List<Order> freOrders)
@@ -347,11 +347,11 @@ namespace GOO.Model
             foreach (Cluster cluster in quadrants)
                 if (cluster != noAssign)
                     foreach (Order order in freOrders)
-                        if (!cluster.OrdersInCluster.Contains(order))
-                            cluster.OrdersInCluster.Add(order);
+                        if (!cluster.AvailableOrdersInCluster.Contains(order))
+                            cluster.AvailableOrdersInCluster.Add(order);
         }
 
-        private void assignOrdersToClustersEuclidean(List<Cluster> clusters, Dictionary<int, Order> toAssign)
+        private void assignOrdersToClustersEuclidean(List<Cluster> clusters)
         {
             // Grouping orders based on Euclidean distance method
             // Note : calculating the root is currently not neccessary due to look at relative points
@@ -375,27 +375,27 @@ namespace GOO.Model
             }
         }
 
-        private List<Order> createStartOrders(Dictionary<int, Order> allOrders, int amountOfClusters)
+        private List<Order> createStartOrders(int amountOfClusters)
         {
             List<Order> toReturn = new List<Order>();
 
             List<List<Order>> freqOrders = new List<List<Order>>(); // The following order is intentional!
-            freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK3));
-            freqOrders.Add(this.findOrdersWithFrequency(allOrders, OrderFrequency.PWK4));
+            freqOrders.Add(this.findOrdersWithFrequency(OrderFrequency.PWK3));
+            freqOrders.Add(this.findOrdersWithFrequency(OrderFrequency.PWK4));
 
             int numMaxAdditions = (amountOfClusters - freqOrders.Count + 1) / 2;
 
-            freqOrders.Add(this.findOrdersWithFrequencyRandomly(allOrders, OrderFrequency.PWK2, numMaxAdditions));
-            freqOrders.Add(this.findOrdersWithFrequencyRandomly(allOrders, OrderFrequency.PWK1, numMaxAdditions));
+            freqOrders.Add(this.findOrdersWithFrequencyRandomly(OrderFrequency.PWK2, numMaxAdditions));
+            freqOrders.Add(this.findOrdersWithFrequencyRandomly(OrderFrequency.PWK1, numMaxAdditions));
 
             foreach (List<Order> orders in freqOrders)
             {
                 for (int i = 0; i < orders.Count; i++)
                 {
+                    toReturn.Add(orders[i]);
+
                     if (toReturn.Count >= amountOfClusters)
                         return toReturn;
-
-                    toReturn.Add(orders[i]);
                 }
             }
             return toReturn;
@@ -412,26 +412,26 @@ namespace GOO.Model
             return toReturn;
         }
 
-        private List<Order> findOrdersWithFrequency(Dictionary<int, Order> toLookIn, OrderFrequency toLookFor)
+        private List<Order> findOrdersWithFrequency(OrderFrequency toLookFor)
         {
             List<Order> toReturn = new List<Order>();
 
-            foreach (Order order in toLookIn.Values)
+            foreach (Order order in allOrders.Values)
                 if (order.Frequency == toLookFor)
                     toReturn.Add(order);
 
             return toReturn;
         }
 
-        private List<Order> findOrdersWithFrequencyRandomly(Dictionary<int, Order> toLookIn, OrderFrequency toLookFor, int maxAdditions)
+        private List<Order> findOrdersWithFrequencyRandomly(OrderFrequency toLookFor, int maxAdditions)
         {
             int numAdditions = 0;
             List<Order> toReturn = new List<Order>();
             Random random = new Random();
 
-            for (int i = 0; i < toLookIn.Count; i++)
+            for (int i = 0; i < allOrders.Count; i++)
             {
-                Order order = toLookIn.ElementAt(random.Next(toLookIn.Count)).Value;
+                Order order = allOrders.ElementAt(random.Next(allOrders.Count)).Value;
 
                 if (order.Frequency == toLookFor)
                 {

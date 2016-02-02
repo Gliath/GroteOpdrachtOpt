@@ -7,68 +7,87 @@ namespace GOO.Model.Optimizers.Strategies
 {
     public class RandomOrderAddStrategy : Strategy
     {
-        private Days day;
-        private int truck;
-        private Route old_route;
-        private Route new_route;
-        private List<Route> RoutesFromSolution;
-        private OrdersCounter ordersCounter;
+        private Tuple<Days, int, List<Route>> Planning;
+        private Order OrderAdded;
+        private Route OriginalRoute;
 
-        public RandomOrderAddStrategy() : base()
+        public RandomOrderAddStrategy()
+            : base()
         {
-
+            Planning = null;
+            OrderAdded = null;
+            OriginalRoute = null;
         }
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            Tuple<Days, int, List<Route>> Planning = toStartFrom.getRandomPlanningForATruck();
-            this.ordersCounter = OrdersCounter.Instance;
-            day = Planning.Item1;
-            truck = Planning.Item2;
-            RoutesFromSolution = Planning.Item3;
-
-            //save the begin route for rollback
-            old_route = RoutesFromSolution[random.Next(RoutesFromSolution.Count)];
-
-            //copy the begin route for the 2-opt and create the route for the 2-opt check
-            new_route = new Route(day);
-            foreach (Order order in old_route.Orders)
+            for (int planningCounter = 0; planningCounter < 5; planningCounter++)
             {
-                new_route.AddOrder(order);
+                Planning = toStartFrom.GetRandomPlanning();
+                if (Planning.Item3.Count == 0)
+                    continue;
+
+                OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
+
+                for (int counter = 0; counter < 5 && OriginalRoute.Orders.Count < 2; counter++)
+                    OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
+
+                if (OriginalRoute.Orders.Count >= 2)
+                    break;
             }
 
-            //start removing a random order
-            if (new_route.Orders.Count >= 2) //fix needed aswel?
+            if (OriginalRoute == null || OriginalRoute.Orders.Count < 2)
+                return toStartFrom;
+
+            Cluster cluster = toStartFrom.GetRandomCluster();
+            for (int clusterCounter = 0; clusterCounter < 8 && cluster.AvailableOrdersInCluster.Count == 0; clusterCounter++)
+                cluster = toStartFrom.GetRandomCluster();
+
+            if (cluster.AvailableOrdersInCluster.Count == 0)
+                return toStartFrom;
+
+            int randomIndex = random.Next(cluster.AvailableOrdersInCluster.Count);
+            OrderAdded = cluster.AvailableOrdersInCluster[randomIndex];
+
+            int typeOfInsert = random.Next(3); // 3 choices, start, after and at the end
+            switch (typeOfInsert)
             {
-                int ordertoAddAfther = random.Next(new_route.Orders.Count - 2);
-                Order aftherOrder = new_route.Orders[ordertoAddAfther];
-                Order order = new_route.Orders[ordertoAddAfther]; //TODO: Get a right order numbahhhh
-                int neworder = order.OrderNumber;
-
-                if (ordersCounter.CanAddOrder(neworder, new_route.Day) == true)
-                {
-                    new_route.AddOrderAt(aftherOrder, order);
-                    //TODO: remove order form orderlist
-                }
+                case 0:
+                    if (OriginalRoute.CanAddOrderAtStart(OrderAdded))
+                    {
+                        OriginalRoute.AddOrderAtStart(OrderAdded);
+                        cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
+                    }
+                    break;
+                case 1:
+                    Order orderToInsertAfter = OriginalRoute.Orders[random.Next(OriginalRoute.Orders.Count - 1)];
+                    if (OriginalRoute.CanAddOrderAfter(OrderAdded, orderToInsertAfter)) {
+                        OriginalRoute.AddOrderAt(OrderAdded, orderToInsertAfter);
+                        cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
+                    }
+                    break;
+                case 2:
+                    if (OriginalRoute.CanAddOrder(OrderAdded)) {
+                        OriginalRoute.AddOrder(OrderAdded);
+                        cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
+                    } 
+                    break;
+                default:
+                    Console.WriteLine("THE END IS NIGH! (Impossible error at RandomOrderAddStrategy, line 67~");
+                    Console.Beep(); // Sign that the end is coming
+                    break;
             }
-
-            RoutesFromSolution.Remove(old_route);
-            RoutesFromSolution.Add(new_route);
-
-            toStartFrom.RemoveItemFromPlanning(day, truck);
-            toStartFrom.AddNewItemToPlanning(day, truck, RoutesFromSolution);
 
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            // Nette manier zou zijn om de tuple weer op te halen gebaseerd op truck en dag.
-            RoutesFromSolution.Remove(new_route);
-            RoutesFromSolution.Add(old_route);
-
-            toStartFrom.RemoveItemFromPlanning(day, truck);
-            toStartFrom.AddNewItemToPlanning(day, truck, RoutesFromSolution);
+            if (OriginalRoute != null && OrderAdded != null && OriginalRoute.Orders.Contains(OrderAdded))
+            {
+                OrderAdded.ClusterOrderIsLocatedIn.AvailableOrdersInCluster.Add(OrderAdded);
+                OriginalRoute.RemoveOrder(OrderAdded);
+            }
 
             return toStartFrom;
         }

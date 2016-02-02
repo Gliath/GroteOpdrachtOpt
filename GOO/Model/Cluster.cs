@@ -13,7 +13,7 @@ namespace GOO.Model
         public Days initialRestrictions { get; set; }
 
         public override Days DaysPlannedFor { get; set; }
-        public override List<Order> OrdersInCluster { get; set; }
+        public override List<Order> AvailableOrdersInCluster { get; set; }
         public override List<Route> Routes { get; set; }
 
         public Cluster(Point centerPoint)
@@ -23,31 +23,25 @@ namespace GOO.Model
         public Cluster(Point centerPoint, List<Order> ordersInCluster, Days daysPlannedFor)
         {
             this.CenterPoint = centerPoint;
-            this.OrdersInCluster = ordersInCluster;
+            this.AvailableOrdersInCluster = ordersInCluster;
             this.DaysPlannedFor = daysPlannedFor;
             this.Routes = new List<Route>();
+
+            foreach (Order order in ordersInCluster)
+                order.PutInCluster(this);
         }
-
-        //public bool canbeplannedon(days day)
-        //{
-        //    for (int i = 0; i < ordersincluster.count; i++)
-        //        //if (!orderscounter.canaddorder(ordersincluster[i].ordernumber, day)) /* ask solution */
-        //            return false;
-
-        //    return true;
-        //}
 
         public bool ReCenterPoint()
         {
-            double newX = 0;
-            double newY = 0;
-            foreach (Order order in OrdersInCluster)
+            double newX = 0.0d;
+            double newY = 0.0d;
+            foreach (Order order in AvailableOrdersInCluster)
             {
                 newX += order.X;
                 newY += order.Y;
             }
-            newX = newX / OrdersInCluster.Count;
-            newY = newY / OrdersInCluster.Count;
+            newX = newX / AvailableOrdersInCluster.Count;
+            newY = newY / AvailableOrdersInCluster.Count;
             if (newX != CenterPoint.X || newY != CenterPoint.Y)
             {
                 this.CenterPoint = new Point(newX, newY);
@@ -59,39 +53,37 @@ namespace GOO.Model
 
         public void AddOrderToCluster(Order toAdd)
         {
-            OrdersInCluster.Add(toAdd);
+            AvailableOrdersInCluster.Add(toAdd);
+            toAdd.PutInCluster(this);
         }
 
         public void RemoveOrderFromCluster(Order toRemove)
         {
-            OrdersInCluster.Remove(toRemove);
+            toRemove.RemoveOrderFromCluster();
+            AvailableOrdersInCluster.Remove(toRemove);
         }
 
         public void RemoveAllOrdersFromCluster()
         {
-            OrdersInCluster.Clear();
+            foreach (Order order in AvailableOrdersInCluster)
+                order.RemoveOrderFromCluster();
+
+            AvailableOrdersInCluster.Clear();
         }
 
         public void AddRouteToCluster(Route toAdd)
         {
             Routes.Add(toAdd);
-
-            //foreach (Order order in toAdd.Orders)
-            //    OrdersCounter.AddOccurrence(order.OrderNumber, toAdd.Day); /* A job for Solution or the class who adds the orders themselves */
         }
 
         public void RemoveRouteFromCluster(Route toRemove)
         {
             Routes.Remove(toRemove);
-
-            //foreach (Order order in toRemove.Orders)
-            //    OrdersCounter.RemoveOccurrence(order.OrderNumber, toRemove.Day); /* A job for Solution or the class who removes the orders themselves */
         }
 
         public void RemoveAllRoutesFromCluster()
         {
             Routes.Clear();
-            //OrdersCounter.ClearAllOccurences(); /* A job for Solution or the class who clears the orders themselves */
         }
 
         public override string ToString()
@@ -100,7 +92,7 @@ namespace GOO.Model
             builder.AppendLine(String.Format("Single Cluster: "));
             builder.AppendLine(String.Format("Days planned: {0}", DaysPlannedFor));
             builder.AppendLine(String.Format("Center Point: {0}", CenterPoint.ToString()));
-            builder.AppendLine(String.Format("Number of Orders: {0}", OrdersInCluster.Count));
+            builder.AppendLine(String.Format("Number of Orders: {0}", AvailableOrdersInCluster.Count));
             builder.AppendLine(String.Format("Number of Routes: {0}", Routes.Count));
             builder.AppendLine("");
             return builder.ToString();

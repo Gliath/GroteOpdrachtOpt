@@ -6,14 +6,35 @@ namespace GOO.Model.Optimizers
 {
     public class StrategyFactory
     {
-        public static Strategy[] GetAllPhase2Strategies()
+        public static Strategy[] GetAllStrategies()
         {
-            return new Strategy[] { // Create routes and use either Opt2, Opt2.5, Opt3, Genetic, Random to optimize Strategies
-                //new GeneticRouteStrategy(), 
-                new RandomRouteOpt2Strategy(), 
-                new RandomRouteOpt2HalfStrategy(), 
-                new RandomRouteOpt3Strategy(), 
-                new RandomRouteOpt3HalfStrategy() };
+            return new Strategy[] {
+                new AddRouteStrategy(),
+                new SwapRouteStrategy(),
+                new DestroyPlannedRouteStrategy(),
+                new DestroyAvailableRouteStrategy(),
+                new RemoveRouteStrategy(),
+                new PlanRouteStrategy(),
+
+                new RandomOrderAddStrategy(),
+                new RandomOrderRemoveStrategy(),
+                new RandomOrderShiftStrategy(),
+                new RandomOrderSwapStrategy(),
+                
+                new RandomStepOpt2Strategy(),
+                new RandomStepOpt2HalfStrategy(),
+                new RandomStepOpt3Strategy(),
+                new RandomStepOpt3HalfStrategy(),
+
+                // Not working correctly?
+                new RandomRouteOpt2Strategy(),
+                new RandomRouteOpt2HalfStrategy(),
+                new RandomRouteOpt3Strategy(),
+                new RandomRouteOpt3HalfStrategy(),
+
+                new GeneticOneRandomRouteStrategy(),
+                //new GeneticTwoRandomRouteStrategy(), // currently not implemented
+            };
         }
     }
 }

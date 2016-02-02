@@ -21,7 +21,6 @@ namespace GOO.Utilities
 
         public static void AddMatrixItem(int MatrixIDFrom, int MatrixIDTo, DistanceMatrixItem MatrixItem)
         {
-            // Get the highest MatrixID for later
             MaximumMatrixID = ((MaximumMatrixID < MatrixIDFrom) ? MatrixIDFrom : MaximumMatrixID);
             MaximumMatrixID = ((MaximumMatrixID < MatrixIDTo) ? MatrixIDTo : MaximumMatrixID);
 

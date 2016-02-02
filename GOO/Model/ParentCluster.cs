@@ -13,7 +13,7 @@ namespace GOO.Model
         public Cluster[] Quadrants { get; private set; }
 
         public Point CentroidPoint { get; private set; }
-        public override List<Order> OrdersInCluster { get; set; }
+        public override List<Order> AvailableOrdersInCluster { get; set; }
         public override Days DaysPlannedFor { get; set; } // available days
 
         public Tuple<Days, Days, Days>[] PerQuadrantDaysInformation { get; set; }
@@ -26,7 +26,7 @@ namespace GOO.Model
         public ParentCluster(Point CentroidPoint, List<Order> OrdersInCluster, Cluster[] Quadrants)
         {
             this.CentroidPoint = CentroidPoint;
-            this.OrdersInCluster = OrdersInCluster;
+            this.AvailableOrdersInCluster = OrdersInCluster;
             this.Quadrants = Quadrants;
             PerQuadrantDaysInformation = new Tuple<Days, Days, Days>[NumberOfQuadrants];
 
@@ -131,9 +131,9 @@ namespace GOO.Model
             builder.AppendLine(String.Format("Days planned: {0}", DaysPlannedFor));
             builder.AppendLine(String.Format("Centroid Point: {0}", CentroidPoint.ToString()));
             builder.AppendLine(String.Format("Number of Quadrants: {0}", NumberOfQuadrants));
-            builder.AppendLine(String.Format("Number of Orders: {0}", OrdersInCluster.Count));
+            builder.AppendLine(String.Format("Number of Orders: {0}", AvailableOrdersInCluster.Count));
             for (int i = 0; i < Quadrants.Length; i++)
-                builder.AppendLine(String.Format("Quadrant {0} has {1} orders", i, Quadrants[i].OrdersInCluster.Count));
+                builder.AppendLine(String.Format("Quadrant {0} has {1} orders", i, Quadrants[i].AvailableOrdersInCluster.Count));
 
             builder.AppendLine(String.Format(""));
             return builder.ToString();

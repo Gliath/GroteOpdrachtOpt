@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows;
 
 using GOO.Utilities;
 
@@ -9,7 +8,7 @@ namespace GOO.Model
 {
     public abstract class AbstractCluster
     {
-        public abstract List<Order> OrdersInCluster { get; set; }
+        public abstract List<Order> AvailableOrdersInCluster { get; set; }
         public abstract Days DaysPlannedFor { get; set; }
         public abstract List<Route> Routes { get; set; }
 
@@ -18,7 +17,7 @@ namespace GOO.Model
             StringBuilder builder = new StringBuilder();
 
             int seqNr = 1;
-            foreach (Order order in OrdersInCluster)
+            foreach (Order order in AvailableOrdersInCluster)
                 builder.AppendLine(String.Format("{0};{1};{2};{3}", truckNr, dayNr, seqNr++, order.OrderNumber));
 
             builder.AppendLine(String.Format("{0};{1};{2};0", truckNr, dayNr, seqNr));

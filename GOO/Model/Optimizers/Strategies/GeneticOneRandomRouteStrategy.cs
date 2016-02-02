@@ -5,53 +5,29 @@ using GOO.Utilities;
 
 namespace GOO.Model.Optimizers.Strategies
 {
-    public class GeneticRouteStrategy : Strategy
+    public class GeneticOneRandomRouteStrategy : Strategy
     {
         private Route originalRoute;
-        private Route firstAbominationRoute;
         private Route bestAbominationOffspringRoute;
         private Tuple<Days, int, List<Route>> planningForSelectedRoute;
 
-        public GeneticRouteStrategy()
+        public GeneticOneRandomRouteStrategy()
             : base()
         {
             originalRoute = null;
-            firstAbominationRoute = null;
             bestAbominationOffspringRoute = null;
             planningForSelectedRoute = null;
         }
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            AbstractCluster targetCluster = null;
-            int firstRouteIndex = -1;
-
-            int numOfMaximumTriesFindingACluster = 32;
-            while (targetCluster == null && numOfMaximumTriesFindingACluster > 0)
-            {
-                targetCluster = toStartFrom.getRandomCluster();
-
-                if (targetCluster.Routes.Count > 0)
-                {
-                    for (int i = 0; i < targetCluster.Routes.Count; i++)
-                        if (targetCluster.Routes[i].Orders.Count > 2)
-                            firstRouteIndex = i; // TODO: Randomize route selection?
-                }
-                else
-                    targetCluster = null;
-
-                numOfMaximumTriesFindingACluster--;
-            }
-
-            if (targetCluster == null)
-                return null; // Just in case something weird happens
-
-            originalRoute = targetCluster.Routes[firstRouteIndex];
+            planningForSelectedRoute = toStartFrom.GetRandomPlanning();
+            originalRoute = planningForSelectedRoute.Item3[random.Next(planningForSelectedRoute.Item3.Count)];
             double originalTravelTime = originalRoute.TravelTime;
             int numOfSlices = random.Next(1, originalRoute.Orders.Count - 2);
 
             List<int> sliceIndices = new List<int>();
-            for (int i = 0; i < numOfSlices; i++)
+            for (int i = 1; i < numOfSlices; i++)
             {
                 bool hasAddedAnIndex = false;
                 do
@@ -64,10 +40,10 @@ namespace GOO.Model.Optimizers.Strategies
                     }
                 } while (!hasAddedAnIndex);
             }
-            sliceIndices.Sort(); // So that the indices are going for low to high
+            sliceIndices.Sort();
 
-            // COMMENCE THE GENETIC EXPERIMENTS! 
-            // OPERATION CUT & SPLICE AN ABOMINATION IS ACTIVE!
+            // COMMENCE THE GENETIC EXPERIMENTS!
+            // OPERATION SLICE & SPLICE AN ABOMINATION IS ACTIVE!
 
             List<Order>[] orderSlices = new List<Order>[sliceIndices.Count];
             for (int i = 0; i < sliceIndices.Count; i++)
@@ -79,9 +55,9 @@ namespace GOO.Model.Optimizers.Strategies
                     orderSlices[i].Add(originalRoute.Orders[j]);
             }
 
-            // No that you've sliced up the orders in the selected route, it is time for randomizing the slices and putting it back together
+            // Now that you've sliced up the orders in the selected route, it is time for randomizing the slices and putting it back together
 
-            firstAbominationRoute = new Route(originalRoute.Day);
+            Route firstAbominationRoute = new Route(originalRoute.Day);
             List<int> slicesIndexPutBack = new List<int>();
             for (int i = 0; i < orderSlices.Length - 2; i++)
             {
@@ -101,24 +77,23 @@ namespace GOO.Model.Optimizers.Strategies
                 } while (!hasPutBackASlice);
             }
 
-            // COMMENCE THE GENETIC EXPERIMENTS PHASE TWO! 
+            // COMMENCE THE GENETIC EXPERIMENTS PHASE TWO!
             // OPERATION DARWIN'S ABOMINATION REPRODUCTION IS NOW OPERATIONAL!
 
-            int numOfGenerationsToMake = 64;
-            Route bestBoyAbominationOffspring = originalRoute; // Is not initially an abomination but is bound to be one soon....
+            Route bestBoyAbominationOffspring = originalRoute;
             Route bestGirlAbominationOffspring = firstAbominationRoute;
             Boolean boyAbominationIsTheBest = bestBoyAbominationOffspring.TravelTime >= bestGirlAbominationOffspring.TravelTime;
             int numberOfGenesThatAreTransferred = originalRoute.Orders.Count / 2;
             List<Order> ordersSelectedForGeneticSwap = new List<Order>();
 
-            while (numOfGenerationsToMake > 0)
+            for (int numOfGenerationsToMake = 64; numOfGenerationsToMake > 0; numOfGenerationsToMake--)
             {
                 ordersSelectedForGeneticSwap.Clear();
-                
+
                 int orderIndex = -1;
                 do
                 {
-                    orderIndex = random.Next(orderSlices.Length - 1);
+                    orderIndex = random.Next(orderSlices.Length - 1); // What?
                     Order randomOrder = null;
 
                     if (boyAbominationIsTheBest)
@@ -133,7 +108,7 @@ namespace GOO.Model.Optimizers.Strategies
 
                 } while (ordersSelectedForGeneticSwap.Count * 2 < numberOfGenesThatAreTransferred - 1);
 
-                List<int> indicesToBeSwaped = new List<int>();
+                List<int> indicesToBeSwaped = new List<int>(); // Change into a array [2], to keep track which index belongs where
                 foreach (Order order in ordersSelectedForGeneticSwap)
                 {
                     indicesToBeSwaped.Add(bestBoyAbominationOffspring.Orders.FindIndex(o => o == order));
@@ -144,9 +119,9 @@ namespace GOO.Model.Optimizers.Strategies
                 Route newBoyAbominationOffspring = new Route(originalRoute.Day);
                 Route newGirlAbominationOffspring = new Route(originalRoute.Day);
 
-                for (int index = 0; index < originalRoute.Orders.Count - 1; index++) // any route (except newAbominations) can be used for this for loop
+                for (int index = 0; index < originalRoute.Orders.Count - 1; index++)
                 {
-                    if (indicesToBeSwaped.Contains(index))
+                    if (indicesToBeSwaped.Contains(index)) // Erm.. What?
                     {
                         newBoyAbominationOffspring.AddOrder(bestGirlAbominationOffspring.Orders[index]);
                         newGirlAbominationOffspring.AddOrder(bestBoyAbominationOffspring.Orders[index]);
@@ -157,9 +132,24 @@ namespace GOO.Model.Optimizers.Strategies
                         newGirlAbominationOffspring.AddOrder(bestGirlAbominationOffspring.Orders[index]);
                     }
                 }
-                // Made children! Now put them to the test! Darwin style! IN THE IF MONSTER CONSTRUCTION!
 
-                Boolean newGirlAbominationOffspringIstheBest = newBoyAbominationOffspring.TravelTime <= newGirlAbominationOffspring.TravelTime;
+                if (newBoyAbominationOffspring.isValid() && !newGirlAbominationOffspring.isValid()) // One is allowed
+                    if (bestBoyAbominationOffspring.TravelTime < bestGirlAbominationOffspring.TravelTime)
+                        bestGirlAbominationOffspring = newBoyAbominationOffspring;
+                    else
+                        bestBoyAbominationOffspring = newBoyAbominationOffspring;
+                else if (!newBoyAbominationOffspring.isValid() && newGirlAbominationOffspring.isValid()) // Other one allowed
+                    if (bestBoyAbominationOffspring.TravelTime < bestGirlAbominationOffspring.TravelTime)
+                        bestGirlAbominationOffspring = newGirlAbominationOffspring;
+                    else
+                        bestBoyAbominationOffspring = newGirlAbominationOffspring;
+                else if (!newBoyAbominationOffspring.isValid() && !newGirlAbominationOffspring.isValid()) // Neither is allowed
+                {
+                    numOfGenerationsToMake--;
+                    continue;
+                }
+
+                bool newGirlAbominationOffspringIstheBest = newBoyAbominationOffspring.TravelTime <= newGirlAbominationOffspring.TravelTime;
                 if (boyAbominationIsTheBest)
                 {
                     if (newGirlAbominationOffspringIstheBest)
@@ -168,7 +158,7 @@ namespace GOO.Model.Optimizers.Strategies
                         {
                             bestGirlAbominationOffspring = newGirlAbominationOffspring;
 
-                            if(bestBoyAbominationOffspring.TravelTime < newBoyAbominationOffspring.TravelTime)
+                            if (bestBoyAbominationOffspring.TravelTime < newBoyAbominationOffspring.TravelTime)
                             {
                                 bestBoyAbominationOffspring = newBoyAbominationOffspring;
                             }
@@ -219,36 +209,25 @@ namespace GOO.Model.Optimizers.Strategies
                 numOfGenerationsToMake--;
             }
 
-            // PHASE 3 - INSERT ABOMINATION INTO THE PUBLIC!
+            // PHASE 3 - INSERT THE ABOMINATION INTO THE PUBLIC!
 
             bestAbominationOffspringRoute = boyAbominationIsTheBest ? bestBoyAbominationOffspring : bestGirlAbominationOffspring;
 
-            Console.WriteLine("Original Travel Time:                     {0}", originalTravelTime);
+            Console.WriteLine("Original Travel Time:                     {0}", originalTravelTime); // These three lines are temporarily here
             Console.WriteLine("The First Abomination Travel Time:        {0}", firstAbominationRoute.TravelTime);
             Console.WriteLine("Best Abomination Offspring Travel Time:   {0}", bestAbominationOffspringRoute.TravelTime);
 
-            planningForSelectedRoute = toStartFrom.getRoute(targetCluster.Routes);
-
-            if (planningForSelectedRoute.Item1 != originalRoute.Day)
-                Console.WriteLine("ERROR, found the wrong route!");
-
-            planningForSelectedRoute.Item3.Remove(originalRoute);
-            planningForSelectedRoute.Item3.Add(bestAbominationOffspringRoute);
-
-            toStartFrom.RemoveItemFromPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2);
-            toStartFrom.AddNewItemToPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, planningForSelectedRoute.Item3);
+            toStartFrom.RemoveRouteFromPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, originalRoute);
+            toStartFrom.AddRouteToPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, bestAbominationOffspringRoute);
 
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            // Revert abomination to Patient Zero... 
-            planningForSelectedRoute.Item3.Remove(bestAbominationOffspringRoute);
-            planningForSelectedRoute.Item3.Add(originalRoute);
-
-            toStartFrom.RemoveItemFromPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2);
-            toStartFrom.AddNewItemToPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, planningForSelectedRoute.Item3);
+            // Revert abomination to Patient Zero...
+            toStartFrom.RemoveRouteFromPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, bestAbominationOffspringRoute);
+            toStartFrom.AddRouteToPlanning(planningForSelectedRoute.Item1, planningForSelectedRoute.Item2, originalRoute);
 
             return toStartFrom;
         }

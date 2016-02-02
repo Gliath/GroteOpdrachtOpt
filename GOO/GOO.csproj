@@ -56,13 +56,24 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\Optimizers\Strategies\DivorceAttourneyStrategy.cs" />
-    <Compile Include="Model\Optimizers\Strategies\GeneticRouteStrategy.cs" />
-    <Compile Include="Model\Optimizers\Strategies\MarriageCounselorStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\DestroyAvailableRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\DestroyPlannedRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\SwapRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RemoveRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\AddRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\PlanRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RandomOrderShiftStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RandomOrderSwapStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\GeneticOneRandomRouteStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\GeneticTwoRandomRoutesStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomOrderAddStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RandomStepOpt2HalfStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt2HalfStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomOrderRemoveStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RandomStepOpt2Strategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RandomStepOpt3HalfStrategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt3HalfStrategy.cs" />
+    <Compile Include="Model\Optimizers\Strategies\RandomStepOpt3Strategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt3Strategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\RandomRouteOpt2Strategy.cs" />
     <Compile Include="Model\Optimizers\Strategies\Strategy.cs" />
@@ -74,7 +85,7 @@
     <Compile Include="Model\MarriedCluster.cs" />
     <Compile Include="Model\Clusterer.cs" />
     <Compile Include="Model\Order.cs" />
-    <Compile Include="Model\OrdersCounter.cs" />
+    <Compile Include="Model\OrderTracker.cs" />
     <Compile Include="Model\ParentCluster.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="Model\RoutePlanner.cs" />

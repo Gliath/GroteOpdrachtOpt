@@ -38,7 +38,7 @@ namespace GOO.ViewModel
             solution = Solver.generateSolution();
             sw.Stop();
             BasicSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
-            BasicSolutionScore = solution.GetSolutionScore();
+            BasicSolutionScore = solution.SolutionScore;
             basicSolutionString = solution.ToString();
             // Basic solution generated.
 
@@ -50,7 +50,7 @@ namespace GOO.ViewModel
             solution = Solver.optimizeSolution(solution);
             sw.Stop();
             OptimizedSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
-            OptimizedSolutionScore = solution.GetSolutionScore();
+            OptimizedSolutionScore = solution.SolutionScore;
             optimizedSolutionString = solution.ToString();
             // Solution optimized
 
