@@ -14,7 +14,10 @@ namespace GOO.Model
 
         public static Solution generateClusters()
         {
-            Clusterer clusterer = new Clusterer(Data.Orders, k);
+            var orders = Data.Orders;
+            orders.Remove(0);
+
+            Clusterer clusterer = new Clusterer(orders, k);
             var clusters = clusterer.createClusters();
             Solution solution = new Solution(clusterer.createClusters());
             solution.MakeBasicPlannings();

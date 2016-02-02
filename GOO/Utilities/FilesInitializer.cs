@@ -71,6 +71,7 @@ namespace GOO.Utilities
 
                 Data.AddOrder(OrderNumber, new Order(OrderNumber, Place, Frequency, NumberOfContainers, VolumePerContainer, EmptyingTimeInSeconds, MatrixID, X, Y));
             }
+
             Data.AddOrder(Data.GetOrder0().OrderNumber, Data.GetOrder0());
         }
     }
