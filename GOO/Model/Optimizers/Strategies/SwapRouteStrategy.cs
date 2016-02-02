@@ -7,46 +7,44 @@ namespace GOO.Model.Optimizers.Strategies
 {
     public class SwapRouteStrategy : Strategy
     {
-        private Tuple<Days, int, List<Route>>[] Plannings;
+        private Tuple<Days, int, List<Route>>[] Plans;
         private int[] routeIndicesSwapped;
 
         public SwapRouteStrategy()
             : base()
         {
-            Plannings = new Tuple<Days, int, List<Route>>[2];
+            Plans = new Tuple<Days, int, List<Route>>[2];
             routeIndicesSwapped = new int[2];
 
             for (int i = 0; i < 2; i++)
-                Plannings[i] = null;
+                Plans[i] = null;
         }
 
-        public override Solution executeStrategy(Solution toStartFrom) // switch two routes from different(?) plannings
+        public override Solution executeStrategy(Solution toStartFrom)
         {
             for (int i = 0; i < 2; i++)
             {
                 for (int planningCounter = 0; planningCounter < 5; planningCounter++)
                 {
-                    Plannings[i] = toStartFrom.GetRandomPlanning();
-                    if (Plannings[i].Item3.Count > 0)
+                    Plans[i] = toStartFrom.GetRandomPlanning();
+                    if (Plans[i].Item3.Count > 0)
                         break;
                 }
 
-                if (Plannings[i].Item3.Count == 0)
+                if (Plans[i].Item3.Count == 0)
                     return toStartFrom;
 
-                routeIndicesSwapped[i] = random.Next(Plannings[i].Item3.Count);
+                routeIndicesSwapped[i] = random.Next(Plans[i].Item3.Count);
             }
 
-            Route first = Plannings[0].Item3[routeIndicesSwapped[0]];
-            Route second = Plannings[1].Item3[routeIndicesSwapped[1]];
-
-            Plannings[0].Item3[routeIndicesSwapped[0]] = second;
-            Plannings[1].Item3[routeIndicesSwapped[1]] = first;
+            Route[] routesToSwap = new Route[2];
+            for (int i = 0; i < 2; i++)
+                routesToSwap[i] = Plans[i].Item3[routeIndicesSwapped[i]];
 
             for (int i = 0; i < 2; i++)
             {
-                toStartFrom.RemoveItemFromPlanning(Plannings[i].Item1, Plannings[i].Item2);
-                toStartFrom.AddNewItemToPlanning(Plannings[i].Item1, Plannings[i].Item2, Plannings[i].Item3);
+                toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, routesToSwap[i]);
+                toStartFrom.AddRouteToPlanning(Plans[(i + 1) % 2].Item1, Plans[(i + 1) % 2].Item2, routesToSwap[i]);
             }
 
             return toStartFrom;
@@ -55,19 +53,17 @@ namespace GOO.Model.Optimizers.Strategies
         public override Solution undoStrategy(Solution toStartFrom)
         {
             for (int i = 0; i < 2; i++)
-                if (Plannings[i].Item3.Count == 0)
+                if (Plans[i].Item3.Count == 0)
                     return toStartFrom;
 
-            Route first = Plannings[0].Item3[routeIndicesSwapped[0]];
-            Route second = Plannings[1].Item3[routeIndicesSwapped[1]];
-
-            Plannings[0].Item3[routeIndicesSwapped[0]] = second;
-            Plannings[1].Item3[routeIndicesSwapped[1]] = first;
+            Route[] routesToSwap = new Route[2];
+            for (int i = 0; i < 2; i++)
+                routesToSwap[i] = Plans[i].Item3[routeIndicesSwapped[i]];
 
             for (int i = 0; i < 2; i++)
             {
-                toStartFrom.RemoveItemFromPlanning(Plannings[i].Item1, Plannings[i].Item2);
-                toStartFrom.AddNewItemToPlanning(Plannings[i].Item1, Plannings[i].Item2, Plannings[i].Item3);
+                toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, routesToSwap[i]);
+                toStartFrom.AddRouteToPlanning(Plans[(i + 1) % 2].Item1, Plans[(i + 1) % 2].Item2, routesToSwap[i]);
             }
 
             return toStartFrom;
