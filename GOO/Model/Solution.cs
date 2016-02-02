@@ -93,6 +93,19 @@ namespace GOO.Model
             }
         }
 
+        public void ReplaceRoutes(Route oldRoute, Route newRoute)
+        {
+            if (AvailableRoutes.Contains(oldRoute))
+                AvailableRoutes.Remove(oldRoute);
+            if (AllRoutes.Contains(oldRoute))
+                AllRoutes.Remove(oldRoute);
+
+            if (!AvailableRoutes.Contains(newRoute))
+                AvailableRoutes.Add(newRoute);
+            if (!AllRoutes.Contains(newRoute))
+                AllRoutes.Add(newRoute);
+        }
+
         public void AddNewItemToPlanning(Days day, int truckID, List<Route> routes)
         {
             TruckPlanning.Add(new Tuple<Days, int, List<Route>>(day, truckID, routes));
@@ -136,20 +149,20 @@ namespace GOO.Model
             this.MakeBasicPlannings();
         }
 
-        public void UpdateOrdersCounterAfterAdding(List<Route> addedRoutes)
-        {
-            foreach (Route route in addedRoutes)
-                foreach (Order order in route.Orders)
-                    if (order.OrderNumber != 0)
-                        AddOrderOccurrence(order.OrderNumber, route);
-        }
+        //public void UpdateOrdersCounterAfterAdding(List<Route> addedRoutes)
+        //{
+        //    foreach (Route route in addedRoutes)
+        //        foreach (Order order in route.Orders)
+        //            if (order.OrderNumber != 0)
+        //                AddOrderOccurrence(order.OrderNumber, route);
+        //}
 
-        public void UpdateOrdersCounterAfterRemoval(List<Route> removedRoutes)
-        {
-            foreach (Route route in removedRoutes)
-                foreach (Order order in route.Orders)
-                    RemoveOrderOccurrence(order.OrderNumber, route);
-        }
+        //public void UpdateOrdersCounterAfterRemoval(List<Route> removedRoutes)
+        //{
+        //    foreach (Route route in removedRoutes)
+        //        foreach (Order order in route.Orders)
+        //            RemoveOrderOccurrence(order.OrderNumber, route);
+        //}
 
         public void AddPlannedOccurrence(int OrderNumber, Route OccurredIn)
         {
@@ -231,22 +244,22 @@ namespace GOO.Model
             CounterList = new List<OrderTracker>();
         }
 
-        public void AddOrderOccurrence(int OrderNumber, Route OccurredIn)
-        {
-            OrderTracker counter = this.FindOrderTracker(OrderNumber);
-            counter.OrderDayOccurrences |= OccurredIn.Day;
-            counter.UpdateOrderDayRestrictions();
-            if (!counter.PartOfRoutes.Contains(OccurredIn))
-                counter.PartOfRoutes.Add(OccurredIn);
-        }
+        //public void AddOrderOccurrence(int OrderNumber, Route OccurredIn)
+        //{
+        //    OrderTracker counter = this.FindOrderTracker(OrderNumber);
+        //    counter.OrderDayOccurrences |= OccurredIn.Day;
+        //    counter.UpdateOrderDayRestrictions();
+        //    //if (!counter.PartOfRoutes.Contains(OccurredIn))
+        //    //    counter.PartOfRoutes.Add(OccurredIn);
+        //}
 
-        public void RemoveOrderOccurrence(int OrderNumber, Route OccurredIn)
-        {
-            OrderTracker counter = this.FindOrderTracker(OrderNumber);
-            counter.OrderDayOccurrences ^= (counter.OrderDayOccurrences & OccurredIn.Day);
-            counter.UpdateOrderDayRestrictions();
-            counter.PartOfRoutes.Remove(OccurredIn);
-        }
+        //public void RemoveOrderOccurrence(int OrderNumber, Route OccurredIn)
+        //{
+        //    OrderTracker counter = this.FindOrderTracker(OrderNumber);
+        //    counter.OrderDayOccurrences ^= (counter.OrderDayOccurrences & OccurredIn.Day);
+        //    counter.UpdateOrderDayRestrictions();
+        //    //counter.PartOfRoutes.Remove(OccurredIn);
+        //}
 
         public bool CanAddOrder(int OrderNumber, Days day)
         {

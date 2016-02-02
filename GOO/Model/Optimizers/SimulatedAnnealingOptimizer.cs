@@ -26,24 +26,51 @@ namespace GOO.Model.Optimizers
         public Solution runOptimizer(Solution solution, GOO.ViewModel.MainViewModel reportProgress)
         {
             oldSolutionScore = solution.SolutionScore;
+            int annealingCounter = 0;
+            int AllRoutesCount = -1;
+            int AvailableCount = -1;
+            Strategy strategyUsed = null;
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
+                if (strategyUsed != null && strategyUsed.GetType() == typeof(RandomOrderSwapStrategy))
+                {
+                    AllRoutesCount = solution.AllRoutes.Count;
+                    AvailableCount = solution.AvailableRoutes.Count;
+                }
+                else
+                {
+                    AllRoutesCount = solution.AllRoutes.Count;
+                    AvailableCount = solution.AvailableRoutes.Count;
+                }
+
                 Strategy usedStrategy = SelectAndExecuteMove(solution);
                 newSolutionScore = solution.SolutionScore;
+                // Possible effects:
+                // OrderAdd                 (None)
+                // OrderRemove              (None)
+                // OrderSwap!               (+2 Available)
+                // OrderShift!              (+2 Available)
+                // RouteDestroyAvailable!   (-1 All (vaak?), -1 Available)
+                // RouteDestroyPlanned      (-1 All)
+                // RoutePlan                (-1 Available)
+                // RouteRemove              (+1 Available)
+                // RouteSwap                (None)
+                // RouteAdd                 (None)
+                // Opt2Half!                (+1 All)
+                // Opt2                     (None)
 
                 // Accept or reject new solution
                 if (AcceptOrReject(solution)) // New Solution accepted
-                {
                     oldSolutionScore = newSolutionScore;
-                }
                 else // New solution rejected
-                {
                     usedStrategy.undoStrategy(solution);
-                }
 
                 if (reportProgress != null)
                     reportProgress.ProgressValue++;
+
+                annealingCounter++;
+                strategyUsed = usedStrategy;
             }
 
             return solution;

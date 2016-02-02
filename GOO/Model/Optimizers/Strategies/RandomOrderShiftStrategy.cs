@@ -62,6 +62,8 @@ namespace GOO.Model.Optimizers.Strategies
                 {
                     toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, oldRoutes[i]);
                     toStartFrom.AddRouteToPlanning(Plans[i].Item1, Plans[i].Item2, newRoutes[i]);
+
+                    toStartFrom.ReplaceRoutes(oldRoutes[i], newRoutes[i]);
                 }
             }
             else
@@ -80,6 +82,8 @@ namespace GOO.Model.Optimizers.Strategies
             {
                 toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, newRoutes[i]);
                 toStartFrom.AddRouteToPlanning(Plans[i].Item1, Plans[i].Item2, oldRoutes[i]);
+
+                toStartFrom.ReplaceRoutes(newRoutes[i], oldRoutes[i]);
             }
 
             return toStartFrom;

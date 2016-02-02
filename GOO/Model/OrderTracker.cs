@@ -9,7 +9,6 @@ namespace GOO.Model
     {
         public int OrderNumber { get; private set; }
         public List<Days> OrderDayRestrictions { get; private set; }
-        public List<Route> PartOfRoutes { get; private set; }
         public Days OrderDayOccurrences { get; set; }
         public Days PlannedDayOccurences { get; set; }
 
@@ -23,22 +22,19 @@ namespace GOO.Model
             this.OrderDayRestrictions = OrderDayRestrictions;
 
             this.OrderDayOccurrences = Days.None;
-            this.PartOfRoutes = new List<Route>();
         }
 
         public void AddOrderOccurrence(Route OccurredIn)
         {
             OrderDayOccurrences |= OccurredIn.Day;
             UpdateOrderDayRestrictions();
-            if (!PartOfRoutes.Contains(OccurredIn))
-                PartOfRoutes.Add(OccurredIn);
         }
 
         public void RemoveOrderOccurrence(Route OccurredIn)
         {
             OrderDayOccurrences ^= (OrderDayOccurrences & OccurredIn.Day);
             UpdateOrderDayRestrictions();
-            PartOfRoutes.Remove(OccurredIn);
+
         }
 
         public Boolean IsCompleted()

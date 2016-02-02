@@ -6,10 +6,10 @@ using System.Windows;
 
 using GOO.Model;
 using GOO.Model.Optimizers;
+using GOO.Model.Optimizers.Strategies;
 using GOO.Utilities;
 using GOO.View;
 using GOO.ViewModel;
-using GOO.Model.Optimizers.Strategies;
 
 namespace GOO
 {
@@ -29,6 +29,25 @@ namespace GOO
             base.OnStartup(e);
             AllocConsole();
 
+            Console.WriteLine("Program booting up...");
+            FilesInitializer.InitializeFiles();
+            Console.WriteLine("Files have been processed");
+
+            Stopwatch sw = Stopwatch.StartNew();
+            Solution start = Solver.generateClusters();
+            sw.Stop();
+
+            Console.WriteLine("Elapsed time for generating clusters: {0:N}ms", sw.ElapsedMilliseconds);
+
+            sw.Restart();
+            start = Solver.optimizeSolution(start);
+            sw.Stop();
+
+            string THE_STRING = start.ToString();
+            Console.WriteLine("Elapsed time for generating the solution: {0:N}ms", sw.ElapsedMilliseconds);
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Solution.txt", THE_STRING);
+        }
+        /*
             #if DEBUG
             Console.WriteLine("Program booting up...");
             FilesInitializer.InitializeFiles();
@@ -65,7 +84,7 @@ namespace GOO
             MainViewModel mainVM = new MainViewModel();
             new MainView() { DataContext = mainVM }.Show();
             System.Threading.Tasks.Task.Factory.StartNew(() => mainVM.InitialRun());
-            #endif
-        }
+            #endif 
+        */ 
     }
 }
