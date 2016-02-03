@@ -294,6 +294,12 @@ namespace GOO.Model
             if (newOrder.OrderNumber == 0 || oldOrder.OrderNumber == 0)
                 return false;
 
+            int tempWeight = Weight;
+            tempWeight -= oldOrder.VolumePerContainer * oldOrder.NumberOfContainers;
+            tempWeight += newOrder.VolumePerContainer * newOrder.NumberOfContainers;
+            if (tempWeight > 100000)
+                return false;
+
             int oldOrderIndex = Orders.FindIndex(o => o.OrderNumber == oldOrder.OrderNumber);
             int preOldMatrixID = Orders[oldOrderIndex == 0 ? Orders.Count - 1 : oldOrderIndex - 1].MatrixID;
             int postOldMatrixID = Orders[oldOrderIndex + 1].MatrixID;
