@@ -35,6 +35,7 @@ namespace GOO.Model.Optimizers
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
+
                 AllRoutesCount = solution.AllRoutes.Count;
                 AvailableCount = solution.AvailableRoutes.Count;
                 PenaltScore = solution.PenaltyScore;
@@ -44,7 +45,8 @@ namespace GOO.Model.Optimizers
                 newSolutionScore = solution.SolutionScore;
 
                 // Accept or reject new solution
-                if (AcceptOrReject(solution)) // New Solution accepted
+                bool AcceptedorRejected = AcceptOrReject(solution);
+                if (AcceptedorRejected) // New Solution accepted
                     oldSolutionScore = newSolutionScore;
                 else // New solution rejected
                     usedStrategy.undoStrategy(solution);
@@ -58,6 +60,11 @@ namespace GOO.Model.Optimizers
 
                 annealingCounter++;
                 strategyUsed = usedStrategy;
+                if (AllRoutesCount != solution.AllRoutes.Count ||
+                    AvailableCount != solution.AvailableRoutes.Count ||
+                    PenaltScore != solution.PenaltyScore ||
+                    TravelScore != solution.TravelTimeScore)
+                { }
             }
 
             return solution;
@@ -94,10 +101,10 @@ namespace GOO.Model.Optimizers
                     0, // new RemoveRouteStrategy()
                     0, // new PlanRouteStrategy()
                     
-                    0, // new RandomOrderAddStrategy()
-                    100, // new RandomOrderRemoveStrategy()
-                    0, // new RandomOrderShiftStrategy()
-                    0, // new RandomOrderSwapStrategy()
+                    25, // new RandomOrderAddStrategy()
+                    25, // new RandomOrderRemoveStrategy()
+                    25, // new RandomOrderShiftStrategy()
+                    25, // new RandomOrderSwapStrategy()
                     
                     0, // new RandomStepOpt2Strategy()
                     0, // new RandomStepOpt2HalfStrategy()
