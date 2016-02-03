@@ -47,7 +47,7 @@ namespace GOO.Model.Optimizers.Strategies
             }
 
             for (int i = 0; i < 2; i++)
-                if (!originalRoutes[0].CanSwapOrderFromDifferentRoutes(ordersSwapped[1], ordersSwapped[0]))
+                if (!originalRoutes[i].CanSwapOrderFromDifferentRoutes(ordersSwapped[(i + 1) % 2], ordersSwapped[i]))
                     return toStartFrom; // if a route could not be swapped...
 
             for (int i = 0; i < 2; i++)
