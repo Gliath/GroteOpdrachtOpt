@@ -75,6 +75,12 @@ namespace GOO.Model.Optimizers.Strategies
 
             originalRoutes[1].RemoveOrder(ordersShifted[0]);
 
+            if (originalRoutes[0].Orders.Count == 1) // if route has only 0order (because other order has been shifted away and the route has been deleted)
+            {
+                toStartFrom.AddRoute(originalRoutes[0]);
+                toStartFrom.AddRouteToPlanning(Plans[0].Item1, Plans[0].Item2, originalRoutes[0]);
+            }
+
             if (orderInFrontOfTheShiftedOrder != null)
                 originalRoutes[0].AddOrderAt(ordersShifted[0], orderInFrontOfTheShiftedOrder);
             else
