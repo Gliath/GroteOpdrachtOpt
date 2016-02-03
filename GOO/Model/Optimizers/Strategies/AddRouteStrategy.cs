@@ -18,12 +18,9 @@ namespace GOO.Model.Optimizers.Strategies
         public override Solution executeStrategy(Solution toStartFrom)
         {
             var dayArray = Enum.GetValues(typeof(Days));
-            Days day = Days.None;
-            while (day.Equals(Days.None))
-            {
-                int dayIndex = random.Next(dayArray.Length);
-                day = (Days)dayArray.GetValue(dayIndex);
-            }
+            Days day = (Days)dayArray.GetValue(random.Next(1, dayArray.Length));
+            if (day.Equals(Days.None))
+                Console.WriteLine("Day is Days.None at RouteAddStrategy! FIX ME!");
 
             routeCreated = new Route(day);
             var allClusters = toStartFrom.GetAllClusters();
@@ -44,7 +41,7 @@ namespace GOO.Model.Optimizers.Strategies
                     continue;
 
                 routeCreated.AddOrder(order);
-                toStartFrom.GetAllClusters()[clusterIndex].AvailableOrdersInCluster.RemoveAt(randomIndex);
+                order.RemoveAvailableOrderFromCluster();
             }
 
             if (routeCreated.Orders.Count > 1) // Does the route have orders added to it

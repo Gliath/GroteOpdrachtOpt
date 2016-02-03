@@ -40,11 +40,11 @@ namespace GOO.Model.Optimizers.Strategies
                 if (totalTravelTime > 43200.0d)
                     continue;
 
-                int routeIndex = -1;
-                for (int routeCounter = 0; routeCounter < 8 && toStartFrom.AvailableRoutes.Count > 0; routeCounter++)
+                for (int routeCounter = 0; routeCounter < 16 && toStartFrom.AvailableRoutes.Count > 0; routeCounter++)
                 {
-                    routeIndex = random.Next(toStartFrom.AvailableRoutes.Count);
-                    routePlanned = toStartFrom.AvailableRoutes[routeIndex];
+                    routePlanned = toStartFrom.AvailableRoutes[random.Next(toStartFrom.AvailableRoutes.Count)];
+                    if (routePlanned.Day != Planning.Item1)
+                        continue;
 
                     if (totalTravelTime + routePlanned.TravelTime <= 43200.0d)
                         break;
