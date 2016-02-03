@@ -27,20 +27,12 @@ namespace GOO.Model.Optimizers
         {
             oldSolutionScore = solution.SolutionScore;
             int annealingCounter = 0;
-            int AllRoutesCount = -1;
-            int AvailableCount = -1;
-            double PenaltScore = -1;
-            double TravelScore = -1;
-            Strategy strategyUsed = null;
+            int lastMinuteMark = 0;
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
-
-                AllRoutesCount = solution.AllRoutes.Count;
-                AvailableCount = solution.AvailableRoutes.Count;
-                PenaltScore = solution.PenaltyScore;
-                TravelScore = solution.TravelTimeScore;
-
                 Strategy usedStrategy = SelectAndExecuteMove(solution);
                 newSolutionScore = solution.SolutionScore;
 
@@ -51,21 +43,25 @@ namespace GOO.Model.Optimizers
                 else // New solution rejected
                     usedStrategy.undoStrategy(solution);
 
-                bool printCurrentSolution = false;
-                if (printCurrentSolution)
-                    System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Solution" + annealingCounter + ".txt", solution.ToString());
-
                 if (reportProgress != null)
                     reportProgress.ProgressValue++;
 
                 annealingCounter++;
-                strategyUsed = usedStrategy;
-                if (AllRoutesCount != solution.AllRoutes.Count ||
-                    AvailableCount != solution.AvailableRoutes.Count ||
-                    PenaltScore != solution.PenaltyScore ||
-                    TravelScore != solution.TravelTimeScore)
-                { }
+
+                sw.Stop();
+                if (sw.ElapsedMilliseconds % 60000 <= 1)
+                {
+                    int minuteMark = (int)(sw.ElapsedMilliseconds / (long)60000);
+                    if (lastMinuteMark < minuteMark)
+                    {
+                        lastMinuteMark = minuteMark;
+                        Console.WriteLine("Elapsed {0}ms and made {1} iterations", sw.ElapsedMilliseconds, annealingCounter);
+                    }
+                }
+                sw.Start();
             }
+            sw.Stop();
+            Console.WriteLine("Finished running in {0}ms and with {1} iterations", sw.ElapsedMilliseconds, annealingCounter);
 
             return solution;
         }
