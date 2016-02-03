@@ -29,10 +29,11 @@ namespace GOO
             base.OnStartup(e);
             AllocConsole();
 
+            #if DEBUG
             Console.WriteLine("Program booting up...");
             FilesInitializer.InitializeFiles();
             Console.WriteLine("Files have been processed");
-
+            
             Stopwatch sw = Stopwatch.StartNew();
             Solution start = Solver.generateClusters();
             sw.Stop();
@@ -42,42 +43,14 @@ namespace GOO
             sw.Restart();
             start = Solver.optimizeSolution(start);
             sw.Stop();
-
-            string THE_STRING = start.ToString();
-            Console.WriteLine("Elapsed time for generating the solution: {0:N}ms", sw.ElapsedMilliseconds);
-            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Solution.txt", THE_STRING);
-        }
-        /*
-            #if DEBUG
-            Console.WriteLine("Program booting up...");
-            FilesInitializer.InitializeFiles();
-            Console.WriteLine("Files have been processed");
-            
-            Stopwatch sw = Stopwatch.StartNew();
-            Solution start = Solver.generateSolution();
-            sw.Stop();
-
-            Console.WriteLine("Elapsed time for generating begin solution: {0:N}ms", sw.ElapsedMilliseconds);
-
-            string THE_SOLUTION_STRING = start.ToString();
-
-            Console.WriteLine("Start Solution:");
-            Console.WriteLine(THE_SOLUTION_STRING);
-            Console.WriteLine("End Solution");
-
-            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/StartSolution.txt", THE_SOLUTION_STRING);
-
-            sw.Restart();
-            start = Solver.optimizeSolution(start);
-            sw.Stop();
             string THE_NEW_STRING = start.ToString();
 
-            Console.WriteLine("Start New Solution:");
+            Console.WriteLine("Start Solution:");
             Console.WriteLine(THE_NEW_STRING);
-            Console.WriteLine("End New Solution");
-            Console.WriteLine("Elapsed time for generating optimized solution: {0:N}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine("End Solution");
+            Console.WriteLine("Elapsed time for generating and optimizing the solution: {0:N}ms", sw.ElapsedMilliseconds);
 
-            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/OptimizedSolution.txt", THE_NEW_STRING);
+            System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/TheSolution.txt", THE_NEW_STRING);
             #endif
 
             #if !DEBUG
@@ -85,6 +58,6 @@ namespace GOO
             new MainView() { DataContext = mainVM }.Show();
             System.Threading.Tasks.Task.Factory.StartNew(() => mainVM.InitialRun());
             #endif 
-        */ 
+        }
     }
 }

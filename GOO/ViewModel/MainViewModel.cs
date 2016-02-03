@@ -26,77 +26,55 @@ namespace GOO.ViewModel
             // Initialization of variables
             Solution solution = null;
             System.Diagnostics.Stopwatch sw = null;
-            long BasicSolutionGenerationTimeInMiliSeconds = 0;
-            long OptimizedSolutionGenerationTimeInMiliSeconds = 0;
-            double BasicSolutionScore = 0.0;
-            double OptimizedSolutionScore = 0.0;
-            string basicSolutionString = "";
-            string optimizedSolutionString = "";
+            long ClustersGenerationTimeInMiliSeconds = 0;
+            long SolutionGenerationTimeInMiliSeconds = 0;
+            double SolutionScore = 0.0;
+            string solutionString = "";
 
-            // Start generating basic solution
+            // Start generating clusters
             sw = System.Diagnostics.Stopwatch.StartNew();
             solution = Solver.generateClusters();
             sw.Stop();
-            BasicSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
-            BasicSolutionScore = solution.SolutionScore;
-            basicSolutionString = solution.ToString();
-            // Basic solution generated.
+            ClustersGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
+            Console.WriteLine("Elapsed time for generating clusters: {0:N}ms", ClustersGenerationTimeInMiliSeconds);
+            // Clusters generated.
 
             ProgressMaximum = Solver.getMaximumNumberOfSAIterations();
-            // update Progress along the way
+            // update progress along the way
 
-            // Optimizing basic solution
+            // Generating and optimizing solution
             sw.Restart();
-            solution = Solver.optimizeSolution(solution);
+            solution = Solver.optimizeSolution(solution, this);
             sw.Stop();
-            OptimizedSolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
-            OptimizedSolutionScore = solution.SolutionScore;
-            optimizedSolutionString = solution.ToString();
-            // Solution optimized
+            SolutionGenerationTimeInMiliSeconds = sw.ElapsedMilliseconds;
+            Console.WriteLine("Elapsed time for generating optimized solution: {0:N}ms", SolutionGenerationTimeInMiliSeconds);
+            SolutionScore = solution.SolutionScore;
+            solutionString = solution.ToString();
+            // Solution generated and optimized
 
-            Console.WriteLine("Elapsed time for generating begin solution: {0:N}ms", BasicSolutionGenerationTimeInMiliSeconds);
-            Console.WriteLine("Elapsed time for generating optimized solution: {0:N}ms", OptimizedSolutionGenerationTimeInMiliSeconds);
-            System.Windows.MessageBox.Show(
-                String.Format("The basic solution generated in: {0:N}ms with a score of: {1:N}\nThe optimized solution generated in: {2:N}ms with a score of: {3:N}",
-                    BasicSolutionGenerationTimeInMiliSeconds, BasicSolutionScore, OptimizedSolutionGenerationTimeInMiliSeconds, OptimizedSolutionScore),
-                "Solution Generation", System.Windows.MessageBoxButton.OK);
 
             System.Windows.MessageBoxResult SaveSolutions = System.Windows.MessageBox.Show(
-                "Do you want to save your solutions?", "Save your solutions?", System.Windows.MessageBoxButton.YesNo);
+                "Do you want to save this solution?", "Save your solution?", System.Windows.MessageBoxButton.YesNo);
             if (SaveSolutions == System.Windows.MessageBoxResult.Yes)
-                SaveSolution(basicSolutionString, optimizedSolutionString);
+                SaveSolution(solutionString);
 
             System.Windows.MessageBoxResult confirmResult = System.Windows.MessageBox.Show("Do you want to exit the application or run the application again?", "Exit confirmation", System.Windows.MessageBoxButton.YesNo);
             if (confirmResult == System.Windows.MessageBoxResult.No)
                 SolveSolution();
         }
 
-        private void SaveSolution(String basicSolutionString, String optimizedSolutionString)
+        private void SaveSolution(String solutionString)
         {
-            Microsoft.Win32.SaveFileDialog sfdStartSolution = new Microsoft.Win32.SaveFileDialog();
-            sfdStartSolution.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            sfdStartSolution.FileName = "StartSolution";
-            sfdStartSolution.DefaultExt = ".txt";
-            sfdStartSolution.Filter = "Text documents (.txt)|*.txt";
+            Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
+            sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            sfd.FileName = "Solution";
+            sfd.DefaultExt = ".txt";
+            sfd.Filter = "Text documents (.txt)|*.txt";
 
-            Nullable<bool> result = sfdStartSolution.ShowDialog();
-            if (result == true)
+            if (sfd.ShowDialog() == true)
             {
-                string filename = sfdStartSolution.FileName;
-                System.IO.File.WriteAllText(filename, basicSolutionString);
-            }
-
-            Microsoft.Win32.SaveFileDialog sfdOptimizedSolution = new Microsoft.Win32.SaveFileDialog();
-            sfdOptimizedSolution.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            sfdOptimizedSolution.FileName = "OptimizedSolution";
-            sfdOptimizedSolution.DefaultExt = ".txt";
-            sfdOptimizedSolution.Filter = "Text documents (.txt)|*.txt";
-
-            result = sfdOptimizedSolution.ShowDialog();
-            if (result == true)
-            {
-                string filename = sfdOptimizedSolution.FileName;
-                System.IO.File.WriteAllText(filename, optimizedSolutionString);
+                string filename = sfd.FileName;
+                System.IO.File.WriteAllText(filename, solutionString);
             }
         }
 
