@@ -59,6 +59,7 @@ namespace GOO.Model.Optimizers.Strategies
             toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, new_route);
             toStartFrom.RemoveRoute(old_route);
 
+            strategyHasExecuted = true;
             return toStartFrom;
         }
 
@@ -70,13 +71,13 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            if (new_route != null)
-            {
-                toStartFrom.AddRoute(old_route);
-                toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, new_route);
-                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, old_route);
-                toStartFrom.RemoveRoute(new_route);
-            }
+            if (!strategyHasExecuted)
+                return toStartFrom;
+
+            toStartFrom.AddRoute(old_route);
+            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, new_route);
+            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, old_route);
+            toStartFrom.RemoveRoute(new_route);
 
             return toStartFrom;
         }

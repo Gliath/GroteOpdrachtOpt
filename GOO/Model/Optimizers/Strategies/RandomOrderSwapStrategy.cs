@@ -8,15 +8,15 @@ namespace GOO.Model.Optimizers.Strategies
     public class RandomOrderSwapStrategy : Strategy
     {
         private Tuple<Days, int, List<Route>>[] Plans;
-        private Route[] oldRoutes;
-        private Route[] newRoutes;
+        private Route[] originalRoutes;
+        private Order[] ordersSwapped;
 
         public RandomOrderSwapStrategy()
             : base()
         {
             Plans = new Tuple<Days, int, List<Route>>[2];
-            oldRoutes = new Route[2];
-            newRoutes = new Route[2];
+            originalRoutes = new Route[2];
+            ordersSwapped = new Order[2];
         }
 
         public override Solution executeStrategy(Solution toStartFrom)
@@ -32,61 +32,43 @@ namespace GOO.Model.Optimizers.Strategies
             if (Plans[0].Item3.Count == 0 || Plans[1].Item3.Count == 0 || (Plans[0].Equals(Plans[1]) && Plans[0].Item3.Count < 2))
                 return toStartFrom;
 
-            Order[] ordersToSwitch = new Order[2];
-
             for (int i = 0; i < 2; i++)
             {
-                oldRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
+                originalRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
 
-                for (int routeCounter = 0; routeCounter < 8 && (oldRoutes[i].Orders.Count < 2 || (i == 1 && oldRoutes[0].Equals(oldRoutes[1]))); routeCounter++)
-                    oldRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
+                for (int routeCounter = 0; routeCounter < 8 && (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1]))); routeCounter++)
+                    originalRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
 
-                if (oldRoutes[i].Orders.Count < 2 || (i == 1 && oldRoutes[0].Equals(oldRoutes[1])))
+                if (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1])))
                     return toStartFrom;
 
-                newRoutes[i] = new Route(Plans[i].Item1);
-                foreach (Order order in oldRoutes[i].Orders)
-                    newRoutes[i].AddOrder(order);
-
-                ordersToSwitch[i] = newRoutes[i].Orders[random.Next(newRoutes[i].Orders.Count - 1)];
+                int swapOrderIndex = random.Next(originalRoutes[i].Orders.Count - 1);
+                ordersSwapped[i] = originalRoutes[i].Orders[swapOrderIndex];
             }
 
             for (int i = 0; i < 2; i++)
-            {
-                newRoutes[i].AddOrderAt(ordersToSwitch[(i + 1) % 2], ordersToSwitch[i]);
-                newRoutes[i].RemoveOrder(ordersToSwitch[i]);
-
-                if (!newRoutes[i].isValid())
-                    return toStartFrom;
-            }
+                if (!originalRoutes[0].CanSwapOrderFromDifferentRoutes(ordersSwapped[1], ordersSwapped[0]))
+                    return toStartFrom; // if a route could not be swapped...
 
             for (int i = 0; i < 2; i++)
             {
-                toStartFrom.AddRoute(newRoutes[i]);
-
-                toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, oldRoutes[i]);
-                toStartFrom.AddRouteToPlanning(Plans[i].Item1, Plans[i].Item2, newRoutes[i]);
-
-                toStartFrom.RemoveRoute(oldRoutes[i]);
+                originalRoutes[i].AddOrderAt(ordersSwapped[(i + 1) % 2], ordersSwapped[i]);
+                originalRoutes[i].RemoveOrder(ordersSwapped[i]);
             }
 
+            strategyHasExecuted = true;
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            for (int i = 0; i < 2; i++)
-                if (newRoutes[i] == null || !newRoutes[i].isValid())
-                    return toStartFrom;
+            if (!strategyHasExecuted)
+                return toStartFrom;
 
             for (int i = 0; i < 2; i++)
             {
-                toStartFrom.AddRoute(oldRoutes[i]);
-
-                toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, newRoutes[i]);
-                toStartFrom.AddRouteToPlanning(Plans[i].Item1, Plans[i].Item2, oldRoutes[i]);
-
-                toStartFrom.RemoveRoute(newRoutes[i]);
+                originalRoutes[i].AddOrderAt(ordersSwapped[i], ordersSwapped[(i + 1) % 2]);
+                originalRoutes[i].RemoveOrder(ordersSwapped[(i + 1) % 2]);
             }
             
             return toStartFrom;

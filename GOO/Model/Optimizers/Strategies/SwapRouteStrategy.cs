@@ -47,14 +47,14 @@ namespace GOO.Model.Optimizers.Strategies
                 toStartFrom.AddRouteToPlanning(Plans[(i + 1) % 2].Item1, Plans[(i + 1) % 2].Item2, routesToSwap[i]);
             }
 
+            strategyHasExecuted = true;
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            for (int i = 0; i < 2; i++)
-                if (Plans[i].Item3.Count == 0)
-                    return toStartFrom;
+            if (!strategyHasExecuted)
+                return toStartFrom;
 
             Route[] routesToSwap = new Route[2];
             for (int i = 0; i < 2; i++)

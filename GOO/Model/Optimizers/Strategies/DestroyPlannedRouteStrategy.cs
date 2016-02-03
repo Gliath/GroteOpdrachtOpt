@@ -38,23 +38,24 @@ namespace GOO.Model.Optimizers.Strategies
             toStartFrom.RemoveRoute(routeToDestroy);
             routeToDestroy.Destroy();
 
+            strategyHasExecuted = true;
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            if (ordersDestroyed != null)
-            {
-                Route routeRestored = new Route(dayDestroyed);
-                foreach (Order order in ordersDestroyed)
-                {
-                    routeRestored.AddOrder(order);
-                    order.RemoveAvailableOrderFromCluster();
-                }
+            if (!strategyHasExecuted)
+                return toStartFrom;
 
-                toStartFrom.AddRoute(routeRestored);
-                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeRestored);
+            Route routeRestored = new Route(dayDestroyed);
+            foreach (Order order in ordersDestroyed)
+            {
+                routeRestored.AddOrder(order);
+                order.RemoveAvailableOrderFromCluster();
             }
+
+            toStartFrom.AddRoute(routeRestored);
+            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeRestored);
 
             return toStartFrom;
         }

@@ -52,25 +52,27 @@ namespace GOO.Model.Optimizers.Strategies
                 toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
                 toStartFrom.RemoveRoute(OriginalRoute);
             }
+
+            strategyHasExecuted = true;
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            if (OriginalRoute != null && OrderRemoved != null)
-            {
-                if (OriginalRoute.Orders.Count == 1)
-                { // If empty 
-                    toStartFrom.AddRoute(OriginalRoute);
-                    toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
-                }
+            if (!strategyHasExecuted)
+                return toStartFrom;
 
-                OrderRemoved.RemoveAvailableOrderFromCluster();
-                if (OrderBefore == null)
-                    OriginalRoute.AddOrderAtStart(OrderRemoved);
-                else
-                    OriginalRoute.AddOrderAt(OrderRemoved, OrderBefore);
+            if (OriginalRoute.Orders.Count == 1)
+            { // If empty 
+                toStartFrom.AddRoute(OriginalRoute);
+                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, OriginalRoute);
             }
+
+            OrderRemoved.RemoveAvailableOrderFromCluster();
+            if (OrderBefore == null)
+                OriginalRoute.AddOrderAtStart(OrderRemoved);
+            else
+                OriginalRoute.AddOrderAt(OrderRemoved, OrderBefore);
 
             return toStartFrom;
         }

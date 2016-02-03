@@ -66,8 +66,8 @@ namespace GOO.Model
                             RemovePlannedOccurrence(order.OrderNumber, toRemove);
 
                     toRemove.partOfSolution = null;
+                    AvailableRoutes.Add(toRemove);
                 }
-                AvailableRoutes.Add(toRemove);
             }
         }
 

@@ -34,12 +34,13 @@ namespace GOO.Model.Optimizers.Strategies
 
             toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, routeDeleted);
 
+            strategyHasExecuted = true;
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            if (routeDeleted != null)
+            if (!strategyHasExecuted)
                 toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routeDeleted);
 
             return toStartFrom;

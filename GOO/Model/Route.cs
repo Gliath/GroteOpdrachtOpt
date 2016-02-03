@@ -289,6 +289,27 @@ namespace GOO.Model
             return tempTT < timeLimit;
         }
 
+        public bool CanSwapOrderFromDifferentRoutes(Order newOrder, Order oldOrder, double timeLimit = 43200.0d)
+        {
+            if (newOrder.OrderNumber == 0 || oldOrder.OrderNumber == 0)
+                return false;
+
+            int oldOrderIndex = Orders.FindIndex(o => o.OrderNumber == oldOrder.OrderNumber);
+            int preOldMatrixID = Orders[oldOrderIndex == 0 ? Orders.Count - 1 : oldOrderIndex - 1].MatrixID;
+            int postOldMatrixID = Orders[oldOrderIndex + 1].MatrixID;
+
+            double tempTT = TravelTime;
+            tempTT -= Data.DistanceMatrix[preOldMatrixID, oldOrder.MatrixID].TravelTime;
+            tempTT -= Data.DistanceMatrix[oldOrder.MatrixID, postOldMatrixID].TravelTime;
+            tempTT += Data.DistanceMatrix[preOldMatrixID, newOrder.MatrixID].TravelTime;
+            tempTT += Data.DistanceMatrix[newOrder.MatrixID, postOldMatrixID].TravelTime;
+
+            tempTT -= oldOrder.EmptyingTimeInSeconds;
+            tempTT += newOrder.EmptyingTimeInSeconds;
+
+            return tempTT < timeLimit;
+        }
+
         public bool CanHalfSwapOrder(Order firstOrder, Order secondOrder, double timeLimit = 43200.0d)
         {
             if (firstOrder.OrderNumber == 0 || secondOrder.OrderNumber == 0)

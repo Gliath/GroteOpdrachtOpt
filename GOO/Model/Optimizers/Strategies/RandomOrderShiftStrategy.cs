@@ -8,15 +8,17 @@ namespace GOO.Model.Optimizers.Strategies
     public class RandomOrderShiftStrategy : Strategy
     {
         private Tuple<Days, int, List<Route>>[] Plans;
-        private Route[] oldRoutes;
-        private Route[] newRoutes;
+        private Route[] originalRoutes;
+        private Order[] ordersShifted;
+        private Order orderInFrontOfTheShiftedOrder;
 
         public RandomOrderShiftStrategy()
             : base()
         {
             Plans = new Tuple<Days, int, List<Route>>[2];
-            oldRoutes = new Route[2];
-            newRoutes = new Route[2];
+            originalRoutes = new Route[2];
+            ordersShifted = new Order[2];
+            orderInFrontOfTheShiftedOrder = null;
         }
 
         public override Solution executeStrategy(Solution toStartFrom)
@@ -32,62 +34,51 @@ namespace GOO.Model.Optimizers.Strategies
             if (Plans[0].Item3.Count == 0 || Plans[1].Item3.Count == 0 || (Plans[0].Equals(Plans[1]) && Plans[0].Item3.Count < 2))
                 return toStartFrom;
 
-            Order[] ordersToShift = new Order[2];
 
             for (int i = 0; i < 2; i++)
             {
-                oldRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
+                originalRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
 
-                for (int routeCounter = 0; routeCounter < 8 && (oldRoutes[i].Orders.Count < 2 || (i == 1 && oldRoutes[0].Equals(oldRoutes[1]))); routeCounter++)
-                    oldRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
+                for (int routeCounter = 0; routeCounter < 8 && (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1]))); routeCounter++)
+                    originalRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
 
-                if (oldRoutes[i].Orders.Count < 2 || (i == 1 && oldRoutes[0].Equals(oldRoutes[1])))
+                if (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1])))
                     return toStartFrom;
 
-                newRoutes[i] = new Route(Plans[i].Item1);
-                foreach (Order order in oldRoutes[i].Orders)
-                    newRoutes[i].AddOrder(order);
+                int shiftOrderIndex = random.Next(originalRoutes[i].Orders.Count - 1);
+                ordersShifted[i] = originalRoutes[i].Orders[shiftOrderIndex];
 
-                ordersToShift[i] = newRoutes[i].Orders[random.Next(newRoutes[i].Orders.Count - 1)];
+                if (i == 0)
+                    orderInFrontOfTheShiftedOrder = shiftOrderIndex == 0 ? null : originalRoutes[0].Orders[shiftOrderIndex - 1];
             }
 
-            // Check if can be shifted
-            newRoutes[1].AddOrderAt(ordersToShift[0], ordersToShift[1]);
-
-            if (newRoutes[1].isValid())
+            if (originalRoutes[1].CanAddOrderAfter(ordersShifted[0], ordersShifted[1])) // Check if can be shifted
             {
-                newRoutes[0].RemoveOrder(ordersToShift[0]);
-                for (int i = 0; i < 2; i++)
+                originalRoutes[0].RemoveOrder(ordersShifted[0]);
+                originalRoutes[1].AddOrderAt(ordersShifted[0], ordersShifted[1]);
+                strategyHasExecuted = true;
+
+                if (originalRoutes[0].Orders.Count == 1) // if route has only 0order (because other order has been shifted away...)
                 {
-                    toStartFrom.AddRoute(newRoutes[i]);
-
-                    toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, oldRoutes[i]);
-                    toStartFrom.AddRouteToPlanning(Plans[i].Item1, Plans[i].Item2, newRoutes[i]);
-
-                    toStartFrom.RemoveRoute(oldRoutes[i]);
+                    toStartFrom.RemoveRouteFromPlanning(Plans[0].Item1, Plans[0].Item2, originalRoutes[0]);
+                    toStartFrom.RemoveRoute(originalRoutes[0]);
                 }
             }
-            else
-                newRoutes[1].RemoveOrder(ordersToShift[0]);
 
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            for (int i = 0; i < 2; i++)
-                if (newRoutes[i] == null)
-                    return toStartFrom;
+            if (!strategyHasExecuted)
+                return toStartFrom;
 
-            for (int i = 0; i < 2; i++)
-            {
-                toStartFrom.AddRoute(oldRoutes[i]);
+            originalRoutes[1].RemoveOrder(ordersShifted[0]);
 
-                toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, newRoutes[i]);
-                toStartFrom.AddRouteToPlanning(Plans[i].Item1, Plans[i].Item2, oldRoutes[i]);
-
-                toStartFrom.RemoveRoute(newRoutes[i]);
-            }
+            if (orderInFrontOfTheShiftedOrder != null)
+                originalRoutes[0].AddOrderAt(ordersShifted[0], orderInFrontOfTheShiftedOrder);
+            else
+                originalRoutes[0].AddOrderAtStart(ordersShifted[0]);
 
             return toStartFrom;
         }

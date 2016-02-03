@@ -40,30 +40,32 @@ namespace GOO.Model.Optimizers.Strategies
                 int randomIndex = random.Next(allClusters[clusterIndex].AvailableOrdersInCluster.Count);
                 Order order = allClusters[clusterIndex].AvailableOrdersInCluster[randomIndex];
 
-                if (routeCreated.CanAddOrder(order))
-                    routeCreated.AddOrder(order);
-                else
+                if (!routeCreated.CanAddOrder(order))
                     continue;
 
+                routeCreated.AddOrder(order);
                 toStartFrom.GetAllClusters()[clusterIndex].AvailableOrdersInCluster.RemoveAt(randomIndex);
             }
 
-            if (routeCreated.Orders.Count > 1) // Does have orders
+            if (routeCreated.Orders.Count > 1) // Does the route have orders added to it
+            {
                 toStartFrom.AddRoute(routeCreated);
+                strategyHasExecuted = true;
+            }
 
             return toStartFrom;
         }
 
         public override Solution undoStrategy(Solution toStartFrom)
         {
-            if (routeCreated.Orders.Count > 1)
-            {
-                foreach (Order order in routeCreated.Orders)
-                    order.AddAvailableOrderBackToCluster();
+            if (!strategyHasExecuted)
+                return toStartFrom;
 
-                toStartFrom.RemoveRoute(routeCreated);
-                routeCreated.Destroy();
-            }
+            foreach (Order order in routeCreated.Orders)
+                order.AddAvailableOrderBackToCluster();
+
+            toStartFrom.RemoveRoute(routeCreated);
+            routeCreated.Destroy();
 
             return toStartFrom;
         }
