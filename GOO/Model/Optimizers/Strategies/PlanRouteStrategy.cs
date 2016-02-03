@@ -22,10 +22,10 @@ namespace GOO.Model.Optimizers.Strategies
             if (toStartFrom.AvailableRoutes.Count == 0)
                 return toStartFrom; // No routes to plan
 
-            for (int numOfTries = 16; numOfTries > 0; numOfTries--)
+            for (int numOfTries = 1; numOfTries > 0; numOfTries--)
             {
                 double totalTravelTime = 0.0d;
-                for (int planningCounter = 0; planningCounter < 5; planningCounter++)
+                for (int planningCounter = 0; planningCounter < 1; planningCounter++)
                 {
                     Planning = toStartFrom.GetRandomPlanning();
                     totalTravelTime = 0.0d;
@@ -40,7 +40,7 @@ namespace GOO.Model.Optimizers.Strategies
                 if (totalTravelTime > 43200.0d)
                     continue;
 
-                for (int routeCounter = 0; routeCounter < 16; routeCounter++)
+                for (int routeCounter = 0; routeCounter < 1; routeCounter++)
                 {
                     routePlanned = toStartFrom.AvailableRoutes[random.Next(toStartFrom.AvailableRoutes.Count)];
                     if (routePlanned.Day != Planning.Item1)

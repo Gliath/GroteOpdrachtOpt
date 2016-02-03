@@ -5,7 +5,7 @@ namespace GOO.Model.Optimizers
     public class AnnealingSchedule
     {
         private readonly double standardStartingTemperature = 10000.0d;
-        private readonly double standardAnnealingTemperatureStep = 0.003d;
+        private readonly double standardAnnealingTemperatureStep = 0.0003d;
         private readonly int standardMaxIterationsBeforeAnnealing = 1;
 
         public double AnnealingTemperature { get; private set; }

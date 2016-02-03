@@ -26,9 +26,10 @@ namespace GOO.Model.Optimizers.Strategies
             var allClusters = toStartFrom.GetAllClusters();
             int clusterIndex = random.Next(allClusters.Count);
 
-            for (int i = 0; i < 64; i++)
+            //for (int i = 0; i < 64; i++)
+            for (int i = 0; i < 16; i++)
             {
-                for (int clusterCounter = 0; clusterCounter < 16 && allClusters[clusterIndex].AvailableOrdersInCluster.Count == 0; clusterCounter++)
+                for (int clusterCounter = 0; clusterCounter < 1 && allClusters[clusterIndex].AvailableOrdersInCluster.Count == 0; clusterCounter++)
                     clusterIndex = random.Next(allClusters.Count);
 
                 if (allClusters[clusterIndex].AvailableOrdersInCluster.Count == 0)

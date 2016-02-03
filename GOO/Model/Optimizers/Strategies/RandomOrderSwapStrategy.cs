@@ -38,7 +38,7 @@ namespace GOO.Model.Optimizers.Strategies
             {
                 originalRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
 
-                for (int routeCounter = 0; routeCounter < 8 && (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1]))); routeCounter++)
+                for (int routeCounter = 0; routeCounter < 1 && (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1]))); routeCounter++)
                     originalRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
 
                 if (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1])))

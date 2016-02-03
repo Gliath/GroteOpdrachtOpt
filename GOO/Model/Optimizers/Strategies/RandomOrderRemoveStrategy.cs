@@ -23,7 +23,7 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            for (int planningCounter = 0; planningCounter < 5; planningCounter++)
+            for (int planningCounter = 0; planningCounter < 1; planningCounter++)
             {
                 Planning = toStartFrom.GetRandomPlanning();
                 if (Planning.Item3.Count == 0)
@@ -31,7 +31,7 @@ namespace GOO.Model.Optimizers.Strategies
 
                 OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
 
-                for (int counter = 0; counter < 5 && OriginalRoute.Orders.Count < 2; counter++)
+                for (int counter = 0; counter < 1 && OriginalRoute.Orders.Count < 2; counter++)
                     OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
 
                 if (OriginalRoute.Orders.Count >= 2)

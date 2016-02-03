@@ -24,11 +24,11 @@ namespace GOO.Model.Optimizers.Strategies
         public override Solution executeStrategy(Solution toStartFrom)
         {
             Plans[0] = toStartFrom.GetRandomPlanning();
-            for (int planCounter = 0; planCounter < 8 && Plans[0].Item3.Count == 0; planCounter++)
+            for (int planCounter = 0; planCounter < 1 && Plans[0].Item3.Count == 0; planCounter++)
                 Plans[0] = toStartFrom.GetRandomPlanning();
 
             Plans[1] = toStartFrom.GetRandomPlanning();
-            for (int planCounter = 0; planCounter < 8 && (Plans[0].Item1 != Plans[1].Item1 || Plans[1].Item3.Count == 0); planCounter++)
+            for (int planCounter = 0; planCounter < 1 && (Plans[0].Item1 != Plans[1].Item1 || Plans[1].Item3.Count == 0); planCounter++)
                 Plans[1] = toStartFrom.GetRandomPlanning();
 
             if (Plans[0].Item3.Count == 0 || Plans[1].Item3.Count == 0 || (Plans[0].Equals(Plans[1]) && Plans[0].Item3.Count < 2))
@@ -39,7 +39,7 @@ namespace GOO.Model.Optimizers.Strategies
             {
                 originalRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
 
-                for (int routeCounter = 0; routeCounter < 8 && (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1]))); routeCounter++)
+                for (int routeCounter = 0; routeCounter < 1 && (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1]))); routeCounter++)
                     originalRoutes[i] = Plans[i].Item3[random.Next(Plans[i].Item3.Count)];
 
                 if (originalRoutes[i].Orders.Count < 2 || (i == 1 && originalRoutes[0].Equals(originalRoutes[1])))
