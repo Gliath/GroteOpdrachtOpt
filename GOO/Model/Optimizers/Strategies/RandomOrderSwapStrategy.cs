@@ -10,6 +10,7 @@ namespace GOO.Model.Optimizers.Strategies
         private Tuple<Days, int, List<Route>>[] Plans;
         private Route[] originalRoutes;
         private Order[] ordersSwapped;
+        private Order[] ordersBehindOrderMarkedForSwap;
 
         public RandomOrderSwapStrategy()
             : base()
@@ -17,6 +18,7 @@ namespace GOO.Model.Optimizers.Strategies
             Plans = new Tuple<Days, int, List<Route>>[2];
             originalRoutes = new Route[2];
             ordersSwapped = new Order[2];
+            ordersBehindOrderMarkedForSwap = new Order[2];
         }
 
         public override Solution executeStrategy(Solution toStartFrom)
@@ -44,6 +46,7 @@ namespace GOO.Model.Optimizers.Strategies
 
                 int swapOrderIndex = random.Next(originalRoutes[i].Orders.Count - 1);
                 ordersSwapped[i] = originalRoutes[i].Orders[swapOrderIndex];
+                ordersBehindOrderMarkedForSwap[i] = swapOrderIndex == 0 ? null : originalRoutes[i].Orders[swapOrderIndex - 1];
             }
 
             for (int i = 0; i < 2; i++)
@@ -51,10 +54,13 @@ namespace GOO.Model.Optimizers.Strategies
                     return toStartFrom; // if a route could not be swapped...
 
             for (int i = 0; i < 2; i++)
-            {
-                originalRoutes[i].AddOrderAt(ordersSwapped[(i + 1) % 2], ordersSwapped[i]);
                 originalRoutes[i].RemoveOrder(ordersSwapped[i]);
-            }
+
+            for (int i = 0; i < 2; i++)
+                if (ordersBehindOrderMarkedForSwap[i] == null)
+                    originalRoutes[i].AddOrderAtStart(ordersSwapped[(i + 1) % 2]);
+                else
+                    originalRoutes[i].AddOrderAt(ordersSwapped[(i + 1) % 2], ordersBehindOrderMarkedForSwap[i]);
 
             strategyHasExecuted = true;
             return toStartFrom;
@@ -66,11 +72,14 @@ namespace GOO.Model.Optimizers.Strategies
                 return toStartFrom;
 
             for (int i = 0; i < 2; i++)
-            {
-                originalRoutes[i].AddOrderAt(ordersSwapped[i], ordersSwapped[(i + 1) % 2]);
                 originalRoutes[i].RemoveOrder(ordersSwapped[(i + 1) % 2]);
-            }
-            
+
+            for (int i = 0; i < 2; i++)
+                if (ordersBehindOrderMarkedForSwap[i] == null)
+                    originalRoutes[i].AddOrderAtStart(ordersSwapped[i]);
+                else
+                    originalRoutes[i].AddOrderAt(ordersSwapped[i], ordersBehindOrderMarkedForSwap[i]);
+
             return toStartFrom;
         }
     }
