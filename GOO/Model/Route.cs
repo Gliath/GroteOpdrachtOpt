@@ -134,7 +134,7 @@ namespace GOO.Model
 
             int FirstMatrixID = 287;
             int NewMatrixID = order.MatrixID;
-            int NextMatrixID = Orders[1].MatrixID;
+            int NextMatrixID = Orders[0].MatrixID;
 
             double OldTravelTime = TravelTime;
 
@@ -144,7 +144,7 @@ namespace GOO.Model
 
             TravelTime += order.EmptyingTimeInSeconds;
             Weight += order.VolumePerContainer * order.NumberOfContainers;
-            Orders.Insert(1, order);
+            Orders.Insert(0, order);
             order.AddOrderOccurrence(this);
             if (partOfSolution != null)
             {
