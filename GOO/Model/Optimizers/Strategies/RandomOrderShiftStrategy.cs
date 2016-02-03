@@ -52,7 +52,14 @@ namespace GOO.Model.Optimizers.Strategies
                     orderInFrontOfTheShiftedOrder = shiftOrderIndex == 0 ? null : originalRoutes[0].Orders[shiftOrderIndex - 1];
             }
 
-            if (originalRoutes[1].CanAddOrderAfter(ordersShifted[0], ordersShifted[1])) // Check if can be shifted
+            double timeLimit = 0.0d; // Check if route can be swapped traveltime-wise
+            foreach (Route route in Plans[1].Item3)
+                if (route != originalRoutes[1])
+                    timeLimit += route.TravelTime;
+
+            timeLimit = 43200.0d - timeLimit;
+            
+            if (originalRoutes[1].CanAddOrderAfter(ordersShifted[0], ordersShifted[1], timeLimit)) // Check if can be shifted
             {
                 originalRoutes[0].RemoveOrder(ordersShifted[0]);
                 originalRoutes[1].AddOrderAt(ordersShifted[0], ordersShifted[1]);

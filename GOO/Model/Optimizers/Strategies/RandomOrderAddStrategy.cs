@@ -49,11 +49,18 @@ namespace GOO.Model.Optimizers.Strategies
             int randomIndex = random.Next(cluster.AvailableOrdersInCluster.Count);
             OrderAdded = cluster.AvailableOrdersInCluster[randomIndex];
 
+            double timeLimit = 0.0d; // Check if route can be swapped traveltime-wise
+            foreach (Route route in Planning.Item3)
+                if (route != OriginalRoute)
+                    timeLimit += route.TravelTime;
+
+            timeLimit = 43200.0d - timeLimit;
+
             int typeOfInsert = random.Next(3); // 3 choices, start, after and at the end
             switch (typeOfInsert)
             {
                 case 0:
-                    if (OriginalRoute.CanAddOrderAtStart(OrderAdded))
+                    if (OriginalRoute.CanAddOrderAtStart(OrderAdded, timeLimit))
                     {
                         OriginalRoute.AddOrderAtStart(OrderAdded);
                         cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
@@ -62,7 +69,7 @@ namespace GOO.Model.Optimizers.Strategies
                     break;
                 case 1:
                     Order orderToInsertAfter = OriginalRoute.Orders[random.Next(OriginalRoute.Orders.Count - 1)];
-                    if (OriginalRoute.CanAddOrderAfter(OrderAdded, orderToInsertAfter))
+                    if (OriginalRoute.CanAddOrderAfter(OrderAdded, orderToInsertAfter, timeLimit))
                     {
                         OriginalRoute.AddOrderAt(OrderAdded, orderToInsertAfter);
                         cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);
@@ -70,7 +77,7 @@ namespace GOO.Model.Optimizers.Strategies
                     }
                     break;
                 case 2:
-                    if (OriginalRoute.CanAddOrder(OrderAdded))
+                    if (OriginalRoute.CanAddOrder(OrderAdded, timeLimit))
                     {
                         OriginalRoute.AddOrder(OrderAdded);
                         cluster.AvailableOrdersInCluster.RemoveAt(randomIndex);

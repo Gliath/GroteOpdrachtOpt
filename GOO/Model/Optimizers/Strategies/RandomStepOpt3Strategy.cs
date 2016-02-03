@@ -52,7 +52,14 @@ namespace GOO.Model.Optimizers.Strategies
             while (firstIndex == thirdIndex || secondIndex == thirdIndex)
                 thirdIndex = random.Next(old_route.Orders.Count - 1);
 
-            swapOrders(old_route.Orders[firstIndex], old_route.Orders[secondIndex], old_route.Orders[thirdIndex], new_route);
+            double timeLimit = 0.0d; // Check if route can be swapped traveltime-wise
+            foreach (Route route in Planning.Item3)
+                if (route != old_route)
+                    timeLimit += route.TravelTime;
+
+            timeLimit = 43200.0d - timeLimit;
+
+            swapOrders(old_route.Orders[firstIndex], old_route.Orders[secondIndex], old_route.Orders[thirdIndex], new_route, timeLimit);
 
             toStartFrom.AddRoute(new_route);
             toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, old_route);
@@ -63,9 +70,9 @@ namespace GOO.Model.Optimizers.Strategies
             return toStartFrom;
         }
 
-        private void swapOrders(Order A, Order B, Order C, Route route)
+        private void swapOrders(Order A, Order B, Order C, Route route, double timeLimit)
         {
-            if (route.CanSwapOrder(A, B, C))
+            if (route.CanSwapOrder(A, B, C, timeLimit))
                 route.SwapOrders(A, B, C);
         }
 

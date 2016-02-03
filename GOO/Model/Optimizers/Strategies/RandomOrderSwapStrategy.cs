@@ -50,8 +50,17 @@ namespace GOO.Model.Optimizers.Strategies
             }
 
             for (int i = 0; i < 2; i++)
-                if (!originalRoutes[i].CanSwapOrderFromDifferentRoutes(ordersSwapped[(i + 1) % 2], ordersSwapped[i]))
+            {
+                double timeLimit = 0.0d; // Check if route can be swapped traveltime-wise
+                foreach (Route route in Plans[i].Item3)
+                    if (route != originalRoutes[i])
+                        timeLimit += route.TravelTime;
+
+                timeLimit = 43200.0d - timeLimit;
+
+                if (!originalRoutes[i].CanSwapOrderFromDifferentRoutes(ordersSwapped[(i + 1) % 2], ordersSwapped[i], timeLimit))
                     return toStartFrom; // if a route could not be swapped...
+            }
 
             for (int i = 0; i < 2; i++)
                 originalRoutes[i].RemoveOrder(ordersSwapped[i]);

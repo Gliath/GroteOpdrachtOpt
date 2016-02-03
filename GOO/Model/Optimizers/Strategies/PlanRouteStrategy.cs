@@ -33,24 +33,24 @@ namespace GOO.Model.Optimizers.Strategies
                     foreach (Route route in Planning.Item3)
                         totalTravelTime += route.TravelTime;
 
-                    if (totalTravelTime > 43200.0d)
-                        continue;
+                    if (totalTravelTime < 43200.0d)
+                        break;
                 }
 
                 if (totalTravelTime > 43200.0d)
                     continue;
 
-                for (int routeCounter = 0; routeCounter < 16 && toStartFrom.AvailableRoutes.Count > 0; routeCounter++)
+                for (int routeCounter = 0; routeCounter < 16 && toStartFrom.AvailableRoutes.Count > 0 && routePlanned.Day != Planning.Item1; routeCounter++)
                 {
                     routePlanned = toStartFrom.AvailableRoutes[random.Next(toStartFrom.AvailableRoutes.Count)];
-                    if (routePlanned.Day != Planning.Item1)
+                    if (toStartFrom.AvailableRoutes.Count > 0 || routePlanned.Day != Planning.Item1)
                         continue;
 
                     if (totalTravelTime + routePlanned.TravelTime <= 43200.0d)
                         break;
                 }
 
-                if (totalTravelTime + routePlanned.TravelTime > 43200.0d)
+                if (toStartFrom.AvailableRoutes.Count > 0 || routePlanned.Day != Planning.Item1 || totalTravelTime + routePlanned.TravelTime > 43200.0d)
                     continue;
 
                 toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routePlanned);

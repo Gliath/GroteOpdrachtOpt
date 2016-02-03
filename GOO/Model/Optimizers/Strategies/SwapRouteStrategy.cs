@@ -24,22 +24,37 @@ namespace GOO.Model.Optimizers.Strategies
         {
             for (int i = 0; i < 2; i++)
             {
-                for (int planningCounter = 0; planningCounter < 5; planningCounter++)
-                {
+                Plans[i] = toStartFrom.GetRandomPlanning();
+                for (int planningCounter = 0; planningCounter < 5 && Plans[i].Item3.Count > 0 && (i == 1 && Plans[0].Item1 != Plans[1].Item1); planningCounter++)
                     Plans[i] = toStartFrom.GetRandomPlanning();
-                    if (Plans[i].Item3.Count > 0)
-                        break;
-                }
 
-                if (Plans[i].Item3.Count == 0)
+                if (Plans[i].Item3.Count == 0 || (i == 1 && Plans[0].Item1 != Plans[1].Item1)) // Make sure it has routes to swap and is on the same day
                     return toStartFrom;
 
                 routeIndicesSwapped[i] = random.Next(Plans[i].Item3.Count);
+                for (int routeCounter = 0; routeCounter < 5 && i == 1 && routeIndicesSwapped[0] == routeIndicesSwapped[1]; routeCounter++)
+                    routeIndicesSwapped[i] = random.Next(Plans[i].Item3.Count);
+
+                if (i == 1 && routeIndicesSwapped[0] == routeIndicesSwapped[1])
+                    return toStartFrom;
             }
 
             Route[] routesToSwap = new Route[2];
             for (int i = 0; i < 2; i++)
                 routesToSwap[i] = Plans[i].Item3[routeIndicesSwapped[i]];
+
+            for (int i = 0; i < 2; i++) // Check if route can be swapped traveltime-wise
+            {
+                double tempTT = 0.0d;
+                foreach (Route route in Plans[i].Item3)
+                    if(route != routesToSwap[i])
+                        tempTT += route.TravelTime;
+
+                tempTT += routesToSwap[(i + 1) % 2].TravelTime;
+
+                if (tempTT > 43200.0d)
+                    return toStartFrom;
+            }
 
             for (int i = 0; i < 2; i++)
             {
