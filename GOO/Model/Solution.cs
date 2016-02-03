@@ -103,12 +103,6 @@ namespace GOO.Model
                 AllRoutes.Remove(toDelete);
         }
 
-        public void ReplaceRoutes(Route oldRoute, Route newRoute)
-        {
-            RemoveRoute(oldRoute);
-            AddRoute(newRoute);
-        }
-
         public void AddNewItemToPlanning(Days day, int truckID, List<Route> routes)
         {
             TruckPlanning.Add(new Tuple<Days, int, List<Route>>(day, truckID, routes));
@@ -138,7 +132,7 @@ namespace GOO.Model
         {
             foreach (OrderTracker oc in CounterList)
             {
-                oc.PlannedDayOccurences = Days.None;
+                oc.PlannedDayOccurrences = Days.None;
                 this.PenaltyScore += oc.CurrentPenalty();
             }
 
@@ -175,7 +169,7 @@ namespace GOO.Model
             OrderTracker counter = this.FindOrderTracker(OrderNumber);
             double before = counter.CurrentPenalty();
 
-            counter.PlannedDayOccurences |= OccurredIn.Day;
+            counter.PlannedDayOccurrences |= OccurredIn.Day;
             counter.UpdateOrderDayRestrictions();
             PenaltyScore += counter.CurrentPenalty() - before;
         }
@@ -188,7 +182,7 @@ namespace GOO.Model
             OrderTracker counter = this.FindOrderTracker(OrderNumber);
             double before = counter.CurrentPenalty();
 
-            counter.PlannedDayOccurences ^= (counter.OrderDayOccurrences & OccurredIn.Day);
+            counter.PlannedDayOccurrences ^= (counter.PlannedDayOccurrences & OccurredIn.Day);
             counter.UpdateOrderDayRestrictions();
             PenaltyScore += counter.CurrentPenalty() - before;
         }
@@ -287,7 +281,7 @@ namespace GOO.Model
 
         public Boolean OrderHasPlannedOccurence(Days day, int OrderNumber)
         {
-            return CounterList.Find(o => o.OrderNumber == OrderNumber && o.PlannedDayOccurences.HasFlag(day)) != null;
+            return CounterList.Find(o => o.OrderNumber == OrderNumber && o.PlannedDayOccurrences.HasFlag(day)) != null;
         }
 
         public Boolean AllOrdersCompleted()

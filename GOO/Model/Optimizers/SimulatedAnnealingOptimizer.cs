@@ -29,12 +29,16 @@ namespace GOO.Model.Optimizers
             int annealingCounter = 0;
             int AllRoutesCount = -1;
             int AvailableCount = -1;
+            double PenaltScore = -1;
+            double TravelScore = -1;
             Strategy strategyUsed = null;
 
             for (annealingSchedule.AnnealingIterations = 0; annealingSchedule.AnnealingTemperature > 0.0d; annealingSchedule.AnnealingIterations++)
             {
                 AllRoutesCount = solution.AllRoutes.Count;
                 AvailableCount = solution.AvailableRoutes.Count;
+                PenaltScore = solution.PenaltyScore;
+                TravelScore = solution.TravelTimeScore;
 
                 Strategy usedStrategy = SelectAndExecuteMove(solution);
                 newSolutionScore = solution.SolutionScore;
@@ -44,6 +48,10 @@ namespace GOO.Model.Optimizers
                     oldSolutionScore = newSolutionScore;
                 else // New solution rejected
                     usedStrategy.undoStrategy(solution);
+
+                bool printCurrentSolution = false;
+                if (printCurrentSolution)
+                    System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Solution" + annealingCounter + ".txt", solution.ToString());
 
                 if (reportProgress != null)
                     reportProgress.ProgressValue++;
@@ -77,51 +85,24 @@ namespace GOO.Model.Optimizers
 
         private int[] whatAreTheChances()
         {
-            if (annealingSchedule.AnnealingTemperature < 43750.0d) // after 37.5% progression
-                return new int[] { 
-                    1, // new AddRouteStrategy()
-                    2, // new SwapRouteStrategy()
-                    1, // new DestroyPlannedRouteStrategy()
-                    1, // new DestroyPoolRouteStrategy()
-                    1, // new RemoveRouteStrategy()
-                    2, // new PlanRouteStrategy()
-
-                    6, // new RandomOrderAddStrategy()
-                    6, // new RandomOrderRemoveStrategy()
-                    6, // new RandomOrderShiftStrategy()
-                    6, // new RandomOrderSwapStrategy()
-
-                    18, // new RandomStepOpt2Strategy()
-                    17, // new RandomStepOpt2HalfStrategy()
-                    18, // new RandomStepOpt3Strategy()
-                    17, // new RandomStepOpt3HalfStrategy()
-
-                    0, // new RandomRouteOpt2Strategy()
-                    0, // new RandomRouteOpt2HalfStrategy()
-                    0, // new RandomRouteOpt3Strategy()
-                    0, // new RandomRouteOpt3HalfStrategy()
-
-                    0, // new GeneticOneRandomRouteStrategy()
-                    //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
-                };
-            else if (annealingSchedule.AnnealingTemperature < 49000.0d) // after 2% progression
+            if (annealingSchedule.AnnealingTemperature < 9000.0d) // after 2% progression
                 return new int[] { 
                     0, // new AddRouteStrategy()
-                    8, // new SwapRouteStrategy()
-                    4, // new DestroyPlannedRouteStrategy()
-                    4, // new DestroyPoolRouteStrategy()
-                    8, // new RemoveRouteStrategy()
-                    8, // new PlanRouteStrategy()
-
-                    11, // new RandomOrderAddStrategy()
-                    11, // new RandomOrderRemoveStrategy()
-                    11, // new RandomOrderShiftStrategy()
-                    11, // new RandomOrderSwapStrategy()
-
-                    8, // new RandomStepOpt2Strategy()
-                    8, // new RandomStepOpt2HalfStrategy()
-                    4, // new RandomStepOpt3Strategy()
-                    4, // new RandomStepOpt3HalfStrategy()
+                    0, // new SwapRouteStrategy()
+                    0, // new DestroyPlannedRouteStrategy()
+                    0, // new DestroyPoolRouteStrategy()
+                    0, // new RemoveRouteStrategy()
+                    0, // new PlanRouteStrategy()
+                    
+                    0, // new RandomOrderAddStrategy()
+                    100, // new RandomOrderRemoveStrategy()
+                    0, // new RandomOrderShiftStrategy()
+                    0, // new RandomOrderSwapStrategy()
+                    
+                    0, // new RandomStepOpt2Strategy()
+                    0, // new RandomStepOpt2HalfStrategy()
+                    0, // new RandomStepOpt3Strategy()
+                    0, // new RandomStepOpt3HalfStrategy()
 
                     0, // new RandomRouteOpt2Strategy()
                     0, // new RandomRouteOpt2HalfStrategy()
@@ -131,24 +112,24 @@ namespace GOO.Model.Optimizers
                     0, // new GeneticOneRandomRouteStrategy()
                     //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
                 };
-            else if (annealingSchedule.AnnealingTemperature < 49500.0d) // after 1% progression
+            else if (annealingSchedule.AnnealingTemperature < 9500.0d) // after 1% progression
                 return new int[] { 
-                    5, // new AddRouteStrategy()
-                    10, // new SwapRouteStrategy()
-                    5, // new DestroyPlannedRouteStrategy()
-                    5, // new DestroyPoolRouteStrategy()
+                    0, // new AddRouteStrategy()
+                    0, // new SwapRouteStrategy()
+                    0, // new DestroyPlannedRouteStrategy()
+                    0, // new DestroyPoolRouteStrategy()
                     0, // new RemoveRouteStrategy()
-                    15, // new PlanRouteStrategy()
+                    100, // new PlanRouteStrategy()
                     
-                    10, // new RandomOrderAddStrategy()
-                    10, // new RandomOrderRemoveStrategy()
-                    10, // new RandomOrderShiftStrategy()
-                    10, // new RandomOrderSwapStrategy()
+                    0, // new RandomOrderAddStrategy()
+                    0, // new RandomOrderRemoveStrategy()
+                    0, // new RandomOrderShiftStrategy()
+                    0, // new RandomOrderSwapStrategy()
                     
-                    5, // new RandomStepOpt2Strategy()
-                    5, // new RandomStepOpt2HalfStrategy()
-                    5, // new RandomStepOpt3Strategy()
-                    5, // new RandomStepOpt3HalfStrategy()
+                    0, // new RandomStepOpt2Strategy()
+                    0, // new RandomStepOpt2HalfStrategy()
+                    0, // new RandomStepOpt3Strategy()
+                    0, // new RandomStepOpt3HalfStrategy()
 
                     0, // new RandomRouteOpt2Strategy()
                     0, // new RandomRouteOpt2HalfStrategy()
@@ -160,12 +141,12 @@ namespace GOO.Model.Optimizers
                 };
             else // before 1% progression
                 return new int[] { 
-                    80, // new AddRouteStrategy()               
+                    100, // new AddRouteStrategy()               
                     0, // new SwapRouteStrategy()               
                     0, // new DestroyPlannedRouteStrategy()     
                     0, // new DestroyPoolRouteStrategy()        
                     0, // new RemoveRouteStrategy()             
-                    20, // new PlanRouteStrategy()              
+                    0, // new PlanRouteStrategy()              
 
                     0, // new RandomOrderAddStrategy()         
                     0, // new RandomOrderRemoveStrategy()       

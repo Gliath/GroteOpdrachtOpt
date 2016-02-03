@@ -10,7 +10,7 @@ namespace GOO.Model
         public int OrderNumber { get; private set; }
         public List<Days> OrderDayRestrictions { get; private set; }
         public Days OrderDayOccurrences { get; set; }
-        public Days PlannedDayOccurences { get; set; }
+        public Days PlannedDayOccurrences { get; set; }
 
         private Order Order;
 
@@ -39,10 +39,10 @@ namespace GOO.Model
         public Boolean IsCompleted()
         {
             foreach (Days restrictions in OrderDayRestrictions)
-                if (!PlannedDayOccurences.HasFlag(restrictions))
-                    return false;
+                if (PlannedDayOccurrences.HasFlag(restrictions))
+                    return true;
 
-            return true;
+            return false;
         }
 
         public void UpdateOrderDayRestrictions()

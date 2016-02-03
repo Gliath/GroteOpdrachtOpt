@@ -31,14 +31,14 @@ namespace GOO.Model.Optimizers.Strategies
 
                 OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
 
-                for (int counter = 0; counter < 5 && OriginalRoute.Orders.Count < 3; counter++)
+                for (int counter = 0; counter < 5 && OriginalRoute.Orders.Count < 2; counter++)
                     OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
 
-                if (OriginalRoute.Orders.Count >= 3)
+                if (OriginalRoute.Orders.Count >= 2)
                     break;
             }
 
-            if (OriginalRoute == null || OriginalRoute.Orders.Count < 3)
+            if (OriginalRoute == null || OriginalRoute.Orders.Count < 2)
                 return toStartFrom;
 
             int orderIndex = random.Next(OriginalRoute.Orders.Count - 1);

@@ -121,7 +121,10 @@ namespace GOO.Model
             Orders.Insert(Orders.Count - 1, order);
             order.AddOrderOccurrence(this);
             if (partOfSolution != null)
+            {
                 partOfSolution.TravelTimeScore -= OldTravelTime - TravelTime;
+                partOfSolution.AddPlannedOccurrence(order.OrderNumber, this);
+            }
         }
 
         public void AddOrderAtStart(Order order)
@@ -144,7 +147,10 @@ namespace GOO.Model
             Orders.Insert(1, order);
             order.AddOrderOccurrence(this);
             if (partOfSolution != null)
+            {
                 partOfSolution.TravelTimeScore -= OldTravelTime - TravelTime;
+                partOfSolution.AddPlannedOccurrence(order.OrderNumber, this);
+            }
         }
 
         public void AddOrderAt(Order newOrder, Order orderToInsertAfter)
@@ -178,7 +184,10 @@ namespace GOO.Model
             Orders.Insert(IndexOfOrderToInsertAfter + 1, newOrder);
             newOrder.AddOrderOccurrence(this);
             if (partOfSolution != null)
+            {
                 partOfSolution.TravelTimeScore -= OldTravelTime - TravelTime;
+                partOfSolution.AddPlannedOccurrence(newOrder.OrderNumber, this);
+            }
         }
 
         public void RemoveOrder(Order order)
@@ -202,7 +211,10 @@ namespace GOO.Model
             Orders.Remove(order);
             order.RemoveOrderOccurrence(this);
             if (partOfSolution != null)
+            {
                 partOfSolution.TravelTimeScore -= OldTravelTime - TravelTime;
+                partOfSolution.RemovePlannedOccurrence(order.OrderNumber, this);
+            }
         }
 
         public bool CanSwapOrder(Order firstOrder, Order secondOrder, double timeLimit = 43200.0d)

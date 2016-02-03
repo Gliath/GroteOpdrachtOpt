@@ -62,10 +62,12 @@ namespace GOO.Model.Optimizers.Strategies
 
             for (int i = 0; i < 2; i++)
             {
+                toStartFrom.AddRoute(newRoutes[i]);
+
                 toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, oldRoutes[i]);
                 toStartFrom.AddRouteToPlanning(Plans[i].Item1, Plans[i].Item2, newRoutes[i]);
 
-                toStartFrom.ReplaceRoutes(oldRoutes[i], newRoutes[i]);
+                toStartFrom.RemoveRoute(oldRoutes[i]);
             }
 
             return toStartFrom;
@@ -79,12 +81,14 @@ namespace GOO.Model.Optimizers.Strategies
 
             for (int i = 0; i < 2; i++)
             {
+                toStartFrom.AddRoute(oldRoutes[i]);
+
                 toStartFrom.RemoveRouteFromPlanning(Plans[i].Item1, Plans[i].Item2, newRoutes[i]);
                 toStartFrom.AddRouteToPlanning(Plans[i].Item1, Plans[i].Item2, oldRoutes[i]);
 
-                toStartFrom.ReplaceRoutes(newRoutes[i], oldRoutes[i]);
+                toStartFrom.RemoveRoute(newRoutes[i]);
             }
-
+            
             return toStartFrom;
         }
     }
