@@ -21,21 +21,11 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            for (int planningCounter = 0; planningCounter < 1; planningCounter++)
-            {
-                Planning = toStartFrom.GetRandomPlanning();
-                if (Planning.Item3.Count == 0)
-                    continue;
+            Planning = toStartFrom.GetRandomPlanning();
+            if (Planning.Item3.Count == 0)
+                return toStartFrom;
 
-                old_route = Planning.Item3[random.Next(Planning.Item3.Count)];
-
-                for (int counter = 0; counter < 1 && old_route.Orders.Count < 4; counter++)
-                    old_route = Planning.Item3[random.Next(Planning.Item3.Count)];
-
-                if (old_route.Orders.Count >= 4)
-                    break;
-            }
-
+            old_route = Planning.Item3[random.Next(Planning.Item3.Count)];
             if (old_route == null || old_route.Orders.Count < 4)
                 return toStartFrom; // Could not find a valid route to shuffle
 
@@ -47,10 +37,8 @@ namespace GOO.Model.Optimizers.Strategies
             int secondIndex = random.Next(old_route.Orders.Count - 1);
             int thirdIndex = random.Next(old_route.Orders.Count - 1);
 
-            while (firstIndex == secondIndex)
-                secondIndex = random.Next(old_route.Orders.Count - 1);
-            while (firstIndex == thirdIndex || secondIndex == thirdIndex)
-                thirdIndex = random.Next(old_route.Orders.Count - 1);
+            if (firstIndex == secondIndex || firstIndex == thirdIndex || secondIndex == thirdIndex)
+                return toStartFrom;
 
             double timeLimit = 0.0d; // Check if route can be swapped traveltime-wise
             foreach (Route route in Planning.Item3)
@@ -59,21 +47,18 @@ namespace GOO.Model.Optimizers.Strategies
 
             timeLimit = 43200.0d - timeLimit;
 
-            swapOrders(old_route.Orders[firstIndex], old_route.Orders[secondIndex], old_route.Orders[thirdIndex], new_route, timeLimit);
+            if (new_route.CanSwapOrder(old_route.Orders[firstIndex], old_route.Orders[secondIndex], old_route.Orders[thirdIndex], timeLimit))
+            {
+                new_route.SwapOrders(old_route.Orders[firstIndex], old_route.Orders[secondIndex], old_route.Orders[thirdIndex]);
+                toStartFrom.AddRoute(new_route);
+                toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, old_route);
+                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, new_route);
+                toStartFrom.RemoveRoute(old_route);
 
-            toStartFrom.AddRoute(new_route);
-            toStartFrom.RemoveRouteFromPlanning(Planning.Item1, Planning.Item2, old_route);
-            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, new_route);
-            toStartFrom.RemoveRoute(old_route);
+                strategyHasExecuted = true;
+            }
 
-            strategyHasExecuted = true;
             return toStartFrom;
-        }
-
-        private void swapOrders(Order A, Order B, Order C, Route route, double timeLimit)
-        {
-            if (route.CanSwapOrder(A, B, C, timeLimit))
-                route.SwapOrders(A, B, C);
         }
 
         public override Solution undoStrategy(Solution toStartFrom)

@@ -21,28 +21,15 @@ namespace GOO.Model.Optimizers.Strategies
 
         public override Solution executeStrategy(Solution toStartFrom)
         {
-            for (int planningCounter = 0; planningCounter < 1; planningCounter++)
-            {
-                Planning = toStartFrom.GetRandomPlanning();
-                if (Planning.Item3.Count == 0)
-                    continue;
+            Planning = toStartFrom.GetRandomPlanning();
+            if (Planning.Item3.Count == 0)
+                return toStartFrom;
 
-                OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
-
-                for (int counter = 0; counter < 5 && OriginalRoute.Orders.Count < 2; counter++)
-                    OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
-
-                if (OriginalRoute.Orders.Count >= 2)
-                    break;
-            }
-
+            OriginalRoute = Planning.Item3[random.Next(Planning.Item3.Count)];
             if (OriginalRoute == null || OriginalRoute.Orders.Count < 2)
                 return toStartFrom;
 
             Cluster cluster = toStartFrom.GetRandomCluster();
-            for (int clusterCounter = 0; clusterCounter < 8 && cluster.AvailableOrdersInCluster.Count == 0; clusterCounter++)
-                cluster = toStartFrom.GetRandomCluster();
-
             if (cluster.AvailableOrdersInCluster.Count == 0)
                 return toStartFrom;
 
@@ -85,7 +72,7 @@ namespace GOO.Model.Optimizers.Strategies
                     }
                     break;
                 default:
-                    Console.WriteLine("THE END IS NIGH! (Impossible error at RandomOrderAddStrategy, line 67~");
+                    Console.WriteLine("THE END IS NIGH! (Impossible error at RandomOrderAddStrategy, line 75~");
                     Console.Beep(); // Sign that the end is coming
                     break;
             }

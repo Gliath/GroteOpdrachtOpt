@@ -25,16 +25,10 @@ namespace GOO.Model.Optimizers.Strategies
             for (int i = 0; i < 2; i++)
             {
                 Plans[i] = toStartFrom.GetRandomPlanning();
-                for (int planningCounter = 0; planningCounter < 1 && Plans[i].Item3.Count > 0 && (i == 1 && Plans[0].Item1 != Plans[1].Item1); planningCounter++)
-                    Plans[i] = toStartFrom.GetRandomPlanning();
-
                 if (Plans[i].Item3.Count == 0 || (i == 1 && Plans[0].Item1 != Plans[1].Item1)) // Make sure it has routes to swap and is on the same day
                     return toStartFrom;
 
                 routeIndicesSwapped[i] = random.Next(Plans[i].Item3.Count);
-                for (int routeCounter = 0; routeCounter < 1 && i == 1 && routeIndicesSwapped[0] == routeIndicesSwapped[1]; routeCounter++)
-                    routeIndicesSwapped[i] = random.Next(Plans[i].Item3.Count);
-
                 if (i == 1 && routeIndicesSwapped[0] == routeIndicesSwapped[1])
                     return toStartFrom;
             }

@@ -22,41 +22,18 @@ namespace GOO.Model.Optimizers.Strategies
             if (toStartFrom.AvailableRoutes.Count == 0)
                 return toStartFrom; // No routes to plan
 
-            for (int numOfTries = 1; numOfTries > 0; numOfTries--)
-            {
-                double totalTravelTime = 0.0d;
-                for (int planningCounter = 0; planningCounter < 1; planningCounter++)
-                {
-                    Planning = toStartFrom.GetRandomPlanning();
-                    totalTravelTime = 0.0d;
+            Planning = toStartFrom.GetRandomPlanning();
+            routePlanned = toStartFrom.AvailableRoutes[random.Next(toStartFrom.AvailableRoutes.Count)];
 
-                    foreach (Route route in Planning.Item3)
-                        totalTravelTime += route.TravelTime;
+            double totalTravelTime = 0.0d;
+            foreach (Route route in Planning.Item3)
+                totalTravelTime += route.TravelTime;
 
-                    if (totalTravelTime < 43200.0d)
-                        break;
-                }
+            if (routePlanned.Day != Planning.Item1 || totalTravelTime + routePlanned.TravelTime > 43200.0d)
+                return toStartFrom;
 
-                if (totalTravelTime > 43200.0d)
-                    continue;
-
-                for (int routeCounter = 0; routeCounter < 1; routeCounter++)
-                {
-                    routePlanned = toStartFrom.AvailableRoutes[random.Next(toStartFrom.AvailableRoutes.Count)];
-                    if (routePlanned.Day != Planning.Item1)
-                        continue;
-
-                    if (totalTravelTime + routePlanned.TravelTime <= 43200.0d)
-                        break;
-                }
-
-                if (toStartFrom.AvailableRoutes.Count == 0 || routePlanned.Day != Planning.Item1 || totalTravelTime + routePlanned.TravelTime > 43200.0d)
-                    continue;
-
-                toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routePlanned);
-                strategyHasExecuted = true;
-                break;
-            }
+            toStartFrom.AddRouteToPlanning(Planning.Item1, Planning.Item2, routePlanned);
+            strategyHasExecuted = true;
 
             return toStartFrom;
         }
