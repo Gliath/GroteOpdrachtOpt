@@ -49,7 +49,7 @@ namespace GOO.Model.Optimizers
 
         public double getMaximumNumberOfIterations()
         {
-            return AnnealingTemperature * AnnealingTemperatureStep * MaxIterationsBeforeAnnealing;
+            return Math.Floor(AnnealingTemperature * (1 / AnnealingTemperatureStep) * MaxIterationsBeforeAnnealing);
         }
     }
 }
