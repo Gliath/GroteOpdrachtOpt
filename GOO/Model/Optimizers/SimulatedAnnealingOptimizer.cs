@@ -14,6 +14,7 @@ namespace GOO.Model.Optimizers
         private Random random;
         private double oldSolutionScore;
         private double newSolutionScore;
+        private int[] chances;
 
         public SimulatedAnnealingOptimizer()
         {
@@ -21,6 +22,32 @@ namespace GOO.Model.Optimizers
             random = new Random();
             oldSolutionScore = Double.MaxValue;
             newSolutionScore = Double.MaxValue;
+            chances = new int[] { 
+                    2, // new AddRouteStrategy()               
+                    2, // new SwapRouteStrategy()               
+                    1, // new DestroyPlannedRouteStrategy()     
+                    1, // new DestroyPoolRouteStrategy()        
+                    2, // new RemoveRouteStrategy()             
+                    30, // new PlanRouteStrategy()              
+
+                    20, // new RandomOrderAddStrategy()         
+                    10, // new RandomOrderRemoveStrategy()       
+                    2, // new RandomOrderShiftStrategy()        
+                    10, // new RandomOrderSwapStrategy()         
+
+                    10, // new RandomStepOpt2Strategy()
+                    10, // new RandomStepOpt2HalfStrategy()
+                    5, // new RandomStepOpt3Strategy()
+                    5, // new RandomStepOpt3HalfStrategy()
+
+                    0, // new RandomRouteOpt2Strategy()
+                    0, // new RandomRouteOpt2HalfStrategy()
+                    0, // new RandomRouteOpt3Strategy()
+                    0, // new RandomRouteOpt3HalfStrategy()
+
+                    0, // new GeneticOneRandomRouteStrategy()
+                    //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
+                };
         }
 
         public Solution runOptimizer(Solution solution, GOO.ViewModel.MainViewModel reportProgress)
@@ -45,6 +72,10 @@ namespace GOO.Model.Optimizers
 
                 if (reportProgress != null)
                     reportProgress.ProgressValue++;
+
+                bool printCurrentSolution = false;
+                if (printCurrentSolution)
+                    System.IO.File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "/Solution" + annealingCounter + ".txt", solution.ToString());
 
                 annealingCounter++;
 
@@ -143,32 +174,7 @@ namespace GOO.Model.Optimizers
             //        //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
             //    };
             //else // before 1% progression
-                return new int[] { 
-                    3, // new AddRouteStrategy()               
-                    2, // new SwapRouteStrategy()               
-                    1, // new DestroyPlannedRouteStrategy()     
-                    5, // new DestroyPoolRouteStrategy()        
-                    2, // new RemoveRouteStrategy()             
-                    10, // new PlanRouteStrategy()              
-
-                    30, // new RandomOrderAddStrategy()         
-                    5, // new RandomOrderRemoveStrategy()       
-                    2, // new RandomOrderShiftStrategy()        
-                    10, // new RandomOrderSwapStrategy()         
-
-                    10, // new RandomStepOpt2Strategy()
-                    10, // new RandomStepOpt2HalfStrategy()
-                    5, // new RandomStepOpt3Strategy()
-                    5, // new RandomStepOpt3HalfStrategy()
-
-                    0, // new RandomRouteOpt2Strategy()
-                    0, // new RandomRouteOpt2HalfStrategy()
-                    0, // new RandomRouteOpt3Strategy()
-                    0, // new RandomRouteOpt3HalfStrategy()
-
-                    0, // new GeneticOneRandomRouteStrategy()
-                    //0, // new GeneticTwoRandomRouteStrategy(), currently not implemented
-                };
+                return chances;
         }
 
         private bool AcceptOrReject(Solution toAcceptOrReject) // Accept Solution or not
